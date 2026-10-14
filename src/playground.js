@@ -1,3 +1,5 @@
+import './review-map.js';
+
 // Mattz's original 80 × 64 cells face left. The common foot anchor is (40, 48).
 const layer = document.querySelector('#pixel-cat-layer');
 const motionButton = document.querySelector('#motion-toggle');

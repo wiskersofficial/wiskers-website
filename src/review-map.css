@@ -1,0 +1,42 @@
+/* Visible working map for discussing the cat's next design pass. */
+.review-map{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:12px clamp(24px,5.6vw,84px);border-bottom:1px solid var(--hair);background:var(--surface);color:var(--ink);font-size:11px;line-height:1.4}
+.review-map-title{font-size:10px;letter-spacing:.13em;white-space:nowrap;color:var(--accent)}
+.review-map-links,.review-map-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.review-map-links a{white-space:nowrap;text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:4px}
+.review-map-links a:hover{color:var(--accent)}
+.review-map-legend{margin-left:auto;gap:14px}
+.review-map-key{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.review-map-key::before{content:"";width:13px;height:11px;border:2px solid var(--green);border-radius:2px}
+.review-map-key--idea::before{border-color:var(--coral);border-style:dashed}
+.review-page{position:relative;isolation:isolate}
+.review-page::after{content:"";position:absolute;inset:8px;z-index:-1;pointer-events:none;border:1px solid var(--hair);border-radius:4px;opacity:.78}
+.review-page-label{position:absolute;top:16px;left:clamp(24px,5.6vw,84px);z-index:3;display:inline-flex;align-items:center;min-height:23px;padding:3px 8px;background:var(--page);border:1px solid var(--hair);border-radius:3px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap;pointer-events:none}
+.demo-band .review-page-label{background:var(--accent-soft)}
+.review-spot{position:relative;outline:2px solid var(--green);outline-offset:4px}
+.review-spot--thin,.review-spot--wall{position:absolute}
+.review-spot--idea{outline:2px dashed var(--coral)}
+.review-spot-label{position:absolute;top:6px;left:6px;z-index:5;display:inline-flex;align-items:center;width:max-content;max-width:calc(100% - 12px);padding:4px 6px;border:1px solid var(--green);border-radius:3px;background:var(--page);color:var(--ink);font-size:10px;font-weight:700;line-height:1.15;letter-spacing:0;white-space:nowrap;pointer-events:none;box-shadow:0 2px 8px var(--shadow)}
+.review-spot--idea>.review-spot-label{border-color:var(--coral)}
+.hero-copy h1.review-spot>.review-spot-label{display:inline-flex;top:auto;bottom:-26px;left:0;max-width:none;font-size:10px}
+#stage-hero.review-spot>.review-spot-label{top:auto;bottom:10px;left:10px}
+.review-spot--thin>.review-spot-label{top:-29px;left:0;max-width:none}
+.review-spot--wall>.review-spot-label{top:42px;left:25px;max-width:none}
+#perch-paw.review-spot>.review-spot-label{top:auto;bottom:8px;left:8px}
+.tool-preview.review-spot>.review-spot-label{top:auto;bottom:7px;left:7px}
+.select-shell.review-spot>.review-spot-label{top:auto;right:auto;bottom:-27px;left:0;max-width:none;font-size:10px}
+.select-shell.review-spot+.demo-note{margin-top:36px}
+#perch-jump.review-spot>.review-spot-label{top:-30px;left:8px}
+#perch-approach.review-spot>.review-spot-label{top:-38px;left:0}
+#perch-approach article.review-spot>.review-spot-label{top:auto;bottom:5px;right:5px;left:auto}
+#stage-contact.review-spot>.review-spot-label{top:10px;right:10px;left:auto}
+.contact-panel.review-spot>.review-spot-label{top:8px;right:8px;left:auto}
+@media(max-width:900px){.review-map{gap:10px 18px}.review-map-legend{margin-left:0}}
+@media(max-width:650px){
+  .review-map{padding:11px 22px;gap:8px 14px}.review-map-links{order:3;width:100%;gap:7px 12px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.review-map-links a{font-size:10px}.review-map-legend{margin-left:auto;gap:9px;font-size:9px}
+  .review-page::after{inset:5px}.review-page-label{top:8px;left:22px;font-size:9px;min-height:19px;padding:2px 5px}
+  .review-spot-label{font-size:9px;padding:3px 4px}
+  .hero-copy h1.review-spot>.review-spot-label{bottom:-22px}
+  #perch-approach article.review-spot>.review-spot-label{font-size:8px}
+  .contact-panel.review-spot>.review-spot-label{top:5px;right:5px}
+}
+@media(max-width:420px){.review-map{padding-inline:16px}.review-page-label{left:16px}.review-map-legend{width:100%;margin-left:0}}
