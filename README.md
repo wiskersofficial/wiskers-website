@@ -20,9 +20,10 @@ The source is mirrored to `wiskersofficial/wiskers-website` without uploading th
 
 Copy is based on Archive/Navigation/TABBY.md, Areas/Clients.md, and the Data Room Company Overview and Offering notes. The business is at an early stage. No client logos, outcome statistics, pricing or established publisher network are claimed.
 
-## Asset attribution
+## Cat animation archive
 
-The website uses a custom-generated Wiskers cat animation library. Its normalized sprite strips are in `public/assets/wiskers-cat/`; no purchased sprite pack is loaded by the site. The older 3D cat and its license are archived in `legacy-3d/` and are no longer used by the site.
+The current website is cat-free. The custom-generated Wiskers animation set is preserved under artifacts/cat-animation-v1/sprites/ with two local preview pages. The artifacts directory is outside public/, so Vite does not publish these files. The sprite preparation script writes only to the archive. The earlier 3D cat remains in legacy-3d/ for historical reference.
+
 
 ## Thesis visual
 

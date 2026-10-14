@@ -6,7 +6,7 @@ The Website folder in the local Tabby companion files, mirrored to the GitHub re
 Repository target:
 wiskersofficial/wiskers-website
 
-The repository contains only the website source and licensed public assets. The surrounding company vault must not be uploaded. The GitHub organization name is unchanged.
+The repository contains the website source and preserved design artifacts. The surrounding company vault must not be uploaded. The GitHub organization name is unchanged.
 
 Local preview: npm ci, then npm run dev.
 Production build: npm run build.
@@ -20,8 +20,9 @@ Website domain: wiskers.click. The similarly spelled whiskers.click is not our d
 
 Customer contact: hello@wiskers.click.
 
-The website uses the custom-generated Wiskers cat animation library in `public/assets/wiskers-cat/`.
-The project owner confirmed directly with the artist that commercial website use is permitted outside crypto. Keep the source asset in the website project, retain the artist credit in the footer, and do not distribute the sprite sheets as a standalone asset pack. There are no API keys or backend services required.
+The current release is cat-free. The Wiskers-generated sprite set and review pages are preserved under artifacts/cat-animation-v1/ and are not copied to dist/. Do not move them back under public/ unless a future design explicitly reintroduces the mascot.
+
+There are no API keys or backend services required.
 
 References:
 https://developers.cloudflare.com/workers/static-assets/binding/

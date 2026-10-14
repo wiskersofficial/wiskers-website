@@ -8,7 +8,7 @@ import struct
 import zlib
 
 SOURCE = Path('/Users/lowcostjosh/.codex/generated_images/01a0fbb6-c964-7d43-a5fa-b24a567a2f62')
-DEST = Path(__file__).resolve().parents[1] / 'public/assets/wiskers-cat'
+DEST = Path(__file__).resolve().parents[1] / 'artifacts/cat-animation-v1/sprites'
 
 SHEETS = {
     # First Wiskers-only set

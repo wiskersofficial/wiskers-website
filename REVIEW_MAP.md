@@ -1,24 +1,22 @@
-# Wiskers website review map v1
+# Cat-interaction review map, archived
 
-The temporary map on the live homepage divides the continuous scroll into five numbered chapters. Solid green outlines mark a current cat route or action. Dashed coral outlines mark a proposed interaction surface; they do not yet make the cat react. The problem statement remains an openable header panel, and Privacy and Website terms remain separate pages.
+This map records the temporary five-chapter layout used while exploring a playful cat route through the website. It is historical reference only. On 14 October 2026 the cat, its route labels, replay controls, and visible site map were removed from the public page.
 
-| Page | Reference | Surface | Status |
+| Previous chapter | Reference | Surface | Interaction considered |
 | --- | --- | --- | --- |
-| 01 Welcome | 1A | Cat shelf | Current route |
-| 01 Welcome | 1B | Headline | Possible interaction |
-| 02 The difference | 2A | Bridge | Current route |
-| 02 The difference | 2B | Climb and slide wall | Current route |
-| 02 The difference | 2C | PDF card | Current paw and shake interaction |
+| 01 Welcome | 1A | Cat shelf | Opening perch |
+| 01 Welcome | 1B | Headline | Cat landing on “content” |
+| 02 The difference | 2A | Bridge | Walk across |
+| 02 The difference | 2B | Climb and slide wall | Climb, then slip |
+| 02 The difference | 2C | PDF card | Paw at the card and shake it |
 | 02 The difference | 2D | Tool preview | Possible interaction |
-| 03 Try it | 3A | Buyer question choice | Possible cat interaction; the selector itself already works |
-| 03 Try it | 3B | Answer card | Current pounce and bounce interaction |
-| 04 Our approach | 4A | Cat ledge | Current route |
-| 04 Our approach | 4B | Find the real question | Possible interaction |
-| 04 Our approach | 4C | Make the answer interactive | Possible interaction |
-| 04 Our approach | 4D | Put it to work | Possible interaction |
-| 05 Contact | 5A | Snack ledge and bowl | Current route and eat interaction |
+| 03 Try it | 3A | Buyer question choice | Reach toward the selector |
+| 03 Try it | 3B | Answer card | Pounce and bounce |
+| 04 Our approach | 4A | Approach ledge | Pause or look down |
+| 04 Our approach | 4B–4D | Three approach steps | Possible interactions |
+| 05 Contact | 5A | Snack ledge and bowl | Eat interaction |
 | 05 Contact | 5B | Contact panel | Possible interaction |
 
-The map is implemented in `src/review-map.js` and `src/review-map.css` and imported once by `src/playground.js`. Remove that import to remove the review layer without changing the cat animation engine.
+The temporary map was implemented in src/review-map.js and src/review-map.css. Those files remain as historical code and are not imported by the current page.
 
-The cat is displayed 15% smaller than the previous build. The website now loads a Wiskers-generated sprite library only: 27 four-frame clips covering front, back, side and diagonal views; walking, running, jumping, pouncing and climbing; pawing and page-specific reactions; falling, twisting and landing; plus eating, grooming, sleeping and waking. Movement selects a front, back, side or diagonal walk/run from the cat's path through the page. The ledge sequence remains SLIP → TWIST → RECOVER. PEEK plays at the welcome perch; LOOKDOWN at the approach chapter; CURIOUS after the cat pounces onto an answer; REACH when the buyer-question choice changes; STRETCH and LICK after idle pauses; and SLEEP after a longer pause. The purchased template sprite sheets have been removed from the site bundle.
+The Wiskers-generated sprite set is preserved at artifacts/cat-animation-v1/sprites/. It contains 27 four-frame clips for front, back, side and diagonal directions; walking, running, jumping, pouncing and climbing; paw reactions; falling, twisting and landing; and resting routines. OPENING_FALL.png adds a separate 16-frame fall study. Preview pages remain at cat-animation-preview.html and opening-animation-preview.html. See the Wiskers vault note for the full design history and animation constraints.

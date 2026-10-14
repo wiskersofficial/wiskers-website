@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wiskers cat animation preview</title>
+  <title>Wiskers cat animation archive</title>
   <style>
     :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #080808; color: #f6f2ed; }
     * { box-sizing: border-box; }
@@ -36,13 +36,13 @@
 </head>
 <body>
   <header>
-    <div><h1>Wiskers cat moves</h1><p>A coherent library of 27 original four-frame clips. Compare the cat's directions, movement, reactions and routines, then scroll the live page to see its current interactions.</p></div>
-    <div class="controls"><button id="toggle">Pause previews</button><a href="/">Back to site</a></div>
+    <div><h1>Wiskers cat animation archive</h1><p>A coherent library of 27 original four-frame clips. This archive preserves the custom directions, movement, reactions and routines from an earlier website design.</p></div>
+    <div class="controls"><button id="toggle">Pause previews</button><a href="/">Current website</a></div>
   </header>
   <main class="grid" id="grid"></main>
   <section class="fall">
     <h2>The ledge recovery, in three parts</h2>
-    <p>These are played in order as the cat leaves the welcome ledge, twists in the air, and reaches the next section.</p>
+    <p>This three-part study was designed for a cat slipping from a ledge, twisting in the air, and recovering on the next section.</p>
     <div class="fall-grid" id="fall"></div>
   </section>
   <script>
@@ -79,7 +79,7 @@
     const tile=(name,description,speed='')=>{
       const article=document.createElement('article');
       article.innerHTML=`<header><h2>${name}</h2><p>${description}</p></header><div class="stage"><div class="sprite ${speed==='slow'?'sprite--slow':''} ${speed==='fast'?'sprite--fast':''}" role="img" aria-label="${name} animation"></div></div>`;
-      article.querySelector('.sprite').style.backgroundImage=`url('./public/assets/wiskers-cat/${name}.png')`;
+      article.querySelector('.sprite').style.backgroundImage=`url('./artifacts/cat-animation-v1/sprites/${name}.png')`;
       return article;
     };
     clips.forEach(c=>grid.append(tile(...c)));
