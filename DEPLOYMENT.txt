@@ -19,7 +19,8 @@ Website domain: wiskers.click. The similarly spelled whiskers.click is not our d
 
 Customer contact: hello@wiskers.click.
 
-The cat asset remains licensed CC BY 4.0 with visible attribution. There are no API keys or backend services required.
+The new pixel cat artwork is by Mattz Art: https://xzany.itch.io/cat-2d-pixel-art.
+The project owner confirmed directly with the artist that commercial website use is permitted outside crypto. Keep the source asset in the website project, retain the artist credit in the footer, and do not distribute the sprite sheets as a standalone asset pack. There are no API keys or backend services required.
 
 References:
 https://developers.cloudflare.com/pages/get-started/direct-upload/
