@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wiskers cat animation preview</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #080808; color: #f6f2ed; }
+    * { box-sizing: border-box; }
+    body { margin: 0 auto; padding: 32px 20px 64px; max-width: 1120px; }
+    header { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+    h1 { font-size: clamp(30px, 6vw, 58px); letter-spacing: -.055em; line-height: .98; margin: 0 0 12px; }
+    p { color: #b9b2c3; margin: 0; max-width: 640px; line-height: 1.5; }
+    a { color: #56b2d5; }
+    .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    button { color: inherit; background: #211a30; border: 1px solid #6950a5; border-radius: 999px; padding: 10px 16px; font: inherit; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+    article { min-height: 250px; border: 1px solid #36313f; border-radius: 16px; background: #121018; overflow: hidden; display: flex; flex-direction: column; }
+    article header { padding: 17px 18px 0; margin: 0; display: block; }
+    h2 { font-size: 18px; margin: 0 0 5px; }
+    article p { font-size: 14px; }
+    .stage { display: grid; place-items: center; flex: 1; min-height: 212px; overflow: hidden; }
+    .sprite { width: 240px; height: 192px; max-width: 100%; background-repeat: no-repeat; background-size: 400% 100%; image-rendering: pixelated; animation: strip .56s steps(4, end) infinite; }
+    .sprite--slow { animation-duration: .67s; }
+    .sprite--fast { animation-duration: .5s; }
+    @keyframes strip { from { background-position: 0 0; } to { background-position: -960px 0; } }
+    .fall { margin-top: 28px; border-top: 1px solid #36313f; padding-top: 22px; }
+    .fall h2 { font-size: 24px; }
+    .fall-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+    .fall-grid .stage { min-height: 150px; }
+    .fall-grid strong { padding: 12px 14px 0; font-size: 13px; color: #56b2d5; }
+    .paused .sprite { animation-play-state: paused; }
+    @media (max-width: 620px) { body { padding: 24px 14px 48px; } header { align-items: start; flex-direction: column; } .fall-grid { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .sprite { animation-play-state: paused; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>Wiskers cat moves</h1><p>A coherent library of 27 original four-frame clips. Compare the cat's directions, movement, reactions and routines, then scroll the live page to see its current interactions.</p></div>
+    <div class="controls"><button id="toggle">Pause previews</button><a href="/">Back to site</a></div>
+  </header>
+  <main class="grid" id="grid"></main>
+  <section class="fall">
+    <h2>The ledge recovery, in three parts</h2>
+    <p>These are played in order as the cat leaves the welcome ledge, twists in the air, and reaches the next section.</p>
+    <div class="fall-grid" id="fall"></div>
+  </section>
+  <script>
+    const clips = [
+      ['IDLE_FRONT','A relaxed front-facing idle.','slow'],
+      ['WALK_FRONT','Walks directly toward you.','fast'],
+      ['WALK_BACK','Walks away down the page.','fast'],
+      ['WALK_SIDE','A clean side-on walk.','fast'],
+      ['DIAGONAL','Moves in a three-quarter direction.','fast'],
+      ['RUN_FRONT','Runs toward the viewer.','fast'],
+      ['RUN_BACK','Runs away down the page.','fast'],
+      ['RUN_SIDE','A side-on run.','fast'],
+      ['JUMP_FRONT','A jump toward the viewer.','fast'],
+      ['JUMP_SIDE','A side-on jump.','fast'],
+      ['POUNCE','Crouches, springs and lands.','fast'],
+      ['CLIMB','Reaches and climbs upward.','fast'],
+      ['SLIP','The first beat of the ledge recovery.','fast'],
+      ['TWIST','Rights itself in midair.','fast'],
+      ['RECOVER','Absorbs the landing and settles.','fast'],
+      ['PEEK','Peeks over the ledge and blinks.','slow'],
+      ['LOOKDOWN','Looks toward you, then down the page.','slow'],
+      ['CURIOUS','Tilts its head and blinks.','slow'],
+      ['PAW_FRONT','Paws toward the viewer.','fast'],
+      ['PAW_SIDE','A raised-paw reaction.','fast'],
+      ['REACH','Reaches out to tap the buyer question.','fast'],
+      ['SCARE','A startled jump and recovery.','fast'],
+      ['STRETCH','A small stretch after resting.','slow'],
+      ['LICK','Grooms a raised paw.','slow'],
+      ['EAT','Lowers its head for a snack.','slow'],
+      ['SLEEP','Curls up for a nap.','slow'],
+      ['WAKE','Wakes and stretches into a sit.','slow'],
+    ];
+    const grid=document.querySelector('#grid');
+    const tile=(name,description,speed='')=>{
+      const article=document.createElement('article');
+      article.innerHTML=`<header><h2>${name}</h2><p>${description}</p></header><div class="stage"><div class="sprite ${speed==='slow'?'sprite--slow':''} ${speed==='fast'?'sprite--fast':''}" role="img" aria-label="${name} animation"></div></div>`;
+      article.querySelector('.sprite').style.backgroundImage=`url('./public/assets/wiskers-cat/${name}.png')`;
+      return article;
+    };
+    clips.forEach(c=>grid.append(tile(...c)));
+    [['1. Slip','SLIP'],['2. Twist','TWIST'],['3. Land','RECOVER']].forEach(([title,name])=>{
+      const card=tile(name,'');card.querySelector('header').remove();card.insertAdjacentHTML('afterbegin',`<strong>${title}</strong>`);document.querySelector('#fall').append(card);
+    });
+    document.querySelector('#toggle').addEventListener('click',event=>{
+      const paused=document.body.classList.toggle('paused');event.currentTarget.textContent=paused?'Play previews':'Pause previews';
+    });
+  </script>
+</body>
+</html>

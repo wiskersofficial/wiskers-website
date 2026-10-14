@@ -20,3 +20,5 @@ The temporary map on the live homepage divides the continuous scroll into five n
 | 05 Contact | 5B | Contact panel | Possible interaction |
 
 The map is implemented in `src/review-map.js` and `src/review-map.css` and imported once by `src/playground.js`. Remove that import to remove the review layer without changing the cat animation engine.
+
+The cat is displayed 15% smaller than the previous build. The website now loads a Wiskers-generated sprite library only: 27 four-frame clips covering front, back, side and diagonal views; walking, running, jumping, pouncing and climbing; pawing and page-specific reactions; falling, twisting and landing; plus eating, grooming, sleeping and waking. Movement selects a front, back, side or diagonal walk/run from the cat's path through the page. The ledge sequence remains SLIP → TWIST → RECOVER. PEEK plays at the welcome perch; LOOKDOWN at the approach chapter; CURIOUS after the cat pounces onto an answer; REACH when the buyer-question choice changes; STRETCH and LICK after idle pauses; and SLEEP after a longer pause. The purchased template sprite sheets have been removed from the site bundle.

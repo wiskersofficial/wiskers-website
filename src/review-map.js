@@ -11,19 +11,20 @@ const pages = [
 ];
 
 const spots = [
-  { selector: '#stage-hero', code: '1A', title: 'Cat shelf', status: 'live' },
-  { selector: '.hero-copy h1', code: '1B', title: 'Headline', status: 'idea' },
-  { selector: '#perch-bridge', code: '2A', title: 'Bridge', status: 'live', shape: 'thin' },
-  { selector: '#cat-route-wall', code: '2B', title: 'Climb + slide wall', status: 'live', shape: 'wall' },
-  { selector: '#perch-paw', code: '2C', title: 'PDF card', status: 'live' },
+  { selector: '#hero-content-word', code: '1A', title: 'Content perch', status: 'live' },
+  { selector: '#hero-input-word', code: '1C', title: 'Input landing', status: 'live' },
+  { selector: '.hero-copy h1', code: '1B', title: 'Opening drop', status: 'idea' },
+  { selector: '#perch-bridge', code: '2A', title: 'Bridge', status: 'idea', shape: 'thin' },
+  { selector: '#cat-route-wall', code: '2B', title: 'Climb + slide wall', status: 'idea', shape: 'wall' },
+  { selector: '#perch-paw', code: '2C', title: 'PDF card', status: 'idea' },
   { selector: '.tool-preview', code: '2D', title: 'Tool preview', status: 'idea' },
   { selector: '.select-shell', code: '3A', title: 'Question choice', status: 'idea' },
-  { selector: '#perch-jump', code: '3B', title: 'Answer card', status: 'live' },
-  { selector: '#perch-approach', code: '4A', title: 'Cat ledge', status: 'live' },
+  { selector: '#perch-jump', code: '3B', title: 'Answer card', status: 'idea' },
+  { selector: '#perch-approach', code: '4A', title: 'Cat ledge', status: 'idea' },
   { selector: '#perch-approach article:nth-child(1)', code: '4B', title: 'Find the question', status: 'idea' },
   { selector: '#perch-approach article:nth-child(2)', code: '4C', title: 'Make it interactive', status: 'idea' },
   { selector: '#perch-approach article:nth-child(3)', code: '4D', title: 'Put it to work', status: 'idea' },
-  { selector: '#stage-contact', code: '5A', title: 'Snack ledge', status: 'live' },
+  { selector: '#stage-contact', code: '5A', title: 'Snack ledge', status: 'idea' },
   { selector: '.contact-panel', code: '5B', title: 'Contact panel', status: 'idea' },
 ];
 

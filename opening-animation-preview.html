@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wiskers · Opening animation review</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#0b0d14;color:#f3f0e9}*{box-sizing:border-box}body{margin:0;padding:clamp(18px,4vw,48px)}main{max-width:1320px;margin:auto}h1{font-size:clamp(26px,4vw,42px);line-height:1.08;margin:0 0 12px;letter-spacing:-.04em}p{color:#b9c0d1;line-height:1.5}.intro{max-width:760px}.controls{position:sticky;top:12px;z-index:3;padding:20px;background:#161b2beF;border:1px solid #3c4762;border-radius:12px;backdrop-filter:blur(12px);margin:24px 0}label{display:flex;justify-content:space-between;gap:12px;font-weight:600}output{color:#61bcdf}input[type=range]{width:100%;margin:18px 0 5px;accent-color:#61bcdf}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}button{padding:9px 15px;border:1px solid #455271;background:#242d45;color:#f3f0e9;border-radius:6px;font:inherit;cursor:pointer}button:hover{border-color:#61bcdf}button:focus-visible,input:focus-visible{outline:3px solid #61bcdf;outline-offset:4px}.stage-row{display:flex;align-items:start;gap:28px;flex-wrap:wrap}.stage{min-width:180px;flex:1;padding:18px;background:#151b2a;border:1px solid #3a4661;border-radius:10px}.stage h2{font-size:15px;margin:0 0 14px}.canvas{display:flex;align-items:center;justify-content:center;min-height:260px;background-color:#0c101c;background-image:linear-gradient(45deg,#172033 25%,transparent 25%),linear-gradient(-45deg,#172033 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#172033 75%),linear-gradient(-45deg,transparent 75%,#172033 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0}.sprite{width:120px;height:96px;background-image:url('./public/assets/wiskers-cat/OPENING_FALL.png');background-repeat:no-repeat;background-size:1920px 96px;background-position:calc(var(--frame,0) * -120px) 0;image-rendering:pixelated;flex:none}.site-sprite{--scale:2.266667;width:calc(120px * var(--scale));height:calc(96px * var(--scale));background-size:calc(1920px * var(--scale)) calc(96px * var(--scale));background-position:calc(var(--frame,0) * -120px * var(--scale)) 0}.caption{font-size:12px;margin-bottom:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin-top:24px}.frame-card{padding:14px;background:#151b2a;border:1px solid #303c55;border-radius:8px;cursor:pointer}.frame-card[aria-pressed=true]{border-color:#61bcdf;box-shadow:0 0 0 1px #61bcdf}.frame-card .canvas{min-height:112px}.frame-card strong,.frame-card span{display:block;font-size:12px;margin-top:8px}.frame-card span{color:#aeb9cf;font-weight:400}.error{display:none;padding:16px;border:1px solid #ef767a;border-radius:8px;color:#efc6c8;background:#28151c}.error.visible{display:block}.note{font-size:13px}.sheet-title{font-size:20px;margin:30px 0 0}.site-grid{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.site-grid .frame-card .canvas{min-height:242px}@media(max-width:650px){.site-sprite{--scale:1.7}.canvas{min-height:200px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.frame-card{padding:8px}.frame-card .canvas{min-height:104px}.controls{top:0}.site-grid{grid-template-columns:1fr}.site-grid .frame-card .canvas{min-height:190px}}
+</style>
+</head>
+<body>
+<main>
+<h1>The opening fall, frame by frame.</h1>
+<p class="intro">Production artwork for the journey from <strong>content</strong> to <strong>input</strong>. The same strip powers every preview here. Native artwork has 50% more pixels per axis than the previous library; the larger view approximates the cat’s physical size on the site.</p>
+<p class="error" id="asset-error" role="status">The production strip has not been saved yet. This preview expects <code>public/assets/wiskers-cat/OPENING_FALL.png</code> beside this page’s folder. Refresh after the artwork is ready.</p>
+<section class="controls" aria-label="Frame scrubber">
+<label for="frame">Choose an exact frame <output id="frame-label" for="frame">01 / 16 · Perch</output></label>
+<input id="frame" type="range" min="0" max="15" step="1" value="0">
+<p class="caption" id="progress-label">Scroll progress 0% · Perch and look toward input</p>
+<div class="buttons"><button type="button" id="previous">← Previous</button><button type="button" id="play" aria-pressed="false">Play frames</button><button type="button" id="next">Next →</button></div>
+</section>
+<div class="stage-row">
+<section class="stage"><h2>Native · 120 × 96 pixels</h2><div class="canvas"><div class="sprite selected-sprite" aria-hidden="true"></div></div><p class="caption">1× source pixels, no smoothing.</p></section>
+<section class="stage"><h2>Approximate website size</h2><div class="canvas"><div class="sprite site-sprite selected-sprite" aria-hidden="true"></div></div><p class="caption">2.27× on desktop, 1.7× on a narrow screen. Shared paw anchor: (60, 80).</p></section>
+</div>
+<p class="note">The frame slider is exact. Playback only cycles the production poses for review; the website moves their shared anchor through the fall and adds the small landing bounce.</p>
+<h2 class="sheet-title">All 16 frames · native 1×</h2>
+<section class="grid" id="frames" aria-label="All sixteen production frames at native resolution"></section>
+<h2 class="sheet-title">All 16 frames · approximate website size</h2>
+<section class="grid site-grid" id="frames-site" aria-label="All sixteen production frames at approximate website size"></section>
+</main>
+<script>
+const frames = [
+ {state:'Perch',progress:0,detail:'Perched above content'},
+ {state:'Perch',progress:11,detail:'Look toward input'},
+ {state:'Slip',progress:12,detail:'Reach and lose balance'},
+ {state:'Slip',progress:22,detail:'Paws leave the ledge'},
+ {state:'Twist',progress:23,detail:'Head begins the righting turn'},
+ {state:'Twist',progress:29,detail:'Shoulders follow the head'},
+ {state:'Twist',progress:35,detail:'Forequarters continue turning'},
+ {state:'Twist',progress:41,detail:'Hips follow the shoulders'},
+ {state:'Twist',progress:47,detail:'Body approaches upright'},
+ {state:'Twist',progress:57,detail:'Righting turn completes'},
+ {state:'Reach',progress:58,detail:'Extend paws toward input'},
+ {state:'Reach',progress:67,detail:'Feet-first approach'},
+ {state:'Reach',progress:76,detail:'Paws just above the word'},
+ {state:'Impact',progress:77,detail:'Paw contact and compression'},
+ {state:'Settle',progress:88,detail:'Recover from the landing'},
+ {state:'Settle',progress:100,detail:'Stable feet-first landing'}
+];
+const slider=document.querySelector('#frame');
+const label=document.querySelector('#frame-label');
+const progressLabel=document.querySelector('#progress-label');
+const grids=[document.querySelector('#frames'),document.querySelector('#frames-site')];
+const playButton=document.querySelector('#play');
+let timer=null;
+function selectFrame(index){
+ index=Math.max(0,Math.min(15,index));slider.value=index;
+ document.querySelectorAll('.selected-sprite').forEach(element=>element.style.setProperty('--frame',index));
+ label.textContent=`${String(index+1).padStart(2,'0')} / 16 · ${frames[index].state}`;
+ progressLabel.textContent=`Scroll progress ${frames[index].progress}% · ${frames[index].detail}`;
+ grids.forEach(grid=>grid.querySelectorAll('button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index))));
+}
+function stop(){if(timer!==null)clearInterval(timer);timer=null;playButton.textContent='Play frames';playButton.setAttribute('aria-pressed','false');}
+grids.forEach((grid,gridIndex)=>frames.forEach((frame,index)=>{
+ const button=document.createElement('button');button.type='button';button.className='frame-card';button.setAttribute('aria-pressed',String(index===0));button.setAttribute('aria-label',`Frame ${index+1}: ${frame.state}, ${frame.detail}`);
+ const canvas=document.createElement('div');canvas.className='canvas';
+ const sprite=document.createElement('div');sprite.className=gridIndex?'sprite site-sprite':'sprite';sprite.style.setProperty('--frame',index);sprite.setAttribute('aria-hidden','true');canvas.append(sprite);
+ const title=document.createElement('strong');title.textContent=`${String(index+1).padStart(2,'0')} · ${frame.state}`;
+ const detail=document.createElement('span');detail.textContent=frame.detail;
+ button.append(canvas,title,detail);button.addEventListener('click',()=>{stop();selectFrame(index);});grid.append(button);
+}));
+slider.addEventListener('input',()=>{stop();selectFrame(Number(slider.value));});
+document.querySelector('#previous').addEventListener('click',()=>{stop();selectFrame(Number(slider.value)-1);});
+document.querySelector('#next').addEventListener('click',()=>{stop();selectFrame(Number(slider.value)+1);});
+playButton.addEventListener('click',()=>{if(timer!==null){stop();return;}playButton.textContent='Pause frames';playButton.setAttribute('aria-pressed','true');timer=setInterval(()=>selectFrame((Number(slider.value)+1)%16),140);});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+const artwork=new Image();artwork.onerror=()=>document.querySelector('#asset-error').classList.add('visible');artwork.src='./public/assets/wiskers-cat/OPENING_FALL.png';
+selectFrame(0);
+</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ Copy is based on Archive/Navigation/TABBY.md, Areas/Clients.md, and the Data Roo
 
 ## Asset attribution
 
-The interactive pixel cat is by Mattz Art. The project owner confirmed commercial website use outside crypto directly with the artist. Public attribution appears in the footer. The older 3D cat and its license are archived in `legacy-3d/` and are no longer used by the site.
+The website uses a custom-generated Wiskers cat animation library. Its normalized sprite strips are in `public/assets/wiskers-cat/`; no purchased sprite pack is loaded by the site. The older 3D cat and its license are archived in `legacy-3d/` and are no longer used by the site.
 
 ## Thesis visual
 

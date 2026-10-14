@@ -95,3 +95,32 @@ h2{font-weight:600;font-size:clamp(42px,4.4vw,66px);letter-spacing:-.055em;line-
   .approach-list#perch-approach::after{left:-5px;right:-5px;}
 }
 @media(prefers-reduced-motion:reduce){.feed-cat{transition:none;}}
+
+/* Focused opening: two words become measured ledges for one authored fall. */
+.opening-runway{position:relative;width:100%;}
+.opening-composition{position:sticky;top:0;min-height:100svh;padding-top:140px;background:var(--page);}
+.opening-journey .hero{display:block;min-height:0;padding-top:0;padding-bottom:60px;}
+.opening-journey .hero-copy{max-width:1050px;}
+.opening-journey .hero-side{display:none;}
+.opening-journey .hero h1 em{margin-top:clamp(110px,18svh,180px);}
+.opening-journey #hero-content-word,.opening-journey #hero-input-word{display:inline-block;position:relative;white-space:nowrap;}
+.opening-journey #hero-input-word{transform:translate3d(0,var(--input-bounce,0px),0);transform-origin:50% 100%;will-change:transform;}
+.opening-journey #hero-content-word>.review-spot-label,.opening-journey #hero-input-word>.review-spot-label{top:auto;bottom:-21px;left:0;font-size:8px;}
+.opening-journey .hero-intro{margin-top:26px;}
+.opening-journey [data-replay],.opening-journey #feed-cat{display:none;}
+.pixel-cat--opening{position:absolute!important;width:0!important;height:0!important;}
+.pixel-cat--opening .pixel-cat__sprite{position:absolute;background-repeat:no-repeat;image-rendering:pixelated;transform:none;}
+@media(max-width:900px){
+  .opening-composition{padding-top:132px;}
+  .opening-journey .hero{padding-top:0;padding-bottom:48px;}
+}
+@media(max-width:650px){
+  .opening-composition{padding-top:110px;}
+  .opening-journey .hero{padding-top:0;padding-bottom:44px;}
+  .opening-journey .hero h1 em{margin-top:clamp(80px,14svh,110px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .opening-composition{position:relative;min-height:0;padding-top:110px;padding-bottom:28px;}
+  .opening-journey .hero h1 em{margin-top:100px;}
+  .opening-journey #hero-input-word{transform:none;will-change:auto;}
+}
