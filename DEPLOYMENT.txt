@@ -10,10 +10,11 @@ The repository contains only the website source and licensed public assets. The 
 
 Local preview: npm ci, then npm run dev.
 Production build: npm run build.
-Build command for Cloudflare Pages: npm run build.
-Output directory: dist.
+Cloudflare build command: npm run build.
+Cloudflare deploy command: npx wrangler deploy.
+Static asset directory: dist.
 
-The site is already served at wiskers.click through Cloudflare. A GitHub push did not trigger a visible production update at the last check. In the Cloudflare account that owns this existing site, inspect its Workers & Pages project. If it is a Direct Upload project, choose Create a new deployment, select Production, and upload wiskers-cloudflare-upload.zip from the local Website folder. If it is Git-integrated, inspect its build/deployment logs and confirm this repository and main branch are connected. Do not create a second project or change the domain's DNS to release this version.
+The site is already served at wiskers.click through Cloudflare. A push to this repository triggers its Git-connected Cloudflare build. The wrangler.jsonc file targets the existing wiskers-website Worker and publishes dist/ as static assets. Keep this Worker name in sync with the Cloudflare project. Do not create a second project or change the domain's DNS to release this version.
 
 Website domain: wiskers.click. The similarly spelled whiskers.click is not our domain. Preserve the existing DNS and mail records for hello@wiskers.click.
 
@@ -23,5 +24,5 @@ The new pixel cat artwork is by Mattz Art: https://xzany.itch.io/cat-2d-pixel-ar
 The project owner confirmed directly with the artist that commercial website use is permitted outside crypto. Keep the source asset in the website project, retain the artist credit in the footer, and do not distribute the sprite sheets as a standalone asset pack. There are no API keys or backend services required.
 
 References:
-https://developers.cloudflare.com/pages/get-started/direct-upload/
-https://developers.cloudflare.com/pages/configuration/custom-domains/
+https://developers.cloudflare.com/workers/static-assets/binding/
+https://developers.cloudflare.com/workers/wrangler/configuration/

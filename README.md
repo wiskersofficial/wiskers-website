@@ -12,9 +12,9 @@ Website domain: https://wiskers.click. Customer contact: hello@wiskers.click. Th
 
 ## Publishing
 
-Prepared for a static host such as Cloudflare Pages (free tier). Build command: `npm run build`. Output folder: `dist`. No runtime server or secret keys are required. A direct upload of the built dist folder also works.
+The site is built with `npm run build` into `dist/`. Cloudflare's connected repository currently runs `npx wrangler deploy` after the build. The Wrangler configuration must target the existing Worker and publish `dist/` as static assets. No runtime server or secret keys are required.
 
-GitHub can store this website source as its own repository, without uploading the vault. GitHub Pages is not the selected host because its usage rules restrict online business hosting. Configure wiskers.click with the selected hosting project and preserve the existing email DNS records when changing nameservers.
+The source is mirrored to `wiskersofficial/wiskers-website` without uploading the vault. The existing Cloudflare project serves wiskers.click. Preserve the existing domain and email DNS records.
 
 ## Content basis
 
@@ -22,7 +22,7 @@ Copy is based on Archive/Navigation/TABBY.md, Areas/Clients.md, and the Data Roo
 
 ## Asset attribution
 
-The cat is “cartoon 3D cat” by berti_buchsbaum, licensed CC BY 4.0. Public attribution and modification details appear in the website footer; the original license is retained in public/assets/license.txt. Head motion and independent eye tracking are adapted from the supplied geometry. Frame and flap are procedural.
+The interactive pixel cat is by Mattz Art. The project owner confirmed commercial website use outside crypto directly with the artist. Public attribution appears in the footer. The older 3D cat and its license are archived in `legacy-3d/` and are no longer used by the site.
 
 ## Thesis visual
 
@@ -30,4 +30,4 @@ The From reading to doing section adapts the supplied flow diagram into a respon
 
 ## Color schemes
 
-Day, Night and Twilight can be selected in the header. Selection persists locally; the initial default follows system light/dark preference. `src/themes.css` defines all semantic colors, including the scene materials. `src/palette-v1.json` holds the approved v1 palette.
+Day, Night and Twilight can be selected in the header. Selection persists locally; the initial default follows system light/dark preference. `src/palette-v1.json` holds the approved v1 palette.
