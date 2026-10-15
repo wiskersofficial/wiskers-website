@@ -22,11 +22,10 @@ const atlasPaths = {
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
-// Start the reaction with the cat's head much closer to the top edge, before
-// it can disappear above the viewport.
-const HEAD_TOP_TRIGGER = 24;
+// Let the cat reach the viewport edge before the reaction starts.
+const HEAD_TOP_TRIGGER = 0;
 const SCARE_SCROLL = 30;
-const IDLE_SCROLL_SPAN = 24;
+const IDLE_SCROLL_SPAN = 96;
 const LANDING_X = 48;
 const LANDING_INSET = -8;
 const RECOVERY_SCROLL = 190;
@@ -46,10 +45,47 @@ let queued = false;
 // Opt-in review aid; IDs remain stable when the atlas order changes.
 const showFrameCounter = import.meta.env.DEV || new URLSearchParams(location.search).get('cat-debug') === '1';
 const frameCounter = showFrameCounter ? document.createElement('div') : null;
+const frameCounterLabel = frameCounter ? document.createElement('span') : null;
+const copyFrameButton = frameCounter ? document.createElement('button') : null;
+let copyFeedbackTimer = 0;
 if (frameCounter) {
   frameCounter.className = 'cat-frame-counter';
-  frameCounter.textContent = 'Frames loading…';
+  frameCounterLabel.className = 'cat-frame-counter-label';
+  frameCounterLabel.textContent = 'Frames loading…';
+  copyFrameButton.type = 'button';
+  copyFrameButton.className = 'cat-frame-copy';
+  copyFrameButton.textContent = 'Copy';
+  copyFrameButton.setAttribute('aria-label','Copy current cat frame reference');
+  copyFrameButton.title = 'Copy frame reference';
+  frameCounter.append(frameCounterLabel,copyFrameButton);
   document.body.append(frameCounter);
+
+  copyFrameButton.addEventListener('click',async()=>{
+    const reference = frameCounter.dataset.copyText;
+    if (!reference) return;
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(reference);
+      copied = true;
+    } catch {
+      const fallback = document.createElement('textarea');
+      fallback.value = reference;
+      fallback.setAttribute('readonly','');
+      fallback.style.position = 'fixed';
+      fallback.style.opacity = '0';
+      document.body.append(fallback);
+      fallback.select();
+      try { copied = document.execCommand('copy'); } catch {}
+      fallback.remove();
+    }
+    clearTimeout(copyFeedbackTimer);
+    copyFrameButton.textContent = copied ? 'Copied' : 'Copy failed';
+    copyFrameButton.setAttribute('aria-label',copied ? 'Frame reference copied' : 'Could not copy frame reference');
+    copyFeedbackTimer = setTimeout(()=>{
+      copyFrameButton.textContent = 'Copy';
+      copyFrameButton.setAttribute('aria-label','Copy current cat frame reference');
+    },1200);
+  });
 }
 
 function validateAtlas(name, data) {
@@ -133,7 +169,10 @@ async function createLayer(name, atlas) {
 function setPose(name, pose, stableId, globalIndex) {
   if (!applyAtlasFrame(atlases,name,pose,stableId,cat,renderState)) return;
   if (frameCounter) {
-    frameCounter.textContent = `${String(globalIndex + 1).padStart(2,'0')} · ${stableId}`;
+    const frameNumber = String(globalIndex + 1).padStart(2,'0');
+    const label = `${frameNumber} · ${stableId}`;
+    frameCounterLabel.textContent = label;
+    frameCounter.dataset.copyText = label;
     frameCounter.dataset.frame = String(globalIndex + 1);
     frameCounter.dataset.pose = stableId;
   }
@@ -241,7 +280,7 @@ function updateScene() {
       resetCatToWord();
       setIdlePose(idleFrame(Math.max(0,y),atlases.idle.cellRects.length,IDLE_SCROLL_SPAN));
       scene.dataset.catScenePhase = 'perched';
-      scene.dataset.catSceneProgress = String(clamp(y/IDLE_SCROLL_SPAN).toFixed(3));
+      scene.dataset.catSceneProgress = String(((Math.max(0,y)%IDLE_SCROLL_SPAN)/IDLE_SCROLL_SPAN).toFixed(3));
     }
     return;
   }
@@ -302,7 +341,7 @@ async function initializeScene() {
     measureTrigger();
     updateScene();
   } catch (error) {
-    if (frameCounter) frameCounter.textContent = 'Cat art unavailable · page remains usable';
+    if (frameCounterLabel) frameCounterLabel.textContent = 'Cat art unavailable';
     // Leave the word clean; an unpaired or partially loaded frame is never shown.
     resetCatToWord();
     scene.dataset.catScenePhase = 'art-unavailable';
