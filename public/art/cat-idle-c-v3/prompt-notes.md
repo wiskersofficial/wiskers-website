@@ -1,0 +1,5 @@
+# Luna idle C v3 generation
+
+Generated once with the built-in image generation tool, using `public/art/cat-master-c/reference.png` as the sole identity reference. The saved generation is retained outside the repository at `/Users/lowcostjosh/.codex/generated_images/01a14124-c5dd-7820-a012-80dfde85c749/exec-f547393a-e557-4f5b-acc2-480d856cdf99.png`.
+
+Prompt: Create exactly three distinct adjacent idle frames for the canonical round playful ginger tabby in one horizontal row with generous transparent gutters. Frame 1: seated with all four white paws grounded, looking slightly upward above the viewer. Frame 2: same seated pose and gaze with a tiny breathing rise and subtle ear/eye movement. Frame 3: return to frame 1's upward-looking position. Preserve the same face, forehead and cheek stripes, blue eyes, white muzzle/chest/paws, pink inner ears, pixel density, proportions, dark pixel outlines and single curled white-tipped tail. Keep all three poses at identical source scale. Transparent background. No other action, raised paw, grooming, extra limbs, props, ground, shadow, labels or grid.

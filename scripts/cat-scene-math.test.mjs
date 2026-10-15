@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {measureCatScroll, catWorldOffset} from '../src/cat-scene-math.js';
+import {
+  FALL_SEQUENCE, FLIGHT_FRAME_COUNT, flightFrame, recoveryFrame, impactDisplacement, idleFrame,
+  measureCatScroll, catWorldOffset,
+} from '../src/cat-scene-math.js';
+import {prepareAtlasScene,applyAtlasFrame} from '../src/cat-atlas-renderer.js';
 
 // Compact layouts must keep their falling room without artificial card padding.
 const layouts = [
@@ -35,5 +39,131 @@ test('unusual layouts retain positive motion and a finite footer offset',()=>{
     const motion=measureCatScroll({tileFootDocumentY,landingScroll:800,viewportHeight:800});
     assert.ok(motion.contentSpeed>=.12 && motion.contentSpeed<=.65);
     assert.ok(Number.isFinite(catWorldOffset(2000,motion)));
+  }
+});
+
+test('interleaved pose map keeps stable IDs and the registered transition order',()=>{
+  assert.equal(FALL_SEQUENCE.length,24);
+  assert.equal(new Set(FALL_SEQUENCE.map(frame=>frame.id)).size,24);
+  assert.deepEqual(FALL_SEQUENCE.slice(0,6).map(frame=>frame.id),[
+    'fall-v1-01','fall-v1-02','fall-v1-03','fall-v1-04','twist-01','fall-v1-05',
+  ]);
+  assert.deepEqual(FALL_SEQUENCE.slice(15).map(frame=>frame.id),[
+    'fall-v1-10','land-01','land-02','fall-v1-11','land-03','land-04','land-05','land-06','fall-v1-12',
+  ]);
+  assert.equal(FLIGHT_FRAME_COUNT,15);
+});
+
+test('flight hands directly from the contact pose into the staged landing',()=>{
+  assert.equal(flightFrame(0).id,'fall-v1-02');
+  assert.equal(flightFrame(1).id,'fall-v1-09');
+  assert.equal(recoveryFrame(0).id,'fall-v1-10');
+  assert.equal(recoveryFrame(1).id,'fall-v1-12');
+});
+
+test('short idle reaches its last upward-gaze pose and impact settles to neutral',()=>{
+  assert.equal(idleFrame(0),0);
+  assert.equal(idleFrame(8),1);
+  assert.equal(idleFrame(23),2);
+  assert.equal(idleFrame(24),2);
+  assert.equal(impactDisplacement(0),0);
+  assert.equal(impactDisplacement(.14),10);
+  assert.equal(impactDisplacement(.42),-2);
+  assert.equal(impactDisplacement(1),0);
+});
+
+function deferred() {
+  let resolve;
+  let reject;
+  const promise = new Promise((yes,no)=>{resolve=yes;reject=no;});
+  return {promise,resolve,reject};
+}
+
+test('atlas scene stays gated until every decode and persistent image layer is ready',async()=>{
+  const names=['idle','fall','transition'];
+  const decodes=Object.fromEntries(names.map(name=>[name,deferred()]));
+  const layers=Object.fromEntries(names.map(name=>[name,deferred()]));
+  const created=[];
+  let revealed=false;
+  const ready=prepareAtlasScene(names.map(name=>[name,`/${name}.json`]),
+    name=>decodes[name].promise,
+    async name=>{created.push(name);await layers[name].promise;})
+    .then(atlases=>{revealed=true;return atlases;});
+
+  decodes.idle.resolve({url:'/idle.png'});
+  decodes.fall.resolve({url:'/fall.png'});
+  await Promise.resolve();
+  assert.equal(revealed,false,'waiting on the final atlas decode must keep the cat hidden');
+  assert.deepEqual(created,[],'image layers are not created from a partially decoded set');
+
+  decodes.transition.resolve({url:'/transition.png'});
+  await new Promise(setImmediate);
+  assert.deepEqual(new Set(created),new Set(names));
+  layers.idle.resolve();
+  layers.fall.resolve();
+  await new Promise(setImmediate);
+  assert.equal(revealed,false,'waiting on the final persistent SVG image must keep the cat hidden');
+  layers.transition.resolve();
+  const atlases=await ready;
+  assert.equal(revealed,true);
+  assert.deepEqual(Object.keys(atlases),names);
+});
+
+function makeLayer(name,url,events) {
+  const attrs={};
+  const classes=new Set();
+  const layer={
+    attrs,
+    image:{href:url},
+    setAttribute(key,value){attrs[key]=String(value);events.push(`${name}:${key}`);},
+    classList:{
+      toggle(token,enabled){events.push(`${name}:active:${enabled}`);if(enabled)classes.add(token);else classes.delete(token);},
+      contains(token){return classes.has(token);},
+    },
+  };
+  return layer;
+}
+
+function makeAtlas(name,url,events) {
+  const layer=makeLayer(name,url,events);
+  const clipAttrs={};
+  return {
+    cellRects:[[0,0,10,11],[20,30,12,13]],
+    viewBoxes:[[0,1,128,128],[20,31,128,128]],
+    layer,
+    clip:{setAttribute(key,value){clipAttrs[key]=String(value);events.push(`${name}:clip:${key}`);},attrs:clipAttrs},
+  };
+}
+
+test('rapid atlas reversals keep each source fixed and atomically switch its crop',()=>{
+  const events=[];
+  const atlases={
+    idle:makeAtlas('idle','/idle.png',events),
+    fall:makeAtlas('fall','/fall.png',events),
+    transition:makeAtlas('transition','/transition.png',events),
+  };
+  const cat={dataset:{}};
+  const state={currentPoseId:''};
+  const changes=[
+    ['idle',0,'idle-01'],['fall',1,'fall-v1-02'],['transition',0,'twist-01'],
+    ['fall',0,'fall-v1-01'],['transition',1,'land-02'],['idle',1,'idle-02'],
+  ];
+
+  for (const [name,pose,id] of changes) {
+    events.length=0;
+    assert.equal(applyAtlasFrame(atlases,name,pose,id,cat,state),true);
+    const target=atlases[name];
+    assert.equal(target.layer.attrs.viewBox,target.viewBoxes[pose].join(' '));
+    assert.deepEqual(target.clip.attrs,Object.fromEntries(
+      ['x','y','width','height'].map((key,index)=>[key,String(target.cellRects[pose][index])]),
+    ));
+    assert.deepEqual(Object.entries(atlases).filter(([,atlas])=>atlas.layer.classList.contains('is-active')).map(([key])=>key),[name]);
+    assert.equal(cat.dataset.pose,id);
+    assert.equal(cat.dataset.atlas,name);
+    for (const atlas of Object.values(atlases)) assert.equal(atlas.layer.image.href,
+      atlas===atlases.idle?'/idle.png':atlas===atlases.fall?'/fall.png':'/transition.png');
+    const switchIndex=events.findIndex(event=>event.endsWith(':active:true'));
+    assert.ok(events.indexOf(`${name}:viewBox`) < switchIndex,'viewBox must be ready before the active layer changes');
+    assert.ok(events.indexOf(`${name}:clip:height`) < switchIndex,'cell crop must be ready before the active layer changes');
   }
 });
