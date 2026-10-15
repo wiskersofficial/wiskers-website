@@ -12,9 +12,9 @@ Scrolling is native. Artwork moves continuously with small scroll-linked offsets
 
 ## Preview
 
-Run `npm run dev -- --port 5178` and open http://127.0.0.1:5178/.
+Run `npm run dev -- --port 5178 --configLoader runner` and open http://127.0.0.1:5178/.
 
-Run `npm run build` for production output in dist/. Both index.html and playground.html contain the redesign. The durable, byte-for-byte permanent C visual master is `public/art/cat-master-c/reference.png`; its original source and SHA-256 are recorded beside it in `public/art/cat-master-c/MASTER.txt`. Derive every future cat pose and animation from this reference, with new cat image generation limited to Luna agents. The permanent C master is `public/art/cat-master-c/reference.png`. The Luna-created grooming and falling atlases live in `public/art/cat-groom-c-v2/` and `public/art/cat-fall-c-v1/`; both use a 128 × 128 viewport, shared (64,113) foot anchor and per-frame cell clipping. Older `cat-content` atlases are archived reference material.
+Run `npm run build -- --configLoader runner` for production output in dist/. Both index.html and playground.html contain the redesign. The durable, byte-for-byte permanent C visual master is `public/art/cat-master-c/reference.png`; its original source and SHA-256 are recorded beside it in `public/art/cat-master-c/MASTER.txt`. Derive every future cat pose and animation from this reference, with new cat image generation limited to Luna agents. The permanent C master is `public/art/cat-master-c/reference.png`. The Luna-created grooming and falling atlases live in `public/art/cat-groom-c-v2/` and `public/art/cat-fall-c-v1/`; both use a 128 × 128 viewport, shared (64,113) foot anchor and per-frame cell clipping. Older `cat-content` atlases are archived reference material.
 
 ## Verification
 
@@ -54,3 +54,14 @@ The approved sequence is: perch on “content”; groom a raised paw during a sh
 During the fall, the tile and everything below it move upward at 0.36× normal scroll speed. The remaining offset is held after landing, while native page scrolling returns to its normal rate. A matching trailing spacer keeps the footer reachable without snapping or pausing. The cat uses fixed positioning only while falling and becomes an absolutely positioned child of the tile at contact. Scrolling back reverses the sequence.
 
 The scene uses the C-derived `cat-groom-c-v2` and `cat-fall-c-v1` atlases, each normalized to a 128 × 128 CSS-pixel viewport, a (64,113) foot anchor, and an approximately 78 × 85.5 visible sprite. Reduced motion leaves the seated cat on “content” and disables the fall, lower-page parallax and impact. Production remains unchanged.
+
+
+## Current revision: compact tile, frame counter and release workflow
+
+The insight tile retains its original content-driven dimensions and normal responsive padding. Falling room comes from adaptive lower-page movement beginning with the first scroll: `src/cat-scene-math.js` measures the compact tile and aims for the cat's landing near 52% of the viewport height. Content always moves upward, at 0.12–0.65 of native speed, and resumes normal speed after contact with its accumulated offset preserved. This supersedes the fixed 0.36 rate and reserved card space described in the initial scene above. The landing point is 48px from the tile's left edge and 8px below its front edge, keeping the cat clear of the copy while the tile stays compact.
+
+A temporary fixed counter shows unique frame IDs 01–08 for Groom and 09–20 for Fall. It appears automatically in the local dev server; on deployed/built pages use `?cat-debug=1`. Ordinary deployed visits do not show this development overlay. Remove the review aid when cat development is finished.
+
+The preview is now a checkout of `wiskersofficial/wiskers-website`, with existing history preserved. The user authorized pushing each completed change to `dev`, then merging validated changes into `main`. Main is connected to Cloudflare publication; do not force-push or overwrite remote changes. The redesign baseline is commit `77de2e2` on dev. Earlier notes that this folder was unversioned describe the period before this revision.
+
+Run `node --test scripts/cat-scene-math.test.mjs` for compact-layout, continuous-scroll, contact, reverse and offset checks. Check the actual browser for pose alignment, text clearance, resize and counter accuracy; passing math tests alone does not prove visual quality.

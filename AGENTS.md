@@ -11,3 +11,9 @@ The user's cat direction from 15 October 2026 applies to future work here:
 - Keep mobile scroll-driven and controls unobstructed. During the fall, move the blue tile and all following content upward more slowly than natural scrolling, then keep the resulting offset while normal scroll resumes. Never intercept scroll, pin or snap the page, reverse content movement, or pause scrolling. Reduced motion keeps the cat seated on “content” and disables the fall, parallax and impact.
 
 This folder is a local redesign preview. The existing production checkout and public website remain unchanged unless the user authorizes publication separately.
+
+## Version control direction, 15 October 2026
+
+The user explicitly authorized committing and pushing every completed website change to `dev`, then merging the checked change into `main`. `main` is connected to the public Cloudflare release workflow. Keep changes in small, traceable commits, push `dev` promptly after each finished change, and merge/push `main` after appropriate validation. Preserve remote work; do not force-push or discard unrelated changes. The active preview now has the website repository history and `origin` at `https://github.com/wiskersofficial/wiskers-website.git`.
+
+Keep the insight tile at its normal content-driven size. Create the falling room with continuous scroll motion, not extra internal card padding. The temporary cat frame counter is visible in the local dev server and available on deployed pages with `?cat-debug=1`; frame IDs are 01–08 for grooming and 09–20 for the fall atlas.

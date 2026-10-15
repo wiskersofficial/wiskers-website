@@ -1,12 +1,12 @@
 // Scroll-driven opening scene. The cat begins on “content”, then falls into
 // the blue statement tile while the lower page moves at a slower rate.
+import {measureCatScroll, catWorldOffset} from './cat-scene-math.js';
 const cat = document.querySelector('.hero-cat');
 const word = document.querySelector('.cat-word');
 const frame = cat?.querySelector('.hero-cat-frame');
 const image = cat?.querySelector('.hero-cat-image');
 const cellClip = frame?.querySelector('.hero-cat-cell-clip');
 const world = document.querySelector('.cat-scroll-world');
-const worldParts = [...document.querySelectorAll('[data-cat-world]')];
 const spacer = document.querySelector('.cat-world-spacer');
 const tile = document.querySelector('.insight-tile');
 const scene = document.querySelector('[data-cat-scene]');
@@ -21,7 +21,8 @@ const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
 const HEAD_TOP_TRIGGER = 12;
 const SCARE_SCROLL = 40;
-const WORLD_SLOW_FACTOR = .64;
+const LANDING_X = 48;
+const LANDING_INSET = -8;
 const RECOVERY_SCROLL = 48;
 const IMPACT_SCROLL = 100;
 let atlases = {};
@@ -32,7 +33,16 @@ let takeoffScroll = 0;
 let fallDistance = 560;
 let baseWordCatAnchor = null;
 let scaredAnchor = null;
+let scrollMotion = null;
 let queued = false;
+// Temporary review aid. Opt in on a built/deployed page with ?cat-debug=1.
+const showFrameCounter = import.meta.env.DEV || new URLSearchParams(location.search).get('cat-debug') === '1';
+const frameCounter = showFrameCounter ? document.createElement('div') : null;
+if (frameCounter) {
+  frameCounter.className = 'cat-frame-counter';
+  frameCounter.textContent = 'Cat frames loading…';
+  document.body.append(frameCounter);
+}
 
 function validateAtlas(name, data) {
   const viewport = data.viewport;
@@ -76,6 +86,11 @@ function setPose(name, pose) {
   image.setAttribute('height',atlas.height);
   cat.dataset.pose = String(pose);
   cat.dataset.action = name === 'groom' ? 'grooming' : name === 'fall' ? (pose < 9 ? 'falling' : pose === 9 ? 'impact' : pose === 10 ? 'crouching' : 'sitting') : 'sitting';
+  if (frameCounter) {
+    const number = (name === 'fall' ? atlases.groom.cellRects.length : 0) + pose + 1;
+    frameCounter.textContent = `Cat frame ${String(number).padStart(2,'0')} · ${name === 'groom' ? 'Groom' : 'Fall'} ${pose + 1}/${atlas.cellRects.length}`;
+    frameCounter.dataset.frame = String(number);
+  }
 }
 
 function setWorldOffset(offset) {
@@ -107,6 +122,14 @@ function measureTrigger() {
   takeoffScroll = triggerScroll + SCARE_SCROLL;
   fallDistance = innerWidth <= 650 ? 650 : 560;
   scaredAnchor = {x:baseWordCatAnchor.x,y:baseWordCatAnchor.y-triggerScroll};
+  const tileRect = tile.getBoundingClientRect();
+  scrollMotion = measureCatScroll({
+    tileFootDocumentY:tileRect.bottom + scrollY - LANDING_INSET,
+    landingScroll:takeoffScroll + fallDistance,
+    viewportHeight:innerHeight,
+  });
+  tile.style.setProperty('--cat-landing-x',`${LANDING_X}px`);
+  tile.style.setProperty('--cat-landing-inset',`${LANDING_INSET}px`);
 }
 
 function showFlyingCat(anchorX, anchorY) {
@@ -151,8 +174,7 @@ function updateScene() {
 
   const y = scrollY;
   const fallProgress = clamp((y - takeoffScroll) / fallDistance);
-  const fallScroll = clamp(y - takeoffScroll, 0, fallDistance);
-  const worldOffset = fallScroll * WORLD_SLOW_FACTOR;
+  const worldOffset = catWorldOffset(y,scrollMotion);
   setWorldOffset(worldOffset);
 
   if (y < takeoffScroll) {
@@ -177,13 +199,13 @@ function updateScene() {
     tile.style.setProperty('--cat-tile-rock','0deg');
   }
   const tileRect = tile.getBoundingClientRect();
-  const targetX = tileRect.left + EXPECTED_VIEWPORT.anchorX;
-  const targetY = tileRect.bottom - 16;
+  const targetX = tileRect.left + LANDING_X;
+  const targetY = tileRect.bottom - LANDING_INSET;
   if (fallProgress < 1) {
     resetCatParentOnly();
     const eased = smooth(fallProgress);
     const anchorX = scaredAnchor.x + (targetX-scaredAnchor.x)*eased;
-    const anchorY = scaredAnchor.y + (targetY-scaredAnchor.y)*eased;
+    const anchorY = scaredAnchor.y + (targetY-scaredAnchor.y)*fallProgress*fallProgress;
     showFlyingCat(anchorX,anchorY);
     const pose = Math.min(8,Math.floor(fallProgress*9));
     setPose('fall',pose);
