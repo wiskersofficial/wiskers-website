@@ -46,19 +46,19 @@ test('interleaved pose map keeps stable IDs and the registered transition order'
   assert.equal(FALL_SEQUENCE.length,24);
   assert.equal(new Set(FALL_SEQUENCE.map(frame=>frame.id)).size,24);
   assert.deepEqual(FALL_SEQUENCE.slice(0,6).map(frame=>frame.id),[
-    'fall-v1-01','fall-v1-02','fall-v1-03','fall-v1-04','twist-01','fall-v1-05',
+    'fall-1','fall-2','fall-3','fall-4','twist-1','fall-5',
   ]);
   assert.deepEqual(FALL_SEQUENCE.slice(15).map(frame=>frame.id),[
-    'fall-v1-10','land-01','land-02','fall-v1-11','land-03','land-04','land-05','land-06','fall-v1-12',
+    'fall-10','land-1','land-2','fall-11','land-3','land-4','land-5','land-6','fall-12',
   ]);
   assert.equal(FLIGHT_FRAME_COUNT,15);
 });
 
 test('flight hands directly from the contact pose into the staged landing',()=>{
-  assert.equal(flightFrame(0).id,'fall-v1-02');
-  assert.equal(flightFrame(1).id,'fall-v1-09');
-  assert.equal(recoveryFrame(0).id,'fall-v1-10');
-  assert.equal(recoveryFrame(1).id,'fall-v1-12');
+  assert.equal(flightFrame(0).id,'fall-2');
+  assert.equal(flightFrame(1).id,'fall-9');
+  assert.equal(recoveryFrame(0).id,'fall-10');
+  assert.equal(recoveryFrame(1).id,'fall-12');
 });
 
 test('short forward-gaze idle reaches its last pose and impact settles to neutral',()=>{
@@ -145,8 +145,8 @@ test('rapid atlas reversals keep each source fixed and atomically switch its cro
   const cat={dataset:{}};
   const state={currentPoseId:''};
   const changes=[
-    ['idle',0,'idle-01'],['fall',1,'fall-v1-02'],['transition',0,'twist-01'],
-    ['fall',0,'fall-v1-01'],['transition',1,'land-02'],['idle',1,'idle-02'],
+    ['idle',0,'idle-1'],['fall',1,'fall-2'],['transition',0,'twist-1'],
+    ['fall',0,'fall-1'],['transition',1,'land-2'],['idle',1,'idle-2'],
   ];
 
   for (const [name,pose,id] of changes) {
