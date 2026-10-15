@@ -17,8 +17,8 @@ const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value))
 const smooth = value => {const t = clamp(value); return t*t*(3-2*t);};
 const atlasPaths = {
   idle: '/art/cat-idle-c-v4/atlas.json',
-  fall: '/art/cat-fall-c-v1/atlas.json',
-  transition: '/art/cat-transition-c-v2/atlas.json',
+  fall: '/art/cat-fall-c-v2/atlas.json',
+  transition: '/art/cat-transition-c-v3/atlas.json',
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;

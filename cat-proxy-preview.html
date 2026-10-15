@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>base-model · cat motion studio</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#f5eee5;background:#1e2423}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}header{padding:28px 4vw 22px;border-bottom:1px solid #ffffff15;display:flex;align-items:center;justify-content:space-between;gap:20px}h1{font-size:26px;font-weight:560;letter-spacing:-.7px;margin:0 0 7px}.eyebrow{font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:#c2d5a8;margin-bottom:10px}.subtitle,#status{font-size:13px;color:#afb6ae}main{max-width:1600px;padding:26px 4vw 50px;margin:auto}.reference{padding:21px 24px;background:#f6f0e7;border-radius:14px;color:#453123;margin-bottom:24px}.reference-top{display:flex;justify-content:space-between;gap:20px;margin-bottom:8px;font-size:13px}.reference-top span{font-size:12px;color:#86725c}.reference img{display:block;width:100%;max-height:250px;object-fit:contain}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:20px}.stage{overflow:hidden;border-radius:14px;background:#f6f0e7;color:#493226}.stage-header{display:flex;justify-content:space-between;gap:15px;padding:20px 23px 0;font-size:14px}.stage-header span{font-size:12px;color:#9c8065}.viewport{width:100%;position:relative;cursor:grab}.viewport:active{cursor:grabbing}.viewport canvas{display:block;width:100%;height:auto}.pose-nav{display:flex;flex-wrap:wrap;gap:7px;padding:0 22px 22px}.pose-nav button{border:1px solid #d2c4b4;border-radius:7px;background:transparent;color:#6f5741;font-size:12px;padding:9px 13px}.pose-nav button[aria-pressed=true]{background:#394437;border-color:#394437;color:#fff}.panel{border:1px solid #ffffff16;border-radius:14px;padding:23px 20px;align-self:start}.panel h2{font-size:14px;font-weight:550;margin:0 0 24px}.panel p{font-size:12px;line-height:1.6;color:#a9b4aa}.control{display:block;margin:0 0 22px;font-size:12px;color:#c2cbc0}.control-row{display:flex;align-items:center;gap:12px;margin-top:9px}.control-row input{width:100%;accent-color:#c1d5a9}.control-row output{min-width:30px;text-align:right;font-size:11px;color:#8b9a88}.toggle{font-size:12px;display:flex;gap:9px;margin-bottom:24px;color:#c2cbc0}.leg-controls{grid-column:1/-1;margin:0 0 16px;border:1px solid #ffffff18;border-radius:8px;padding:11px}.leg-controls summary{font-size:12px;color:#c2d5a8;cursor:pointer}.leg-controls p{margin:7px 0 12px}.leg-controls fieldset{border:0;border-top:1px solid #ffffff16;padding:10px 0 0;margin:10px 0 0}.leg-controls legend{font-size:11px;color:#e4e8df;padding:0 5px 0 0}.leg-controls .control{margin:8px 0 13px;font-size:11px}.leg-controls .control-row{gap:8px;margin-top:5px}.action{display:block;width:100%;padding:11px 12px;border:1px solid #ffffff25;background:#ffffff08;border-radius:7px;color:#e0e6db;font-size:12px;margin-top:9px}.action.primary{background:#c2d5a8;color:#26331f;border-color:#c2d5a8}#anchor{margin:20px 0 0;border-top:1px solid #ffffff18;padding-top:18px}#anchor h3{font-size:12px;font-weight:500;color:#c2d5a8;margin:0 0 6px}#anchor canvas{width:100%;height:auto;image-rendering:pixelated}.board{margin-top:24px}.board h2{font-size:16px;font-weight:500;margin-bottom:14px}.board img{width:100%;display:block;border-radius:14px}.disclaimer{color:#98a594;font-size:12px;line-height:1.6;max-width:800px;margin-top:20px}@media(max-width:850px){header{display:block}#status{margin-top:17px}.workspace{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}.panel h2,.panel p,#anchor{grid-column:1/-1}.reference-top{display:block}.reference-top span{display:block;margin-top:5px}.stage-header span{display:none}}
+  </style>
+  <style>
+    .workspace{grid-template-columns:minmax(0,1fr) 350px}
+    .panel{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;overscroll-behavior:contain;padding:16px}
+    .panel h2{margin-bottom:12px}
+    .global-controls{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+    .global-controls .control{margin:0 0 10px}
+    .global-controls .control-row{gap:7px;margin-top:4px}
+    .leg-controls{margin-bottom:10px;padding:9px}
+    .leg-controls p{margin:5px 0 8px}
+    .leg-controls fieldset{display:grid;grid-template-columns:1fr 1fr;gap:0 8px;margin-top:7px;padding-top:7px}
+    .leg-controls legend{grid-column:1/-1}
+    .leg-controls .control{margin:6px 0 8px}
+    .leg-controls .control-row{gap:5px;margin-top:4px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .actions .action{margin:0;padding:9px 7px;font-size:11px}
+    .panel .toggle{margin:3px 0 10px}
+    @media(max-width:850px){.workspace{grid-template-columns:1fr}.panel{position:static;max-height:none;overflow:visible}.global-controls{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.global-controls{grid-template-columns:1fr}.leg-controls fieldset{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <header><div><div class="eyebrow">Wiskers · motion studio</div><h1>base-model</h1><div class="subtitle">The approved character, translated into an editable 3D motion study.</div></div><div id="status">Loading approved reference…</div></header>
+  <main>
+    <section class="reference"><div class="reference-top"><strong>Approved base-model · unchanged</strong><span>All five approved views, including the corrected back. Source pixels preserved.</span></div><img src="/art/cat-motion-proxy-v1/base-model.png" alt="Unchanged approved base-model: front, three-quarter, profile, back and belly-up"></section>
+    <div class="workspace">
+      <section class="stage"><div class="stage-header"><strong id="pose-label">Front</strong><span>Drag to orbit · scroll to zoom</span></div><div id="viewport" class="viewport"></div><nav class="pose-nav" aria-label="Model views"><button data-pose="front">Front</button><button data-pose="threeQuarter">¾</button><button data-pose="profile">Profile</button><button data-pose="back">Back</button><button data-pose="belly">Belly-up</button><button data-pose="fall3">fall-3</button></nav></section>
+      <aside class="panel"><h2>Motion controls</h2><div class="global-controls">
+        <label class="control">Turn<div class="control-row"><input data-control="yaw" type="range" min="-180" max="180" value="0"><output>0</output></div></label>
+        <label class="control">Lean<div class="control-row"><input data-control="roll" type="range" min="-80" max="80" value="0"><output>0</output></div></label>
+        <label class="control">Tip<div class="control-row"><input data-control="pitch" type="range" min="-75" max="75" value="0"><output>0</output></div></label>
+        <label class="control">Tuck<div class="control-row"><input data-control="tuck" type="range" min="0" max="1" step=".01" value="0"><output>0</output></div></label>
+        <label class="control">Head<div class="control-row"><input data-control="head" type="range" min="-35" max="35" value="0"><output>0</output></div></label>
+        <label class="control">Tail<div class="control-row"><input data-control="tail" type="range" min="-.6" max=".6" step=".01" value="0"><output>0</output></div></label></div>
+        <details class="leg-controls" open><summary>Move each leg</summary><p>Swing moves the leg at its shoulder. Bend flexes its elbow or knee.</p>
+          <fieldset><legend>Cat’s front left</legend><label class="control">Swing<div class="control-row"><input data-leg-control="foreLeft" data-joint="swing" type="range" min="-65" max="65" value="0"><output>0</output></div></label><label class="control">Bend<div class="control-row"><input data-leg-control="foreLeft" data-joint="bend" type="range" min="0" max="120" value="0"><output>0</output></div></label></fieldset>
+          <fieldset><legend>Cat’s front right</legend><label class="control">Swing<div class="control-row"><input data-leg-control="foreRight" data-joint="swing" type="range" min="-65" max="65" value="0"><output>0</output></div></label><label class="control">Bend<div class="control-row"><input data-leg-control="foreRight" data-joint="bend" type="range" min="0" max="120" value="0"><output>0</output></div></label></fieldset>
+          <fieldset><legend>Cat’s hind left</legend><label class="control">Swing<div class="control-row"><input data-leg-control="hindLeft" data-joint="swing" type="range" min="-65" max="65" value="0"><output>0</output></div></label><label class="control">Bend<div class="control-row"><input data-leg-control="hindLeft" data-joint="bend" type="range" min="0" max="120" value="0"><output>0</output></div></label></fieldset>
+          <fieldset><legend>Cat’s hind right</legend><label class="control">Swing<div class="control-row"><input data-leg-control="hindRight" data-joint="swing" type="range" min="-65" max="65" value="0"><output>0</output></div></label><label class="control">Bend<div class="control-row"><input data-leg-control="hindRight" data-joint="bend" type="range" min="0" max="120" value="0"><output>0</output></div></label></fieldset>
+        </details>
+        <label class="toggle"><input id="wireframe" type="checkbox"> Show mesh</label><div class="actions"><button id="reset" class="action">Reset pose</button><button id="export-pose" class="action">Save pose</button><button id="export-glb" class="action">Download 3D model</button><button id="download-board" class="action primary">Download review sheet</button><button id="download-sequence-guide" class="action">Download movement guide</button></div>
+        <p>Fixed camera, shared scale and four connected legs. The cat’s travel across the page is a separate control.</p>
+        <div id="anchor" hidden><h3>Exact approved fall-3</h3><p>Compare silhouette and paw placement. This drawing remains untouched.</p><canvas id="anchor-image"></canvas></div>
+      </aside>
+    </div>
+    <section class="board"><h2>Model fit · six views</h2><img id="model-board" alt="Six-view review sheet of the editable 3D base-model"></section>
+    <p class="disclaimer">This is a motion and volume study derived from the approved artwork. Its mesh and camera fit require review before generating animation frames. The original Style C master, approved base-model sheet and locked fall-3 drawing remain the visual standards.</p>
+  </main>
+  <script type="module" src="/src/cat-proxy-guide.js"></script>
+</body>
+</html>
