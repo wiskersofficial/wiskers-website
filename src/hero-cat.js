@@ -1,11 +1,13 @@
-// Scroll-driven opening scene. The cat begins on “content”, then falls into
-// the blue statement tile while the lower page moves at a slower rate.
-import {measureCatScroll, catWorldOffset} from './cat-scene-math.js';
+// Scroll-driven opening scene. Each atlas owns a persistent, predecoded SVG
+// layer so a frame's crop and viewBox can never be paired with another sheet.
+import {
+  FALL_SEQUENCE, flightFrame, recoveryFrame, impactDisplacement, idleFrame,
+  measureCatScroll, catWorldOffset,
+} from './cat-scene-math.js';
+import {prepareAtlasScene,applyAtlasFrame} from './cat-atlas-renderer.js';
+
 const cat = document.querySelector('.hero-cat');
 const word = document.querySelector('.cat-word');
-const frame = cat?.querySelector('.hero-cat-frame');
-const image = cat?.querySelector('.hero-cat-image');
-const cellClip = frame?.querySelector('.hero-cat-cell-clip');
 const world = document.querySelector('.cat-scroll-world');
 const spacer = document.querySelector('.cat-world-spacer');
 const tile = document.querySelector('.insight-tile');
@@ -14,20 +16,23 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
 const smooth = value => {const t = clamp(value); return t*t*(3-2*t);};
 const atlasPaths = {
-  groom: '/art/cat-groom-c-v2/atlas.json',
+  idle: '/art/cat-idle-c-v3/atlas.json',
   fall: '/art/cat-fall-c-v1/atlas.json',
+  transition: '/art/cat-transition-c-v2/atlas.json',
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
-const HEAD_TOP_TRIGGER = 12;
-const SCARE_SCROLL = 40;
+const HEAD_TOP_TRIGGER = 72;
+const SCARE_SCROLL = 30;
+const IDLE_SCROLL_SPAN = 24;
 const LANDING_X = 48;
 const LANDING_INSET = -8;
-const RECOVERY_SCROLL = 48;
-const IMPACT_SCROLL = 100;
+const RECOVERY_SCROLL = 190;
+const IMPACT_SCROLL = 240;
+const IDLE_IDS = ['idle-01','idle-02','idle-03'];
+const FALL_GLOBAL_START = IDLE_IDS.length;
 let atlases = {};
-let displayedAtlas = '';
-let displayedPose = -1;
+const renderState = {currentPoseId:''};
 let triggerScroll = 0;
 let takeoffScroll = 0;
 let fallDistance = 560;
@@ -35,7 +40,8 @@ let baseWordCatAnchor = null;
 let scaredAnchor = null;
 let scrollMotion = null;
 let queued = false;
-// Temporary review aid. Opt in on a built/deployed page with ?cat-debug=1.
+
+// Opt-in review aid; IDs remain stable when the atlas order changes.
 const showFrameCounter = import.meta.env.DEV || new URLSearchParams(location.search).get('cat-debug') === '1';
 const frameCounter = showFrameCounter ? document.createElement('div') : null;
 if (frameCounter) {
@@ -49,8 +55,21 @@ function validateAtlas(name, data) {
   if (!viewport || Object.keys(EXPECTED_VIEWPORT).some(key => viewport[key] !== EXPECTED_VIEWPORT[key])) {
     throw new Error(`${name} cat atlas does not use the shared 128px viewport and foot anchor`);
   }
-  if (!Array.isArray(data.cellRects) || !Array.isArray(data.viewBoxes) || data.cellRects.length !== data.viewBoxes.length) {
+  if (!Number.isFinite(data.width) || !Number.isFinite(data.height) || !data.url ||
+      !Array.isArray(data.cellRects) || !Array.isArray(data.viewBoxes) ||
+      data.cellRects.length !== data.viewBoxes.length || !data.cellRects.length) {
     throw new Error(`${name} cat atlas has incomplete frame geometry`);
+  }
+  for (let i=0;i<data.cellRects.length;i++) {
+    const rect = data.cellRects[i];
+    const box = data.viewBoxes[i];
+    if (rect.length !== 4 || box.length !== 4 ||
+        rect.some(value => !Number.isFinite(value)) || box.some(value => !Number.isFinite(value)) ||
+        rect[0] < 0 || rect[1] < 0 || rect[2] <= 0 || rect[3] <= 0 ||
+        rect[0] + rect[2] > data.width || rect[1] + rect[3] > data.height ||
+        box[2] <= 0 || box[3] <= 0) {
+      throw new Error(`${name} cat atlas frame ${i + 1} has invalid crop geometry`);
+    }
   }
   return data;
 }
@@ -59,44 +78,87 @@ async function loadAtlas(name, path) {
   const response = await fetch(path);
   if (!response.ok) throw new Error(`${name} cat atlas is not ready`);
   const data = validateAtlas(name, await response.json());
-  await new Promise((resolve, reject) => {
-    const bitmap = new Image();
-    bitmap.onload = resolve;
-    bitmap.onerror = () => reject(new Error(`${name} cat image could not load`));
-    bitmap.src = data.url;
+  const decoded = new Image();
+  decoded.src = data.url;
+  if (typeof decoded.decode === 'function') await decoded.decode();
+  else await new Promise((resolve,reject)=>{
+    decoded.onload=resolve;
+    decoded.onerror=()=>reject(new Error(`${name} cat image could not load`));
   });
+  if (decoded.naturalWidth !== data.width || decoded.naturalHeight !== data.height) {
+    throw new Error(`${name} cat atlas dimensions do not match its image`);
+  }
+  data.decodedImage = decoded;
   return data;
 }
 
-function setPose(name, pose) {
-  const atlas = atlases[name];
-  if (!atlas || !cat || !image || !frame || !cellClip) return;
-  pose = clamp(pose, 0, atlas.cellRects.length - 1);
-  if (displayedAtlas === name && displayedPose === pose) return;
-  displayedAtlas = name;
-  displayedPose = pose;
-  const [x,y,width,height] = atlas.cellRects[pose];
-  cellClip.setAttribute('x',x);
-  cellClip.setAttribute('y',y);
-  cellClip.setAttribute('width',width);
-  cellClip.setAttribute('height',height);
-  frame.setAttribute('viewBox',atlas.viewBoxes[pose].join(' '));
+async function createLayer(name, atlas) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns,'svg');
+  const clip = document.createElementNS(ns,'clipPath');
+  const rect = document.createElementNS(ns,'rect');
+  const image = document.createElementNS(ns,'image');
+  const clipId = `hero-cat-${name}-cell`;
+  svg.classList.add('hero-cat-frame','hero-cat-atlas-layer');
+  svg.setAttribute('aria-hidden','true');
+  svg.setAttribute('preserveAspectRatio','none');
+  svg.setAttribute('viewBox','0 0 128 128');
+  svg.dataset.atlas = name;
+  clip.setAttribute('id',clipId);
+  clip.setAttribute('clipPathUnits','userSpaceOnUse');
+  rect.classList.add('hero-cat-cell-clip');
+  clip.append(rect);
+  const defs = document.createElementNS(ns,'defs');
+  defs.append(clip);
   image.setAttribute('href',atlas.url);
-  image.setAttribute('width',atlas.width);
-  image.setAttribute('height',atlas.height);
-  cat.dataset.pose = String(pose);
-  cat.dataset.action = name === 'groom' ? 'grooming' : name === 'fall' ? (pose < 9 ? 'falling' : pose === 9 ? 'impact' : pose === 10 ? 'crouching' : 'sitting') : 'sitting';
+  image.setAttribute('x','0');
+  image.setAttribute('y','0');
+  image.setAttribute('width',String(atlas.width));
+  image.setAttribute('height',String(atlas.height));
+  image.setAttribute('clip-path',`url(#${clipId})`);
+  svg.append(defs,image);
+  const ready = new Promise((resolve,reject)=>{
+    const timeout = setTimeout(()=>reject(new Error(`${name} SVG image timed out`)),15000);
+    image.addEventListener('load',()=>{clearTimeout(timeout);resolve();},{once:true});
+    image.addEventListener('error',()=>{clearTimeout(timeout);reject(new Error(`${name} SVG image failed to load`));},{once:true});
+  });
+  cat.append(svg);
+  atlas.layer = svg;
+  atlas.clip = rect;
+  await ready;
+}
+
+function setPose(name, pose, stableId, globalIndex) {
+  if (!applyAtlasFrame(atlases,name,pose,stableId,cat,renderState)) return;
   if (frameCounter) {
-    const number = (name === 'fall' ? atlases.groom.cellRects.length : 0) + pose + 1;
-    frameCounter.textContent = `Cat frame ${String(number).padStart(2,'0')} · ${name === 'groom' ? 'Groom' : 'Fall'} ${pose + 1}/${atlas.cellRects.length}`;
-    frameCounter.dataset.frame = String(number);
+    frameCounter.textContent = `Cat frame ${String(globalIndex + 1).padStart(2,'0')} · ${stableId}`;
+    frameCounter.dataset.frame = String(globalIndex + 1);
+    frameCounter.dataset.pose = stableId;
   }
+}
+
+function setIdlePose(pose) {
+  const count = atlases.idle?.cellRects.length ?? IDLE_IDS.length;
+  const index = clamp(pose,0,count-1);
+  setPose('idle',index,IDLE_IDS[index] ?? `idle-${String(index+1).padStart(2,'0')}`,index);
+}
+
+function setFallPose(frame) {
+  const atlas = atlases[frame.atlas];
+  const index = FALL_SEQUENCE.indexOf(frame);
+  setPose(frame.atlas,frame.pose,frame.id,FALL_GLOBAL_START + index);
 }
 
 function setWorldOffset(offset) {
   const bounded = Math.max(0,offset);
   scene?.style.setProperty('--cat-world-offset',`${bounded}px`);
   if (spacer) spacer.style.height = `${bounded}px`;
+}
+
+function clearImpact() {
+  tile?.classList.remove('cat-impacting');
+  tile?.style.removeProperty('--cat-tile-rock');
+  tile?.style.removeProperty('--cat-tile-sink');
 }
 
 function resetCatToWord() {
@@ -106,9 +168,7 @@ function resetCatToWord() {
   cat.style.removeProperty('left');
   cat.style.removeProperty('top');
   cat.style.removeProperty('bottom');
-  tile?.classList.remove('cat-impacting');
-  tile?.style.removeProperty('--cat-tile-rock');
-  // The measured word anchor remains stable through reverse scrolling.
+  clearImpact();
 }
 
 function measureTrigger() {
@@ -136,8 +196,7 @@ function showFlyingCat(anchorX, anchorY) {
   if (!cat || !word) return;
   if (cat.parentElement !== word) word.append(cat);
   cat.classList.add('is-flying');
-  cat.classList.remove('is-scared');
-  cat.classList.remove('is-landed');
+  cat.classList.remove('is-scared','is-landed');
   cat.style.left = `${anchorX - EXPECTED_VIEWPORT.anchorX}px`;
   cat.style.top = `${anchorY - EXPECTED_VIEWPORT.anchorY}px`;
 }
@@ -145,7 +204,7 @@ function showFlyingCat(anchorX, anchorY) {
 function landCat() {
   if (!cat || !tile) return;
   if (cat.parentElement !== tile) tile.append(cat);
-  cat.classList.remove('is-flying');
+  cat.classList.remove('is-flying','is-scared');
   cat.classList.add('is-landed');
   cat.style.removeProperty('left');
   cat.style.removeProperty('top');
@@ -154,82 +213,65 @@ function landCat() {
 
 function updateScene() {
   queued = false;
-  if (!cat || !word || !world || !tile || !scene || !Object.keys(atlases).length) return;
+  if (!cat || !word || !world || !tile || !scene || !atlases.idle || !atlases.fall || !atlases.transition) return;
 
   if (reducedMotion.matches) {
     resetCatToWord();
     setWorldOffset(0);
-    setPose('groom',0);
+    setIdlePose(0);
     scene.dataset.catScenePhase = 'reduced-motion-static';
-    return;
-  }
-
-  if (!atlases.fall && scrollY >= takeoffScroll) {
-    resetCatToWord();
-    setWorldOffset(0);
-    setPose('groom',0);
-    scene.dataset.catScenePhase = 'perched-art-unavailable';
     return;
   }
 
   const y = scrollY;
   const fallProgress = clamp((y - takeoffScroll) / fallDistance);
-  const worldOffset = catWorldOffset(y,scrollMotion);
-  setWorldOffset(worldOffset);
+  setWorldOffset(catWorldOffset(y,scrollMotion));
 
   if (y < takeoffScroll) {
-    const moved = Math.max(0,y);
+    clearImpact();
     if (y >= triggerScroll) {
       showFlyingCat(scaredAnchor.x,scaredAnchor.y);
       cat.classList.add('is-scared');
-      setPose('fall',0);
+      setFallPose(FALL_SEQUENCE[0]);
+      scene.dataset.catScenePhase = 'scared';
+      scene.dataset.catSceneProgress = String(clamp((y-triggerScroll)/SCARE_SCROLL).toFixed(3));
     } else {
       resetCatToWord();
-      const groomingPose = Math.floor(clamp(moved / 18, 0, 7));
-      if (moved < 3) setPose('groom',0);
-      else setPose('groom',groomingPose);
+      setIdlePose(idleFrame(Math.max(0,y),atlases.idle.cellRects.length,IDLE_SCROLL_SPAN));
+      scene.dataset.catScenePhase = 'perched';
+      scene.dataset.catSceneProgress = String(clamp(y/IDLE_SCROLL_SPAN).toFixed(3));
     }
-    scene.dataset.catScenePhase = y < triggerScroll ? 'perched' : 'scared';
-    scene.dataset.catSceneProgress = String(clamp((y-triggerScroll)/SCARE_SCROLL).toFixed(3));
     return;
   }
 
   if (fallProgress < 1) {
-    tile.classList.remove('cat-impacting');
-    tile.style.setProperty('--cat-tile-rock','0deg');
-  }
-  const tileRect = tile.getBoundingClientRect();
-  const targetX = tileRect.left + LANDING_X;
-  const targetY = tileRect.bottom - LANDING_INSET;
-  if (fallProgress < 1) {
-    resetCatParentOnly();
+    clearImpact();
+    const tileRect = tile.getBoundingClientRect();
+    const targetX = tileRect.left + LANDING_X;
+    const targetY = tileRect.bottom - LANDING_INSET;
     const eased = smooth(fallProgress);
     const anchorX = scaredAnchor.x + (targetX-scaredAnchor.x)*eased;
     const anchorY = scaredAnchor.y + (targetY-scaredAnchor.y)*fallProgress*fallProgress;
     showFlyingCat(anchorX,anchorY);
-    const pose = Math.min(8,Math.floor(fallProgress*9));
-    setPose('fall',pose);
+    setFallPose(flightFrame(fallProgress));
     scene.dataset.catScenePhase = 'falling';
     scene.dataset.catSceneProgress = String(fallProgress.toFixed(3));
     return;
   }
 
-  landCat();
+  // Clear tile transform before reading its box. That keeps reverse contact and
+  // resize measurements independent from the previous impact frame.
+  clearImpact();
   const recovery = Math.max(0,y-(takeoffScroll+fallDistance));
-  const landedPose = recovery < 1 ? 9 : recovery < RECOVERY_SCROLL*.38 ? 10 : 11;
-  setPose('fall',landedPose);
-  const impact = 1-smooth(recovery/IMPACT_SCROLL);
+  landCat();
+  setFallPose(recoveryFrame(recovery/RECOVERY_SCROLL));
+  const impactProgress = clamp(recovery/IMPACT_SCROLL);
+  const impact = 1-smooth(impactProgress);
   tile.classList.add('cat-impacting');
   tile.style.setProperty('--cat-tile-rock',`${-2.2*impact}deg`);
-  scene.dataset.catScenePhase = recovery < RECOVERY_SCROLL*.38 ? 'impact-crouch' : 'landed';
+  tile.style.setProperty('--cat-tile-sink',`${impactDisplacement(impactProgress)}px`);
+  scene.dataset.catScenePhase = recovery < RECOVERY_SCROLL ? 'impact-recovery' : 'landed';
   scene.dataset.catSceneProgress = String(clamp(recovery/RECOVERY_SCROLL).toFixed(3));
-}
-
-function resetCatParentOnly() {
-  if (!cat || !word) return;
-  if (cat.parentElement !== word) word.append(cat);
-  cat.classList.remove('is-landed');
-  cat.classList.remove('is-scared');
 }
 
 function requestUpdate() {if(!queued){queued=true;requestAnimationFrame(updateScene);}}
@@ -243,19 +285,26 @@ addEventListener('resize',()=>{
 });
 reducedMotion.addEventListener('change',requestUpdate);
 
-if (cat && word && frame && image && cellClip && world && tile) {
-  loadAtlas('groom',atlasPaths.groom).then(groom=>{
-    atlases.groom=groom;
-    cat.hidden=false;
-    setPose('groom',0);
-    measureTrigger();
-    updateScene();
-    loadAtlas('fall',atlasPaths.fall).then(fall=>{
-      if (Object.keys(EXPECTED_VIEWPORT).some(key=>fall.viewport[key]!==groom.viewport[key])) {
+async function initializeScene() {
+  if (!cat || !word || !world || !tile || !scene) return;
+  try {
+    // No cat appears until every sheet is decoded and every atlas layer exists.
+    atlases = await prepareAtlasScene(Object.entries(atlasPaths),loadAtlas,createLayer);
+    for (const [name,atlas] of Object.entries(atlases)) {
+      if (name !== 'idle' && Object.keys(EXPECTED_VIEWPORT).some(key=>atlas.viewport[key]!==atlases.idle.viewport[key])) {
         throw new Error('Cat atlases do not share a stable display anchor');
       }
-      atlases.fall=fall;
-      requestUpdate();
-    }).catch(()=>{/* Leave the seated cat visible if the falling sequence is unavailable. */});
-  }).catch(()=>{/* Keep the page usable if the base character asset is unavailable. */});
+    }
+    setIdlePose(0);
+    cat.hidden = false;
+    measureTrigger();
+    updateScene();
+  } catch (error) {
+    if (frameCounter) frameCounter.textContent = 'Cat art unavailable · page remains usable';
+    // Leave the word clean; an unpaired or partially loaded frame is never shown.
+    resetCatToWord();
+    scene.dataset.catScenePhase = 'art-unavailable';
+  }
 }
+
+initializeScene();
