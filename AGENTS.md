@@ -1,0 +1,13 @@
+# Wiskers website preview
+
+The user's cat direction from 15 October 2026 applies to future work here:
+
+- The user decides the cat's path and actions. Implement only the beats they describe; do not restore old animation plans or invent new scenes.
+- The current agreed cat scene starts seated on “content”, grooms a raised paw during a small scroll, then reacts as the cat approaches the top of the screen, falls back-first, rights itself in midair, and lands in the lower area of the blue “Insight takes input” tile. The tile rocks slightly counterclockwise at impact and settles. The cat stays attached inside the tile afterward. Do not add other cat actions or scenes.
+- `public/art/cat-master-c/reference.png` is the durable, byte-for-byte copy of the user's permanent C visual master for every cat pose and animation. Derive every newly generated cat atlas from it, preserving the ginger tabby, blue eyes whenever open, white markings, face and body proportions, rounded playful pixel style, and fixed rendered character size. Do not switch visual masters between poses or generations. Its source and SHA-256 are recorded in `public/art/cat-master-c/MASTER.txt`.
+- Only Luna agents may use image generation for new cat art or refinements. Reuse suitable existing C-derived art, and describe requested frames precisely. Keep the user's character and pose choices authoritative.
+- Current scene atlases are `public/art/cat-groom-c-v2/atlas.json` and `public/art/cat-fall-c-v1/atlas.json`. Their common viewport is 128 × 128 with a foot anchor at (64,113); the visible character remains approximately 78 × 85.5 CSS pixels at every breakpoint. Each frame uses its `cellRects` to clip to its source grid cell and a normalized `viewBox` to preserve the same visible size and anchor. Keep the actual visible character size consistent, not merely the wrapper size. The older `public/art/cat-content-c-v1/` and `public/art/cat-content-v1/` atlases are archived material; do not use them as a style master or delete them.
+- Inspect all frames and their transitions before integrating. New art is optional; consistency is mandatory.
+- Keep mobile scroll-driven and controls unobstructed. During the fall, move the blue tile and all following content upward more slowly than natural scrolling, then keep the resulting offset while normal scroll resumes. Never intercept scroll, pin or snap the page, reverse content movement, or pause scrolling. Reduced motion keeps the cat seated on “content” and disables the fall, parallax and impact.
+
+This folder is a local redesign preview. The existing production checkout and public website remain unchanged unless the user authorizes publication separately.

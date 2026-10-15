@@ -1,0 +1,13 @@
+Use case: stylized-concept
+Asset type: single pixel-art character sprite for a website mascot style exploration
+Primary request: Create one front-facing seated ginger tabby cat, using the first sitting pose in the provided reference atlas only as identity guidance.
+Input images: Image 1: reference atlas; use only its first sitting pose to guide cat identity and markings, not its multi-pose layout.
+Scene/backdrop: genuinely transparent background; no floor, cast shadow, backdrop, or extra elements.
+Subject: One compact, full-body seated orange/ginger tabby with recognizable forehead and cheek stripes, open friendly blue eyes, white muzzle, white chest and white paws, and a curled striped tail visible on the viewer's right. Small happy curved mouth. Cute and cheerful.
+Style/medium: Distinct chunky retro 1990s 16-bit video game sprite, with larger deliberate square pixel blocks, crisp native pixel clusters, a simple rounded cheek silhouette, roughly 12 colors, and a clean bold warm-brown outline. More cartoony, cute, and happy than the reference, while still a compact cat rather than a giant-headed baby. Pixel art only.
+Composition/framing: Single character centered on a square canvas, front-facing seated view; full body occupies about 75% of canvas height, feet baseline at about 88%.
+Lighting/mood: Bright, friendly, happy.
+Color palette: Ginger and orange fur, darker warm-brown stripes and outline, cream-white muzzle/chest/paws, clear blue eyes, restrained palette of roughly 12 colors.
+Materials/textures: Flat clustered pixel shading with hard pixel edges.
+Constraints: Exactly one cat and one pose. Open blue eyes. Preserve the ginger tabby identity cues and specified white markings. Transparent alpha.
+Avoid: Atlas, spritesheet, multiple poses, additional characters, costumes, props, red fringe, antialiasing, vector art, smooth painting, 3D, text, labels, watermarks, floor, shadow.
