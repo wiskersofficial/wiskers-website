@@ -1,0 +1,21 @@
+{
+  "url": "/art/cat-idle-c-v4/cat-idle-c-v4-final.png",
+  "width": 2159,
+  "height": 728,
+  "viewport": {
+    "width": 128,
+    "height": 128,
+    "anchorX": 64,
+    "anchorY": 113
+  },
+  "cellRects": [
+    [0, 0, 720, 728],
+    [720, 0, 719, 728],
+    [1439, 0, 720, 728]
+  ],
+  "viewBoxes": [
+    [15, -164, 838, 878],
+    [696, -164, 838, 878],
+    [1370.5, -164, 838, 878]
+  ]
+}

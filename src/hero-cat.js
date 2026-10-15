@@ -16,13 +16,15 @@ const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
 const smooth = value => {const t = clamp(value); return t*t*(3-2*t);};
 const atlasPaths = {
-  idle: '/art/cat-idle-c-v3/atlas.json',
+  idle: '/art/cat-idle-c-v4/atlas.json',
   fall: '/art/cat-fall-c-v1/atlas.json',
   transition: '/art/cat-transition-c-v2/atlas.json',
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
-const HEAD_TOP_TRIGGER = 72;
+// Start the reaction with the cat's head much closer to the top edge, before
+// it can disappear above the viewport.
+const HEAD_TOP_TRIGGER = 24;
 const SCARE_SCROLL = 30;
 const IDLE_SCROLL_SPAN = 24;
 const LANDING_X = 48;
