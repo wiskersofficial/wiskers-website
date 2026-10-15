@@ -31,7 +31,7 @@ const LANDING_X = 48;
 const LANDING_INSET = -8;
 const RECOVERY_SCROLL = 190;
 const IMPACT_SCROLL = 240;
-const IDLE_IDS = ['idle-01','idle-02','idle-03'];
+const IDLE_IDS = ['idle-1','idle-2','idle-3'];
 const FALL_GLOBAL_START = IDLE_IDS.length;
 let atlases = {};
 const renderState = {currentPoseId:''};
@@ -48,7 +48,7 @@ const showFrameCounter = import.meta.env.DEV || new URLSearchParams(location.sea
 const frameCounter = showFrameCounter ? document.createElement('div') : null;
 if (frameCounter) {
   frameCounter.className = 'cat-frame-counter';
-  frameCounter.textContent = 'Cat frames loading…';
+  frameCounter.textContent = 'Frames loading…';
   document.body.append(frameCounter);
 }
 
@@ -133,7 +133,7 @@ async function createLayer(name, atlas) {
 function setPose(name, pose, stableId, globalIndex) {
   if (!applyAtlasFrame(atlases,name,pose,stableId,cat,renderState)) return;
   if (frameCounter) {
-    frameCounter.textContent = `Cat frame ${String(globalIndex + 1).padStart(2,'0')} · ${stableId}`;
+    frameCounter.textContent = `${String(globalIndex + 1).padStart(2,'0')} · ${stableId}`;
     frameCounter.dataset.frame = String(globalIndex + 1);
     frameCounter.dataset.pose = stableId;
   }
@@ -142,7 +142,7 @@ function setPose(name, pose, stableId, globalIndex) {
 function setIdlePose(pose) {
   const count = atlases.idle?.cellRects.length ?? IDLE_IDS.length;
   const index = clamp(pose,0,count-1);
-  setPose('idle',index,IDLE_IDS[index] ?? `idle-${String(index+1).padStart(2,'0')}`,index);
+  setPose('idle',index,IDLE_IDS[index] ?? `idle-${index+1}`,index);
 }
 
 function setFallPose(frame) {
