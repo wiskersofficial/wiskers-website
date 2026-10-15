@@ -20,7 +20,11 @@ Website domain: wiskers.click. The similarly spelled whiskers.click is not our d
 
 Customer contact: hello@wiskers.click.
 
-The current release is cat-free. The Wiskers-generated sprite set and review pages are preserved under artifacts/cat-animation-v1/ and are not copied to dist/. Do not move them back under public/ unless a future design explicitly reintroduces the mascot.
+The active development checkout is the wiskers-redesign folder identified in AGENTS.md and README.md. The user has reintroduced the approved Style C mascot; current cat atlases live under public/art/. The older sprite archive remains under artifacts/cat-animation-v1/.
+
+Development workflow authorized on 15 October 2026: commit each completed website change, push to dev promptly, validate it, then merge and push main for the Cloudflare release. Preserve other contributors' commits and never force-push. If branch protection requires a pull request, follow that repository workflow instead of bypassing it.
+
+The temporary cat frame counter appears in the local dev server. To inspect frames on a deployed page, add ?cat-debug=1 to its URL. Normal deployed visits hide the development counter.
 
 There are no API keys or backend services required.
 

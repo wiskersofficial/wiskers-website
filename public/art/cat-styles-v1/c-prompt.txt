@@ -1,0 +1,13 @@
+Use case: game-asset
+Asset type: a single standalone pixel-art cat character option for a website asset review
+Primary request: Create ONE front-facing seated ginger tabby cat based on the first sitting pose in Image 1. Preserve the same cat's identity and key markings while making the style a little more cartoony, cute, and happy. Use a modestly rounder/larger head, about 10–15% larger than the reference, a slightly shorter compact body and legs, and softly rounded cheeks formed from stepped pixel contours. Give the cat friendly open blue eyes with tiny highlights and a small clear contented smile. Playful and charming, while still recognizably the same cat; do not exaggerate the eyes or make it look like an infant or emoji.
+Input images: Image 1: identity and pose reference only; use the first sitting pose in the upper-left of the atlas, not the whole atlas or other poses.
+Scene/backdrop: transparent background, no floor or shadow.
+Subject: a full-body seated ginger/orange tabby, centered and facing forward, with the curled striped tail on the viewer's right; retain orange stripes and the distinctive forehead markings, blue eyes, white muzzle, white chest, and white paws from the first reference pose.
+Style/medium: cute modern indie-game pixel art; coherent chunky hard-edged pixel clusters, limited warm palette, warm brown outline; crisp pixels.
+Composition/framing: one cat only, square canvas, centered, occupying about 75% of image height, feet baseline around 88% of image height; same seated view as the reference.
+Lighting/mood: warm, friendly, contented.
+Color palette: ginger and orange tabby stripes, warm browns, white muzzle/chest/paws, clear blue eyes.
+Materials/textures: clean deliberate pixel clusters with stepped edges and consistent pixel scale.
+Constraints: exactly one complete seated cat; preserve the reference identity, face markings, and tail placement; actual transparent background.
+Avoid: atlas or sprite sheet, multiple poses, extra cats, background, floor, cast shadow, text, collar, props, antialiasing, blur, vector art, 3D, speckles, red fringe, jagged stray pixels, oversized infant-like eyes, emoji face.

@@ -1,0 +1,13 @@
+Use case: stylized-concept
+Asset type: tiny low-resolution pixel-art game character sprite, style option B for a website mascot exploration
+Primary request: Create a single front-facing seated ginger tabby cat with the same broad cat identity and orange/ginger plus white marking cues as the reference atlas. Use the reference only for identity, color, and marking guidance; disregard its detailed pixel-art rendering style.
+Input images: Image 1: continuity atlas; use only as a source for ginger tabby color and white muzzle/chest/paw markings. Do not reproduce the atlas or its detailed sprite style.
+Scene/backdrop: pure transparent background with clean alpha; no ground, floor, shadow, backdrop, or extra elements.
+Subject: One compact seated ginger tabby, centered and full-body, with a simple broad-cheek silhouette, small white muzzle, white chest and paws, a few simple dark ginger forehead/cheek stripes, and a curled striped tail on the viewer's right. Friendly happy expression with only a 2–3-pixel curved smile. Two tiny bright blue square eyes, each with at most one small dark pupil pixel; no glossy eye highlights.
+Style/medium: Extremely simple native 24x28 or 32x32 logical-pixel handheld-game sprite from a crisp 1990s game. Make the image visibly low resolution, using large uniform square pixel blocks and deliberately sparse pixel clusters; about 8 flat colors total. Bold, clean warm-brown pixel outline. Compact body with restrained head-to-body proportion. This must read as a tiny crisp game sprite, not a detailed high-resolution pixel illustration.
+Composition/framing: One front-facing seated cat, one pose, centered on a square canvas. Full figure about 75% of canvas height with feet baseline near 88%. Pixels should look like an integer-scaled small sprite with obvious chunky block sizes.
+Lighting/mood: Cheerful, warm, friendly.
+Color palette: About 8 flat colors: ginger orange, light orange, dark warm brown, cream-white, pink inner ears, bright blue, deep brown eye pixels, and optional pale shading. Minimal shading.
+Materials/textures: Flat color fills built from clean square pixel blocks only.
+Constraints: Exactly one cat, one pose. Keep the orange tabby identity and white muzzle/chest/paws, open tiny blue eyes, and right-side curled striped tail. True transparent alpha.
+Avoid: High-detail pixel illustration, finely shaded fur, many interior stripes, glossy oversized eyes or highlights, elaborate whiskers, red edge fringe, antialiasing, smooth painting, vector art, 3D, text, labels, watermark, props, costumes, floor, ground, cast shadow, spritesheet, multiple characters.

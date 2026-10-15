@@ -1,0 +1,14 @@
+Wiskers cat visual master C
+
+Canonical reference: reference.png
+Original selected source: public/art/cat-styles-v1/c-round-playful.png
+The canonical PNG is an unchanged byte-for-byte copy of that source.
+SHA-256: 0450e5277a794c72bb86eb392586d747c551f947eadd3ced2829861101215a7c
+
+The user selected C as the permanent visual master for every cat pose and
+animation. All future generated cat art and atlases must derive from this
+reference. Preserve the ginger tabby identity, blue eyes whenever open, white
+muzzle and chest markings, face and body proportions, round playful pixel-art
+style, pixel density, and rendered character size. Do not switch visual
+references between poses or generations. Only Luna agents may use image
+generation for new cat artwork.
