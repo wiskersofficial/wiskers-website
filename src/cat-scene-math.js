@@ -53,9 +53,10 @@ export function impactDisplacement(progress) {
   return -2 * (1 - smooth((t - .42) / .58));
 }
 
-export function idleFrame(scrollY, frameCount = 3, span = 24) {
+export function idleFrame(scrollY, frameCount = 3, span = 96) {
   if (frameCount <= 1) return 0;
-  return Math.min(frameCount - 1, Math.floor(clamp(scrollY / span) * frameCount));
+  const cycleProgress = (Math.max(0,scrollY) % span) / span;
+  return Math.min(frameCount - 1, Math.floor(cycleProgress * frameCount));
 }
 
 // Keep the compact tile in view at contact. Extra falling room comes from

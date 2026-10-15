@@ -61,11 +61,13 @@ test('flight hands directly from the contact pose into the staged landing',()=>{
   assert.equal(recoveryFrame(1).id,'fall-12');
 });
 
-test('short forward-gaze idle reaches its last pose and impact settles to neutral',()=>{
+test('short forward-gaze idle cycles without sticking on its last pose',()=>{
   assert.equal(idleFrame(0),0);
-  assert.equal(idleFrame(8),1);
-  assert.equal(idleFrame(23),2);
-  assert.equal(idleFrame(24),2);
+  assert.equal(idleFrame(31,3,96),0);
+  assert.equal(idleFrame(32,3,96),1);
+  assert.equal(idleFrame(64,3,96),2);
+  assert.equal(idleFrame(95,3,96),2);
+  assert.equal(idleFrame(96,3,96),0);
   assert.equal(impactDisplacement(0),0);
   assert.equal(impactDisplacement(.14),10);
   assert.equal(impactDisplacement(.42),-2);
