@@ -39,6 +39,14 @@
 - `route-jump-left-sequence-v1.png` provides six left-facing poses for the tile-to-text-wall hop only: crouch, launch, airborne, descent, contact and settle. Contact and settle play after the cat reaches the wall. This replaces the old two-frame right-facing hop without changing its scroll span.
 - Visual browser review at the narrow viewport confirmed the left-facing wall landing, selector clearance, paw/tongue frames, the compact yarn cluster, blue-first movement and reverse return to the start cluster. Production build and syntax checks passed. Desktop-size review remains pending because no desktop browser surface was available in this task; user approval of the new art and placement is still pending.
 
+## Yarn timing and viewport revision — 16 October 2026
+
+- The pile target now arrives at 65% of viewport height, moving the whole yarn interaction earlier in scroll and keeping the cat visible.
+- Blue, coral and green share one scroll position for their motion start, 24px after the pile landing. Their travel durations are `.46`, `.64` and `.82` of yarn-scene travel; the roll/tip/drop phase proportions stay `.34/.14/.52`.
+- Cat landing times use the same shared speed and scene-travel helpers as ball movement, at 84% of each duration. This preserves blue → coral → green contacts while the three balls start together.
+- The route freezes each jump's departure point so a moving yarn source cannot drag the cat's takeoff. The current preview showed the pile and all three ball contacts clearly within the viewport, and reverse scrolling returned to the pile.
+- Vite production build, JavaScript syntax checks, and `git diff --check` passed.
+
 ## Earlier pixel-atlas review history
 
 - Independent Luna review confirmed the corrected `fall-4` and `twist-2` cells each show four paws/legs and one tail, with no obvious clipping or extra limb.

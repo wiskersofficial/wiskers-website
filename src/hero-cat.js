@@ -3,6 +3,7 @@
 import {
   FALL_SEQUENCE, flightFrame, recoveryFrame, impactDisplacement, idleFrame,
   measureCatScroll, catWorldOffset, anchorArrivalScroll, routeProgress,
+  YARN_DROP_SPEEDS, YARN_START_SETTLE_SCROLL, yarnMotionTravel, yarnBallLandingScroll,
 } from './cat-scene-math.js';
 import {prepareAtlasScene,applyAtlasFrame} from './cat-atlas-renderer.js';
 
@@ -44,7 +45,6 @@ const ROUTE_GLOBAL_START = GROOM_GLOBAL_START + GROOM_POSE_IDS.length + 1;
 const ROUTE_LINE = .54;
 const HOP_MAX_SCROLL = 132;
 const GROOM_HOLD_SCROLL = 120;
-const YARN_PRECONTACT_SCROLL = 40;
 const ROUTE_POSES = ['fall-8','fall-9','twist-6','fall-8','fall-9','twist-6','fall-8','fall-9'];
 const LANDING_X = 48;
 const LANDING_INSET = -8;
@@ -63,6 +63,7 @@ let routeLandingScroll = 0;
 let routeStartScroll = 0;
 let routeStopsLocked = false;
 let routeRefreshPending = false;
+let activeFlight = null;
 let manualToggleOverride = null;
 let autoToggleActive = false;
 let queued = false;
@@ -254,18 +255,6 @@ function resetCatToWord() {
 
 function routeAnchorSpecs() {
   const ball = number => yarnScene?.querySelector(`[data-yarn="${number}"]`);
-  const ballContactScroll = number => Number(ball(number)?.dataset.catContactScroll);
-  const ballDropScroll = number => {
-    const element=ball(number);
-    const base=ballContactScroll(number);
-    if(!element || !Number.isFinite(base) || !yarnScene) return NaN;
-    const stagger=Number(element.dataset.catContactProgress)||0;
-    const duration=.46+(number-1)*.06;
-    const travel=Math.max(600,yarnScene.clientHeight-innerHeight*.22);
-    // Meet each ball once it has unspooled into the annotated lower section.
-    const dropProgress=stagger+duration*.84;
-    return base+travel*(dropProgress-stagger);
-  };
   return [
     {id:'text-wall',host:textWall,point:host=>({x:host.left+Math.min(34,host.width*.12),y:host.top}),line:()=>innerHeight*ROUTE_LINE},
     {id:'card-toggle',host:previewCard,point:host=>{
@@ -299,8 +288,8 @@ function routeAnchorSpecs() {
       const ballHalfHeight=initial[0].offsetHeight/2/host.height*1100;
       const startY=initial.reduce((sum,item)=>sum+Number(item.dataset.startY||0),0)/initial.length-ballHalfHeight;
       return {x:host.left+startX/1000*host.width,y:host.top+startY/1100*host.height+6};
-    },line:()=>innerHeight*.32},
-    ...[1,2,3].map(number=>({id:`yarn-ball-${number}`,host:ball(number),arrival:()=>ballDropScroll(number),point:host=>({x:host.left+host.width/2,y:host.top+6}),line:()=>innerHeight*.42})),
+    },line:()=>innerHeight*.65},
+    ...[1,2,3].map(number=>({id:`yarn-ball-${number}`,host:ball(number),point:host=>({x:host.left+host.width/2,y:host.top+6}),line:()=>innerHeight*.65})),
   ].filter(stop=>stop.host);
 }
 
@@ -338,13 +327,23 @@ function measureTrigger() {
 }
 
 function measureRouteStops() {
+  activeFlight=null;
   const specs=routeAnchorSpecs();
   let previousArrival=routeStartScroll;
+  let yarnCommonStart=NaN;
+  const yarnTravel=yarnMotionTravel(yarnScene?.getBoundingClientRect().height??0,innerHeight);
+  const yarnBounds=yarnScene?.getBoundingClientRect();
+  const yarnSceneStart=yarnBounds?yarnBounds.top+scrollY-innerHeight*.66:0;
   routeStops=specs.map((spec,index)=>{
     const rect=spec.host.getBoundingClientRect();
     const point=spec.point(rect);
     const authoredArrival=spec.arrival?.();
-    let arrival=Number.isFinite(authoredArrival)?Math.max(previousArrival+1,authoredArrival):anchorArrivalScroll(point.y,scrollY,spec.line(),previousArrival+1);
+    const yarnNumber=spec.id.startsWith('yarn-ball-')?Number(spec.id.slice('yarn-ball-'.length)):0;
+    const scheduledArrival=yarnNumber && Number.isFinite(yarnCommonStart)
+      ? yarnBallLandingScroll(yarnCommonStart,yarnTravel,YARN_DROP_SPEEDS[yarnNumber-1])
+      : authoredArrival;
+    let arrival=Number.isFinite(scheduledArrival)?Math.max(previousArrival+1,scheduledArrival):anchorArrivalScroll(point.y,scrollY,spec.line(),previousArrival+1);
+    if(spec.id==='yarn-pile') yarnCommonStart=Math.max(arrival+YARN_START_SETTLE_SCROLL,yarnSceneStart);
     const gap=Math.max(0,arrival-previousArrival);
     const duration=Math.min(HOP_MAX_SCROLL,gap*.72);
     const stop={...spec,arrival,departure:Math.max(previousArrival,arrival-duration),pointAt:spec.point};
@@ -357,10 +356,7 @@ function measureRouteStops() {
       scrollMap[stop.id]=Math.round(stop.arrival);
       scrollMap[`${stop.id}Departure`]=Math.round(stop.departure);
     });
-    const pileStop=routeStops.find(stop=>stop.id==='yarn-pile');
-    if(pileStop) scrollMap.yarnStartFloor=Math.round(
-      pileStop.arrival+YARN_PRECONTACT_SCROLL*2,
-    );
+    if(Number.isFinite(yarnCommonStart)) scrollMap.yarnStartFloor=Math.round(yarnCommonStart);
     [1,2,3].forEach(number=>{
       const contact=Number(yarnScene?.querySelector(`[data-yarn="${number}"]`)?.dataset.catContactScroll);
       if(Number.isFinite(contact)) scrollMap[`yarnRoll${number}`]=Math.round(contact);
@@ -536,7 +532,12 @@ function updateScene() {
     const progress=routeProgress(y,next.departure,next.arrival);
     const sourceRect=current.host.getBoundingClientRect();
     const targetRect=next.host.getBoundingClientRect();
-    const source=current.pointAt(sourceRect);
+    const flightKey=`${current.id}->${next.id}:${next.departure}:${next.arrival}`;
+    if(activeFlight?.key!==flightKey) {
+      const departureSource=current.pointAt(sourceRect);
+      activeFlight={key:flightKey,x:departureSource.x,documentY:departureSource.y+scrollY};
+    }
+    const source={x:activeFlight.x,y:activeFlight.documentY-scrollY};
     const target=next.pointAt(targetRect);
     const arc=Math.min(116,Math.max(34,Math.abs(target.x-source.x)*.18+Math.abs(target.y-source.y)*.12));
     showFlyingCat(source.x+(target.x-source.x)*progress,

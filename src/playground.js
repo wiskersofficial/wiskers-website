@@ -1,3 +1,5 @@
+import {YARN_DROP_SPEEDS, yarnMotionTravel} from './cat-scene-math.js';
+
 const panel = document.querySelector('#problem-panel');
 
 // A real button keeps this control keyboard accessible; the cat can activate
@@ -105,28 +107,24 @@ function updateMotion() {
   if (!scene) return;
   if (!layout || layout.width !== scene.clientWidth || layout.height !== scene.clientHeight) setRoutes();
   const bounds = scene.getBoundingClientRect();
-  const travel = Math.max(600,bounds.height-innerHeight*.22);
+  const travel = yarnMotionTravel(bounds.height,innerHeight);
   const sceneDocumentTop = bounds.top + scrollY;
   const sceneStart = sceneDocumentTop-innerHeight*.66;
   let yarnStartFloor=NaN;
   try {
     yarnStartFloor=Number(JSON.parse(catScene?.dataset.catScrollMap||'{}').yarnStartFloor);
   } catch {}
-  // Keep the strands still until the cat has reached the selector, groomed,
-  // and made its approach to the first yarn. Ball contacts then remain driven
-  // by these same actual motion-start milestones in the cat route.
+  // Keep the strands still until the cat has landed on the starting pile.
+  // All three then share one motion-start milestone and drop at different
+  // speeds, leaving room for the cat to visit each hanging ball in order.
   const contactStart=Number.isFinite(yarnStartFloor)?Math.max(sceneStart,yarnStartFloor):sceneStart;
   const progress = clamp((scrollY-contactStart)/travel);
   balls.forEach((ball,i) => {
-    const stagger = i*.19;
     // The cat scene reads this live document-space milestone to time contact
     // with the exact scroll point where this ball begins to move. Recompute
     // after layout/resize; no fixed page offsets or one-shot events.
-    ball.dataset.catContactProgress = String(stagger);
-    ball.dataset.catContactScroll = String(Math.round(
-      contactStart+travel*stagger,
-    ));
-    const t = reduced ? 1 : clamp((progress-stagger)/(.46+i*.06));
+    ball.dataset.catContactScroll = String(Math.round(contactStart));
+    const t = reduced ? 1 : clamp(progress/YARN_DROP_SPEEDS[i]);
     // Each ball gets a clear cause-and-effect beat: roll along the shelf,
     // tip over its front edge, then unspool vertically. The drop starts only
     // after the tip finishes, so the phases cannot visually leapfrog.

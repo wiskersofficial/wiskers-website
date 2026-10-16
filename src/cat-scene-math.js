@@ -1,5 +1,19 @@
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
 
+// All three balls share a motion start; differing durations stagger their
+// edge drops and give the cat room to land on each one in order.
+export const YARN_DROP_SPEEDS = Object.freeze([.46,.64,.82]);
+export const YARN_START_SETTLE_SCROLL = 24;
+export const YARN_LANDING_PROGRESS = .84;
+
+export function yarnMotionTravel(sceneHeight, viewportHeight) {
+  return Math.max(600,sceneHeight-viewportHeight*.22);
+}
+
+export function yarnBallLandingScroll(commonStart, travel, speed) {
+  return commonStart+travel*speed*YARN_LANDING_PROGRESS;
+}
+
 // Stable frame identity is kept separate from the atlas-local pose index.
 // Atlas-local indices remain separate from stable IDs used in the review aid.
 export const FALL_SEQUENCE = [
