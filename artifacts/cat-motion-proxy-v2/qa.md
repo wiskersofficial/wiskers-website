@@ -31,6 +31,14 @@
 - The buyer-question stop uses a dedicated paw-lick pose positioned beside the selector so the control remains usable. Yarn contact scroll values are measured from the actual scene and each ball's travel phases, rather than copied from screenshots.
 - Browser review checked the tile landing, tile-to-text-wall travel, the toggle reaction, selector placement and the final hanging-ball positions. Further visual approval of the new continuation remains with the user.
 
+## Route and pose revision — 16 October 2026
+
+- The yarn start positions now form a compact blue/coral/green cluster (desktop x coordinates 520/620/720; narrow x coordinates 250/400/550). The cat lands once on the top of that pile and stays there while the balls roll to their existing edge/drop positions. The cat then visits the three hanging balls in order. Ball motion and landing positions remain unchanged.
+- `FULL_Cat 2D Pixel Art.zip` was inspected for movement only. Its LICK strip informed the paw raise, tongue contact, cheek wipe and paw-lower beats; its JUMP strip informed anticipation, launch, airborne travel and paws-down recovery. The production art remains in the approved soft cartoon style.
+- `groom-paw-lick-sequence-v2.png` provides seven runtime poses. The generated cell that changed which forepaw was raised is intentionally omitted. The prior whole-sprite rocking animation has been removed; grooming is driven by the 120px selector hold and reverses with scroll.
+- `route-jump-left-sequence-v1.png` provides six left-facing poses for the tile-to-text-wall hop only: crouch, launch, airborne, descent, contact and settle. Contact and settle play after the cat reaches the wall. This replaces the old two-frame right-facing hop without changing its scroll span.
+- Visual browser review at the narrow viewport confirmed the left-facing wall landing, selector clearance, paw/tongue frames, the compact yarn cluster, blue-first movement and reverse return to the start cluster. Production build and syntax checks passed. Desktop-size review remains pending because no desktop browser surface was available in this task; user approval of the new art and placement is still pending.
+
 ## Earlier pixel-atlas review history
 
 - Independent Luna review confirmed the corrected `fall-4` and `twist-2` cells each show four paws/legs and one tail, with no obvious clipping or extra limb.

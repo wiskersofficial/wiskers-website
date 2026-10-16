@@ -71,7 +71,9 @@ function setRoutes() {
   layout = {
     width: scene.clientWidth, height: scene.clientHeight,
     x: narrow ? [110,430,770] : [180,500,850],
-    starts: narrow ? [250,550,850] : [520,720,920],
+    // Start as one compact blue/coral/green cluster; each ball still rolls to
+    // its original edge and drop position before the cat visits it below.
+    starts: narrow ? [250,400,550] : [520,620,720],
     startY, shelfY,
     ends: [390,650,930],
   };
@@ -81,6 +83,10 @@ function setRoutes() {
   anchors.forEach((anchor,i) => {
     anchor.setAttribute('cx',layout.starts[i]);
     anchor.setAttribute('cy',layout.shelfY);
+  });
+  balls.forEach((ball,i)=>{
+    ball.dataset.startX=String(layout.starts[i]);
+    ball.dataset.startY=String(layout.startY);
   });
   options.forEach((label,i) => {
     label.style.left = `${layout.x[i]/10}%`;

@@ -27,6 +27,7 @@ const atlasPaths = {
   fall: '/art/cat-fall-soft-v1/atlas.json',
   transition: '/art/cat-transition-soft-v1/atlas.json',
   groom: '/art/cat-groom-soft-v1/atlas.json',
+  route: '/art/cat-route-soft-v1/atlas.json',
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
@@ -36,10 +37,13 @@ const SCARE_SCROLL = 30;
 const IDLE_SCROLL_SPAN = 96;
 const IDLE_IDS = ['idle-1','idle-2'];
 const FALL_GLOBAL_START = IDLE_IDS.length;
+const GROOM_POSE_IDS = ['groom-lick-1','groom-lick-2','groom-lick-3','groom-lick-4','groom-wipe-1','groom-lower-paw','groom-lick-settle'];
+const GROOM_GLOBAL_START = FALL_GLOBAL_START + FALL_SEQUENCE.length;
+const ROUTE_JUMP_IDS = ['route-jump-left-crouch','route-jump-left-launch','route-jump-left-airborne','route-jump-left-descend','route-jump-left-contact','route-jump-left-settle'];
+const ROUTE_GLOBAL_START = GROOM_GLOBAL_START + GROOM_POSE_IDS.length + 1;
 const ROUTE_LINE = .54;
 const HOP_MAX_SCROLL = 132;
 const GROOM_HOLD_SCROLL = 120;
-const FIRST_SHELF_HOP_SCROLL = 80;
 const YARN_PRECONTACT_SCROLL = 40;
 const ROUTE_POSES = ['fall-8','fall-9','twist-6','fall-8','fall-9','twist-6','fall-8','fall-9'];
 const LANDING_X = 48;
@@ -219,12 +223,18 @@ function setActionPose(id) {
   if(frame) setFallPose(frame);
 }
 
-function setGroomPose() {
-  setPose('groom',0,'groom-lick-1',FALL_GLOBAL_START+FALL_SEQUENCE.length);
+function setGroomPose(index=0) {
+  const pose=clamp(index,0,GROOM_POSE_IDS.length-1);
+  setPose('groom',pose,GROOM_POSE_IDS[pose],GROOM_GLOBAL_START+pose);
 }
 
 function setTogglePressPose() {
-  setPose('transition',12,'toggle-paw-press',FALL_GLOBAL_START+FALL_SEQUENCE.length+1);
+  setPose('transition',12,'toggle-paw-press',GROOM_GLOBAL_START+GROOM_POSE_IDS.length);
+}
+
+function setRouteJumpPose(index) {
+  const pose=clamp(index,0,ROUTE_JUMP_IDS.length-1);
+  setPose('route',pose,ROUTE_JUMP_IDS[pose],ROUTE_GLOBAL_START+pose);
 }
 
 function setWorldOffset(offset) {
@@ -243,7 +253,6 @@ function resetCatToWord() {
 }
 
 function routeAnchorSpecs() {
-  const shelf = yarnScene?.querySelector('.yarn-shelf');
   const ball = number => yarnScene?.querySelector(`[data-yarn="${number}"]`);
   const ballContactScroll = number => Number(ball(number)?.dataset.catContactScroll);
   const ballDropScroll = number => {
@@ -283,12 +292,20 @@ function routeAnchorSpecs() {
       cat?.style.setProperty('--cat-groom-scale',String(scale));
       return {x:control.left+Math.min(100,control.width*.2),y:note.bottom+4+113*scale};
     },line:()=>innerHeight*.9},
-    ...[1,2,3].map(number=>({id:`yarn-shelf-${number}`,host:shelf,arrival:()=>ballContactScroll(number)-YARN_PRECONTACT_SCROLL,point:host=>{
-      const target=ball(number)?.getBoundingClientRect();
-      return target?{x:target.left+target.width/2,y:target.top+6}:{x:host.left+host.width*(.2+.28*(number-1)),y:host.top+innerHeight*.17};
-    },line:()=>innerHeight*.32})),
+    {id:'yarn-pile',host:yarnScene,point:host=>{
+      const initial=ballsForRoute();
+      if(!initial.length) return {x:host.left+host.width*.62,y:host.top+innerHeight*.17};
+      const startX=initial.reduce((sum,item)=>sum+Number(item.dataset.startX||0),0)/initial.length;
+      const ballHalfHeight=initial[0].offsetHeight/2/host.height*1100;
+      const startY=initial.reduce((sum,item)=>sum+Number(item.dataset.startY||0),0)/initial.length-ballHalfHeight;
+      return {x:host.left+startX/1000*host.width,y:host.top+startY/1100*host.height+6};
+    },line:()=>innerHeight*.32},
     ...[1,2,3].map(number=>({id:`yarn-ball-${number}`,host:ball(number),arrival:()=>ballDropScroll(number),point:host=>({x:host.left+host.width/2,y:host.top+6}),line:()=>innerHeight*.42})),
   ].filter(stop=>stop.host);
+}
+
+function ballsForRoute() {
+  return yarnScene?[...yarnScene.querySelectorAll('[data-yarn]')]:[];
 }
 
 function measureTrigger() {
@@ -329,9 +346,7 @@ function measureRouteStops() {
     const authoredArrival=spec.arrival?.();
     let arrival=Number.isFinite(authoredArrival)?Math.max(previousArrival+1,authoredArrival):anchorArrivalScroll(point.y,scrollY,spec.line(),previousArrival+1);
     const gap=Math.max(0,arrival-previousArrival);
-    const duration=spec.id==='yarn-shelf-1'
-      ? Math.min(FIRST_SHELF_HOP_SCROLL,gap)
-      : Math.min(HOP_MAX_SCROLL,gap*.72);
+    const duration=Math.min(HOP_MAX_SCROLL,gap*.72);
     const stop={...spec,arrival,departure:Math.max(previousArrival,arrival-duration),pointAt:spec.point};
     previousArrival=arrival;
     return stop;
@@ -342,9 +357,9 @@ function measureRouteStops() {
       scrollMap[stop.id]=Math.round(stop.arrival);
       scrollMap[`${stop.id}Departure`]=Math.round(stop.departure);
     });
-    const questionStop=routeStops.find(stop=>stop.id==='buyer-question');
-    if(questionStop) scrollMap.yarnStartFloor=Math.round(
-      questionStop.arrival+GROOM_HOLD_SCROLL+FIRST_SHELF_HOP_SCROLL+YARN_PRECONTACT_SCROLL,
+    const pileStop=routeStops.find(stop=>stop.id==='yarn-pile');
+    if(pileStop) scrollMap.yarnStartFloor=Math.round(
+      pileStop.arrival+YARN_PRECONTACT_SCROLL*2,
     );
     [1,2,3].forEach(number=>{
       const contact=Number(yarnScene?.querySelector(`[data-yarn="${number}"]`)?.dataset.catContactScroll);
@@ -410,7 +425,7 @@ function updateScene() {
     scrollCounterLabel.textContent = `scroll ${Math.round(scrollY)}px`;
     frameCounter.dataset.scrollY = String(Math.round(scrollY));
   }
-  if (!cat || !word || !world || !scene || !atlases.idle || !atlases.fall || !atlases.transition || !atlases.groom) return;
+  if (!cat || !word || !world || !scene || !atlases.idle || !atlases.fall || !atlases.transition || !atlases.groom || !atlases.route) return;
 
   if (reducedMotion.matches) {
     resetCatToWord();
@@ -526,8 +541,13 @@ function updateScene() {
     const arc=Math.min(116,Math.max(34,Math.abs(target.x-source.x)*.18+Math.abs(target.y-source.y)*.12));
     showFlyingCat(source.x+(target.x-source.x)*progress,
       source.y+(target.y-source.y)*progress-4*arc*progress*(1-progress));
-    const pose=ROUTE_POSES[(Math.max(0,currentIndex)+Math.floor(progress*2))%ROUTE_POSES.length];
-    setActionPose(pose);
+    if(current.id==='insight-tile' && next.id==='text-wall') {
+      const pose=progress<.16?0:progress<.34?1:progress<.68?2:3;
+      setRouteJumpPose(pose);
+    } else {
+      const pose=ROUTE_POSES[(Math.max(0,currentIndex)+Math.floor(progress*2))%ROUTE_POSES.length];
+      setActionPose(pose);
+    }
     scene.dataset.catScenePhase=`jumping-to-${next.id}`;
     scene.dataset.catSceneProgress=String(progress.toFixed(3));
     scene.dataset.catRouteStop=next.id;
@@ -548,11 +568,12 @@ function updateScene() {
     scene.dataset.catScenePhase='grooming';
     scene.dataset.catNeedsArt='';
     cat.dataset.groomAction='paw-lick';
-    setGroomPose();
+    const groomProgress=clamp((y-current.arrival)/GROOM_HOLD_SCROLL);
+    setGroomPose(Math.min(GROOM_POSE_IDS.length-1,Math.floor(groomProgress*GROOM_POSE_IDS.length)));
   } else {
     scene.dataset.catScenePhase=current.id.startsWith('yarn-')?'yarn-contact':'landed';
     scene.dataset.catNeedsArt='';
-    if(current.id==='text-wall') setActionPose('land-6');
+    if(current.id==='text-wall') setRouteJumpPose(y<current.arrival+12?4:5);
     else if(current.id==='card-toggle') setTogglePressPose();
     else if(current.id==='yarn-ball-3') setActionPose('land-6');
     else if(current.id.startsWith('yarn-')) setActionPose('fall-10');

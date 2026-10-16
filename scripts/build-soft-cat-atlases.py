@@ -102,6 +102,10 @@ def file_pose(name):
     return ('file', name)
 
 
+def grid_file_pose(name, index, cols, rows):
+    return ('grid-file', name, index, cols, rows)
+
+
 # Approved or reviewed poses only. The two repeated holds are intentional:
 # the scroll route has more stable IDs than unique key drawings.
 IDLE = [sheet_pose(0), sheet_pose(1)]
@@ -128,7 +132,8 @@ TRANSITION = [
     file_pose('reference-R9-pose.png'), file_pose('reference-R9-pose.png'),
     file_pose('toggle-paw-press-v1.png'),
 ]
-GROOM = [file_pose('groom-paw-lick-v1.png')]
+GROOM = [grid_file_pose('groom-paw-lick-sequence-v2.png', index, 4, 2) for index in (0, 1, 2, 3, 4, 6, 7)]
+ROUTE = [grid_file_pose('route-jump-left-sequence-v1.png', index, 3, 2) for index in range(6)]
 
 
 def load_pose(spec, cache):
@@ -136,6 +141,17 @@ def load_pose(spec, cache):
         if 'sheet' not in cache:
             cache['sheet'] = decode_png(SOURCE/'style-proof-soft-9pose-recreated-5-6.png')
         return cache['sheet'], spec[1:]
+    if spec[0] == 'grid-file':
+        name, index, cols, rows = spec[1:]
+        if name not in cache:
+            cache[name] = decode_png(SOURCE/name)
+        width,height,_pixels=cache[name]
+        cell_w,cell_h=width/cols,height/rows
+        row,col=divmod(index,cols)
+        return cache[name], (
+            round(col*cell_w),round(row*cell_h),
+            round((col+1)*cell_w),round((row+1)*cell_h),
+        )
     name = spec[1]
     if name not in cache:
         cache[name] = decode_png(SOURCE/name)
@@ -143,18 +159,45 @@ def load_pose(spec, cache):
     return cache[name], (0,0,width,height)
 
 
-def crop_bounds(width, height, pixels, region):
+def crop_bounds(width, height, pixels, region, include=None):
     rx0, ry0, rx1, ry1 = region
     min_x, min_y, max_x, max_y = rx1, ry1, rx0-1, ry0-1
     for y in range(ry0,ry1):
         row = y*width*4
         for x in range(rx0,rx1):
-            if pixels[row+x*4+3] > 8:
+            if pixels[row+x*4+3] > 8 and (include is None or y*width+x in include):
                 min_x, min_y = min(min_x,x), min(min_y,y)
                 max_x, max_y = max(max_x,x), max(max_y,y)
     if max_x < min_x:
         raise ValueError('Pose crop has no visible pixels')
     return min_x,min_y,max_x+1,max_y+1
+
+
+def dominant_alpha_component(width, height, pixels, region):
+    """Keep the cat silhouette and ignore isolated generative speckles in a cell."""
+    x0,y0,x1,y1=region
+    visited=bytearray((x1-x0)*(y1-y0))
+    cell_w=x1-x0
+    largest=[]
+    for y in range(y0,y1):
+        for x in range(x0,x1):
+            local=(y-y0)*cell_w+(x-x0)
+            if visited[local] or pixels[(y*width+x)*4+3] <= 8:
+                continue
+            visited[local]=1
+            queue=[(x,y)]
+            component=[]
+            while queue:
+                px,py=queue.pop()
+                component.append(py*width+px)
+                for ny in range(max(y0,py-1),min(y1,py+2)):
+                    for nx in range(max(x0,px-1),min(x1,px+2)):
+                        near=(ny-y0)*cell_w+(nx-x0)
+                        if not visited[near] and pixels[(ny*width+nx)*4+3] > 8:
+                            visited[near]=1
+                            queue.append((nx,ny))
+            if len(component)>len(largest): largest=component
+    return set(largest)
 
 
 def sample_rgba(width, height, pixels, x, y):
@@ -180,7 +223,8 @@ def sample_rgba(width, height, pixels, x, y):
 
 def place_pose(atlas, frame_index, spec, cache):
     (width,height,source), region = load_pose(spec,cache)
-    x0,y0,x1,y1 = crop_bounds(width,height,source,region)
+    keep=dominant_alpha_component(width,height,source,region)
+    x0,y0,x1,y1 = crop_bounds(width,height,source,region,keep)
     sw,sh = x1-x0,y1-y0
     layout = ART_LAYOUT_BY_SOURCE.get(spec[1], {}) if spec[0] == 'file' else {}
     max_art = layout.get('max_size', ART_MAX)
@@ -195,6 +239,10 @@ def place_pose(atlas, frame_index, spec, cache):
         for dx in range(dw):
             sx = x0 + (dx+0.5)/scale - 0.5
             px = sample_rgba(width,height,source,sx,sy)
+            nearest_x=min(x1-1,max(x0,round(sx)))
+            nearest_y=min(y1-1,max(y0,round(sy)))
+            if nearest_y*width+nearest_x not in keep:
+                px=b'\0\0\0\0'
             dest = ((dy0+dy)*ATLAS_W + dx0+dx)*4
             atlas[dest:dest+4] = px
     return [cell_x,cell_y,CELL,CELL], [
@@ -215,6 +263,7 @@ def build(name, specs, cache):
     image_name = {
         'idle':'idle-atlas.png','fall':'fall-atlas.png',
         'transition':'transition-atlas.png','groom':'groom-atlas.png',
+        'route':'route-atlas.png',
     }[name]
     write_png(folder/image_name,ATLAS_W,atlas_height,image)
     manifest = {
@@ -230,11 +279,15 @@ def build(name, specs, cache):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--groom-only',action='store_true',help='Build only the new grooming atlas, preserving existing atlas outputs.')
+    parser.add_argument('--route-only',action='store_true',help='Build only the post-landing route-jump atlas.')
     parser.add_argument('--transition-only',action='store_true',help='Build only the transition atlas, preserving other atlas outputs.')
     args=parser.parse_args()
     cache = {}
     if args.groom_only:
         build('groom',GROOM,cache)
+        return
+    if args.route_only:
+        build('route',ROUTE,cache)
         return
     if args.transition_only:
         build('transition',TRANSITION,cache)
@@ -243,6 +296,7 @@ def main():
     build('fall',FALL,cache)
     build('transition',TRANSITION,cache)
     build('groom',GROOM,cache)
+    build('route',ROUTE,cache)
 
 
 if __name__ == '__main__':
