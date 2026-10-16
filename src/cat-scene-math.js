@@ -7,7 +7,6 @@ export const FALL_SEQUENCE = [
   ['fall','fall-2','recoil',1],
   ['fall','fall-3','back-first',2],
   ['fall','fall-4','supine',3],
-  ['transition','twist-1','twist',0],
   ['fall','fall-5','supine',4],
   ['transition','twist-2','twist',1],
   ['transition','twist-3','twist',2],
@@ -29,7 +28,9 @@ export const FALL_SEQUENCE = [
   ['fall','fall-12','settled',11],
 ].map(([atlas,id,phase,pose]) => Object.freeze({atlas,id,phase,pose}));
 
-export const FLIGHT_FRAME_COUNT = 15;
+// One transition drawing was cut; keep the same flight duration so each
+// remaining pose gets a little more scroll time. Recovery still starts at fall-10.
+export const FLIGHT_FRAME_COUNT = 14;
 export const RECOVERY_FRAME_COUNT = FALL_SEQUENCE.length - FLIGHT_FRAME_COUNT;
 
 export function flightFrame(progress) {

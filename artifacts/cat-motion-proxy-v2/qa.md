@@ -16,6 +16,12 @@
 - The production Vite build succeeded using Vite’s runner config loader after the normal build encountered a temporary config-file permission error in `node_modules/.vite-temp`.
 - The opt-in frame overlay now shows the live page scroll offset in CSS pixels alongside the stable pose ID. Browser verification at `scrollY = 400` showed `scroll 400px` while the matching pose label remained visible.
 
+## Sequence update and ComfyUI pilot — 16 October 2026
+
+- The user cut runtime `twist-1`; no replacement frame was inserted. The action sequence is now 23 frames, counter IDs 03–25, and `twist-4` moves from frame 12 to frame 11. The 560px/650px flight span is unchanged; `FLIGHT_FRAME_COUNT` is 14 so the remaining flight poses receive the freed scroll time and recovery still starts at `fall-10`.
+- A Comfy Cloud pilot used the Qwen Image 2.1 edit workflow with `fall-6-bridge-v2.png` as the previous-pose target and `reference-R7-pose.png` as the next-pose reference. Five free runs were used; no paid run was started. The first candidate jumped ahead and smiled; later results included one better tilted, startled bridge and several overly upright/smiling variants. The Cloud graph's compare preview was useful for pose direction, but the final output could not be retrieved into the repo through the browser, so no generated pilot art was integrated or approved.
+- For future bridge checks, compare the candidate directly against both immediate neighbors at the website's actual display size. Reject any candidate that jumps to the next pose, changes the shocked expression into a smile, hides a limb/ear/tail, changes the cat's scale, or has a non-transparent background. Keep the runtime frame out until a full-resolution local asset passes those checks and the user approves its image and placement.
+
 ## Earlier pixel-atlas review history
 
 - Independent Luna review confirmed the corrected `fall-4` and `twist-2` cells each show four paws/legs and one tail, with no obvious clipping or extra limb.
