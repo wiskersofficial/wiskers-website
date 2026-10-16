@@ -40,7 +40,7 @@ const ROUTE_LINE = .54;
 const HOP_MAX_SCROLL = 132;
 const GROOM_HOLD_SCROLL = 120;
 const FIRST_SHELF_HOP_SCROLL = 80;
-const CARD_TO_GROOM_SCROLL = 80;
+const YARN_PRECONTACT_SCROLL = 40;
 const ROUTE_POSES = ['fall-8','fall-9','twist-6','fall-8','fall-9','twist-6','fall-8','fall-9'];
 const LANDING_X = 48;
 const LANDING_INSET = -8;
@@ -282,8 +282,8 @@ function routeAnchorSpecs() {
       const scale=clamp(freeGap/128,.3,.64);
       cat?.style.setProperty('--cat-groom-scale',String(scale));
       return {x:control.left+Math.min(100,control.width*.2),y:note.bottom+4+113*scale};
-    },line:()=>innerHeight*.62},
-    ...[1,2,3].map(number=>({id:`yarn-shelf-${number}`,host:shelf,arrival:()=>ballContactScroll(number),point:host=>{
+    },line:()=>innerHeight*.9},
+    ...[1,2,3].map(number=>({id:`yarn-shelf-${number}`,host:shelf,arrival:()=>ballContactScroll(number)-YARN_PRECONTACT_SCROLL,point:host=>{
       const target=ball(number)?.getBoundingClientRect();
       return target?{x:target.left+target.width/2,y:target.top+6}:{x:host.left+host.width*(.2+.28*(number-1)),y:host.top+innerHeight*.17};
     },line:()=>innerHeight*.32})),
@@ -312,30 +312,22 @@ function measureTrigger() {
   routeLandingScroll = takeoffScroll + fallDistance;
   routeStartScroll=routeLandingScroll+IMPACT_SCROLL;
   routeStopsLocked = false;
+  // Downstream anchors should be measured in the settled world position,
+  // even when this page is first initialized before the fall offset is set.
+  const currentOffset=catWorldOffset(scrollY,scrollMotion);
+  setWorldOffset(catWorldOffset(routeStartScroll,scrollMotion));
   measureRouteStops();
+  setWorldOffset(currentOffset);
 }
 
 function measureRouteStops() {
   const specs=routeAnchorSpecs();
-  const firstBall= yarnScene?.querySelector('[data-yarn="1"]');
-  const firstContact=Number(firstBall?.dataset.catContactScroll);
-  const groomLead=GROOM_HOLD_SCROLL+FIRST_SHELF_HOP_SCROLL;
-  const questionLead=groomLead+CARD_TO_GROOM_SCROLL;
   let previousArrival=routeStartScroll;
   routeStops=specs.map((spec,index)=>{
     const rect=spec.host.getBoundingClientRect();
     const point=spec.point(rect);
     const authoredArrival=spec.arrival?.();
     let arrival=Number.isFinite(authoredArrival)?Math.max(previousArrival+1,authoredArrival):anchorArrivalScroll(point.y,scrollY,spec.line(),previousArrival+1);
-    // Keep the selector stop long enough to read as grooming before the first
-    // yarn contact. Pull the preceding card stop too if the DOM anchors are
-    // unusually close, while leaving the ball's actual contact scroll intact.
-    if(Number.isFinite(firstContact) && spec.id==='card-toggle') {
-      arrival=Math.max(previousArrival+1,Math.min(arrival,firstContact-questionLead));
-    }
-    if(Number.isFinite(firstContact) && spec.id==='buyer-question') {
-      arrival=Math.max(previousArrival+1,Math.min(arrival,firstContact-groomLead));
-    }
     const gap=Math.max(0,arrival-previousArrival);
     const duration=spec.id==='yarn-shelf-1'
       ? Math.min(FIRST_SHELF_HOP_SCROLL,gap)
@@ -349,6 +341,14 @@ function measureRouteStops() {
     routeStops.forEach(stop=>{
       scrollMap[stop.id]=Math.round(stop.arrival);
       scrollMap[`${stop.id}Departure`]=Math.round(stop.departure);
+    });
+    const questionStop=routeStops.find(stop=>stop.id==='buyer-question');
+    if(questionStop) scrollMap.yarnStartFloor=Math.round(
+      questionStop.arrival+GROOM_HOLD_SCROLL+FIRST_SHELF_HOP_SCROLL+YARN_PRECONTACT_SCROLL,
+    );
+    [1,2,3].forEach(number=>{
+      const contact=Number(yarnScene?.querySelector(`[data-yarn="${number}"]`)?.dataset.catContactScroll);
+      if(Number.isFinite(contact)) scrollMap[`yarnRoll${number}`]=Math.round(contact);
     });
     scene.dataset.catScrollMap=JSON.stringify(scrollMap);
   }

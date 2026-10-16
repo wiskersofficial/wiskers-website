@@ -53,6 +53,7 @@ document.querySelector('#buyer-question')?.addEventListener('change', event => {
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const drifting = [...document.querySelectorAll('[data-drift]')];
 const scene = document.querySelector('.yarn-scene');
+const catScene = document.querySelector('[data-cat-scene]');
 const balls = [...document.querySelectorAll('[data-yarn]')];
 const paths = [...document.querySelectorAll('.yarn-strand')];
 const anchors = [...document.querySelectorAll('.yarn-anchor')];
@@ -99,8 +100,17 @@ function updateMotion() {
   if (!layout || layout.width !== scene.clientWidth || layout.height !== scene.clientHeight) setRoutes();
   const bounds = scene.getBoundingClientRect();
   const travel = Math.max(600,bounds.height-innerHeight*.22);
-  const progress = clamp((innerHeight*.66-bounds.top)/travel);
   const sceneDocumentTop = bounds.top + scrollY;
+  const sceneStart = sceneDocumentTop-innerHeight*.66;
+  let yarnStartFloor=NaN;
+  try {
+    yarnStartFloor=Number(JSON.parse(catScene?.dataset.catScrollMap||'{}').yarnStartFloor);
+  } catch {}
+  // Keep the strands still until the cat has reached the selector, groomed,
+  // and made its approach to the first yarn. Ball contacts then remain driven
+  // by these same actual motion-start milestones in the cat route.
+  const contactStart=Number.isFinite(yarnStartFloor)?Math.max(sceneStart,yarnStartFloor):sceneStart;
+  const progress = clamp((scrollY-contactStart)/travel);
   balls.forEach((ball,i) => {
     const stagger = i*.19;
     // The cat scene reads this live document-space milestone to time contact
@@ -108,7 +118,7 @@ function updateMotion() {
     // after layout/resize; no fixed page offsets or one-shot events.
     ball.dataset.catContactProgress = String(stagger);
     ball.dataset.catContactScroll = String(Math.round(
-      sceneDocumentTop-innerHeight*.66+travel*stagger,
+      contactStart+travel*stagger,
     ));
     const t = reduced ? 1 : clamp((progress-stagger)/(.46+i*.06));
     // Each ball gets a clear cause-and-effect beat: roll along the shelf,
