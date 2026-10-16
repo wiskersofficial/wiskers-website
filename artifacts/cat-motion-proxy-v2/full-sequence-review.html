@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Soft cat motion sequence review</title>
+  <style>
+    :root{font:14px/1.45 system-ui,sans-serif;color:#26313a;background:#f6f3ef}
+    *{box-sizing:border-box}body{margin:0;padding:24px}
+    h1{font-size:22px;margin:0 0 8px}p{max-width:760px;margin:0 0 16px;color:#54606b}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 22px}
+    button{font:inherit;padding:6px 10px;border:1px solid #b9c0c6;border-radius:6px;background:white;color:inherit;cursor:pointer}
+    button[aria-pressed="true"]{background:#dce8f4;border-color:#52758f}
+    .sequence{display:grid;grid-template-columns:repeat(6,minmax(128px,1fr));gap:10px;margin:0 0 24px}
+    figure{margin:0;min-width:0;padding:5px;border:1px solid #d6d5d2;border-radius:7px;background:#fff}
+    .stage{width:100%;aspect-ratio:1;overflow:hidden;background:#f9f7f3;border-radius:4px}
+    .stage svg{display:block;width:100%;height:100%}
+    figcaption{display:flex;justify-content:space-between;gap:8px;padding:5px 2px 1px;font:11px/1.3 ui-monospace,monospace;color:#35414a}
+    .phase{color:#78838c}
+    .dark{background:#18171d;color:#ece9ef}.dark p{color:#bbb7c2}.dark figure{background:#26242c;border-color:#423f4a}.dark .stage{background:#201e25}.dark figcaption{color:#e7e2ea}
+    .plum .stage{background:#382842}.blue .stage{background:#8db7e6}
+    .dark.plum .stage{background:#382842}.dark.blue .stage{background:#48688d}
+    .section-heading{margin:18px 0 8px;font-size:15px}
+    @media(max-width:940px){.sequence{grid-template-columns:repeat(4,minmax(128px,1fr))}}
+    @media(max-width:620px){body{padding:14px}.sequence{grid-template-columns:repeat(3,minmax(96px,1fr));gap:7px}.stage{aspect-ratio:1}}
+  </style>
+</head>
+<body>
+  <h1>Soft cat motion sequence</h1>
+  <p>Frames are displayed through the same atlas crops and view boxes as the website. The original 128 px viewport is preserved. Check pose order, facing, scale, paws, and tail through the full scroll arc.</p>
+  <div class="controls" aria-label="Review controls">
+    <button id="play" type="button">Play sequence</button>
+    <button data-theme="light" aria-pressed="true">Light</button>
+    <button data-theme="dark" aria-pressed="false">Dark</button>
+    <button data-bg="plum" aria-pressed="false">Plum</button>
+    <button data-bg="blue" aria-pressed="false">Blue tile</button>
+  </div>
+  <h2 class="section-heading">Idle</h2><section class="sequence" id="idle"></section>
+  <h2 class="section-heading">Fall and recovery · stable order</h2><section class="sequence" id="action"></section>
+  <script type="module">
+    const routes={
+      idle:'/art/cat-idle-soft-v1/atlas.json',
+      fall:'/art/cat-fall-soft-v1/atlas.json',
+      transition:'/art/cat-transition-soft-v1/atlas.json',
+    };
+    const sequence=[
+      ['fall','fall-1','startle',0],['fall','fall-2','recoil',1],['fall','fall-3','back-first',2],
+      ['fall','fall-4','belly-up',3],['transition','twist-1','supine',0],['fall','fall-5','supine',4],
+      ['transition','twist-2','half-twist',1],['transition','twist-3','half-twist',2],['fall','fall-6','righting',5],
+      ['transition','twist-4','righting',3],['transition','twist-5','approach',4],['fall','fall-7','approach',6],
+      ['transition','twist-6','steep approach',5],['fall','fall-8','descent',7],['fall','fall-9','near contact',8],
+      ['fall','fall-10','first contact',9],['transition','land-1','compression',6],['transition','land-2','rebound',7],
+      ['fall','fall-11','ground crouch',10],['transition','land-3','chest lift',8],['transition','land-4','crouch hold',9],
+      ['transition','land-5','seated',10],['transition','land-6','seated hold',11],['fall','fall-12','settled hold',11],
+    ];
+    const idleIds=['idle-1','idle-2','idle-3'];
+    const data=Object.fromEntries(await Promise.all(Object.entries(routes).map(async([name,url])=>[name,await (await fetch(url)).json()])));
+    const NS='http://www.w3.org/2000/svg';
+    function card(section,name,index,id,phase){
+      const manifest=data[name],[x,y,w,h]=manifest.cellRects[index],box=manifest.viewBoxes[index];
+      const figure=document.createElement('figure');
+      const stage=document.createElement('div');stage.className='stage';
+      const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',box.join(' '));svg.setAttribute('preserveAspectRatio','none');
+      const clipId=`clip-${id}`;const defs=document.createElementNS(NS,'defs');const clip=document.createElementNS(NS,'clipPath');clip.setAttribute('id',clipId);clip.setAttribute('clipPathUnits','userSpaceOnUse');
+      const rect=document.createElementNS(NS,'rect');rect.setAttribute('x',x);rect.setAttribute('y',y);rect.setAttribute('width',w);rect.setAttribute('height',h);clip.append(rect);defs.append(clip);
+      const image=document.createElementNS(NS,'image');image.setAttribute('href',manifest.url);image.setAttribute('x',0);image.setAttribute('y',0);image.setAttribute('width',manifest.width);image.setAttribute('height',manifest.height);image.setAttribute('clip-path',`url(#${clipId})`);
+      svg.append(defs,image);stage.append(svg);figure.append(stage);
+      const caption=document.createElement('figcaption');caption.innerHTML=`<span>${id}</span><span class="phase">${phase}</span>`;figure.append(caption);
+      figure.dataset.index=String(index);figure.dataset.id=id;figure.dataset.atlas=name;figure.dataset.section=section;
+      return figure;
+    }
+    idleIds.forEach((id,index)=>document.querySelector('#idle').append(card('idle','idle',index,id,'perched')));
+    sequence.forEach(([atlas,id,phase,index])=>document.querySelector('#action').append(card('action',atlas,index,id,phase)));
+    document.querySelectorAll('[data-theme]').forEach(button=>button.addEventListener('click',()=>{
+      document.body.classList.toggle('dark',button.dataset.theme==='dark');
+      document.querySelectorAll('[data-theme]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    }));
+    document.querySelectorAll('[data-bg]').forEach(button=>button.addEventListener('click',()=>{
+      document.body.classList.remove('plum','blue');document.body.classList.add(button.dataset.bg);
+      document.querySelectorAll('[data-bg]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    }));
+    let timer=0;
+    document.querySelector('#play').addEventListener('click',event=>{
+      clearInterval(timer);const button=event.currentTarget;
+      if(button.textContent==='Stop'){button.textContent='Play sequence';return}
+      button.textContent='Stop';const cards=[...document.querySelectorAll('#action figure')];let index=0;
+      cards.forEach(item=>item.style.outline='');timer=setInterval(()=>{
+        cards.forEach(item=>item.style.outline='');cards[index].style.outline='2px solid #3486c9';cards[index].scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});
+        index=(index+1)%cards.length;
+      },210);
+    });
+  </script>
+</body>
+</html>

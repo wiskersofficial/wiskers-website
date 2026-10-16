@@ -78,7 +78,7 @@ h2{font-size:clamp(42px,4.5vw,65px);font-weight:500;letter-spacing:-.06em;line-h
 /* First character beat: a fixed-size cat perched on the actual word. */
 .cat-word{display:inline-block;position:relative;white-space:nowrap;line-height:inherit}
 .hero-cat{position:absolute;width:96px;height:112px;left:49%;bottom:calc(100% - .18em);transform:translateX(-50%);pointer-events:none;z-index:4;line-height:0}
-.hero-cat[hidden]{display:none}.hero-cat-frame{display:block;width:100%;height:100%;overflow:visible;image-rendering:pixelated}
+.hero-cat[hidden]{display:none}.hero-cat-frame{display:block;width:100%;height:100%;overflow:visible;image-rendering:auto}
 .hero-top{overflow:visible}.hero h1{text-wrap:initial}
 .text-wall{background:var(--surface);border:1px solid var(--hair);border-radius:2px;padding:25px 24px;box-shadow:3px 4px 0 color-mix(in srgb,var(--hair),transparent 75%)}
 @media(max-width:480px){.text-wall{padding:22px 20px}.hero{padding-top:70px}}
@@ -103,7 +103,7 @@ h2{font-size:clamp(42px,4.5vw,65px);font-weight:500;letter-spacing:-.06em;line-h
 .hero-cat.is-landed{position:absolute;left:calc(var(--cat-landing-x,48px) - 64px);top:auto;bottom:calc(var(--cat-landing-inset,-8px) - 15px);transform:none;z-index:4}
 .insight-tile{transform-origin:var(--cat-landing-x,48px) calc(100% - var(--cat-landing-inset,-8px))}
 .insight-tile.cat-impacting{transform:translateY(var(--cat-tile-sink,0px)) rotate(var(--cat-tile-rock,0deg));will-change:transform}
-.hero-cat-frame{width:128px;height:128px;overflow:hidden;image-rendering:pixelated}
+.hero-cat-frame{width:128px;height:128px;overflow:hidden;image-rendering:auto}
 .hero-cat-atlas-layer{display:none}.hero-cat-atlas-layer.is-active{display:block}
 .cat-frame-counter{position:fixed;bottom:14px;left:14px;z-index:80;display:flex;align-items:center;gap:10px;padding:7px 8px 7px 11px;border:1px solid var(--hair);border-radius:6px;background:var(--surface);color:var(--ink);font:12px/1.3 ui-monospace,SFMono-Regular,Consolas,monospace;font-variant-numeric:tabular-nums;box-shadow:0 2px 10px #0002}
 .cat-frame-copy{padding:4px 7px;border:1px solid var(--hair);border-radius:4px;background:transparent;color:var(--ink);font:inherit;line-height:1.2;cursor:pointer;touch-action:manipulation}
