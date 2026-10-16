@@ -1,4 +1,18 @@
+import {YARN_DROP_SPEEDS, yarnMotionTravel} from './cat-scene-math.js';
+
 const panel = document.querySelector('#problem-panel');
+
+// A real button keeps this control keyboard accessible; the cat can activate
+// the same stable [data-cat-toggle] hook on impact.
+document.querySelectorAll('[data-cat-toggle]').forEach(button => {
+  button.addEventListener('click', () => {
+    const card = button.closest('[data-cat-toggle-card]');
+    if (!card) return;
+    const active = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(active));
+    card.dataset.active = String(active);
+  });
+});
 
 document.querySelector('.problem-trigger')?.addEventListener('click', () => {
   panel?.showModal();
@@ -41,6 +55,7 @@ document.querySelector('#buyer-question')?.addEventListener('change', event => {
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
 const drifting = [...document.querySelectorAll('[data-drift]')];
 const scene = document.querySelector('.yarn-scene');
+const catScene = document.querySelector('[data-cat-scene]');
 const balls = [...document.querySelectorAll('[data-yarn]')];
 const paths = [...document.querySelectorAll('.yarn-strand')];
 const anchors = [...document.querySelectorAll('.yarn-anchor')];
@@ -58,7 +73,9 @@ function setRoutes() {
   layout = {
     width: scene.clientWidth, height: scene.clientHeight,
     x: narrow ? [110,430,770] : [180,500,850],
-    starts: narrow ? [250,550,850] : [520,720,920],
+    // Start as one compact blue/coral/green cluster; each ball still rolls to
+    // its original edge and drop position before the cat visits it below.
+    starts: narrow ? [250,400,550] : [520,620,720],
     startY, shelfY,
     ends: [390,650,930],
   };
@@ -68,6 +85,10 @@ function setRoutes() {
   anchors.forEach((anchor,i) => {
     anchor.setAttribute('cx',layout.starts[i]);
     anchor.setAttribute('cy',layout.shelfY);
+  });
+  balls.forEach((ball,i)=>{
+    ball.dataset.startX=String(layout.starts[i]);
+    ball.dataset.startY=String(layout.startY);
   });
   options.forEach((label,i) => {
     label.style.left = `${layout.x[i]/10}%`;
@@ -86,15 +107,30 @@ function updateMotion() {
   if (!scene) return;
   if (!layout || layout.width !== scene.clientWidth || layout.height !== scene.clientHeight) setRoutes();
   const bounds = scene.getBoundingClientRect();
-  const travel = Math.max(600,bounds.height-innerHeight*.22);
-  const progress = clamp((innerHeight*.66-bounds.top)/travel);
+  const travel = yarnMotionTravel(bounds.height,innerHeight);
+  const sceneDocumentTop = bounds.top + scrollY;
+  const sceneStart = sceneDocumentTop-innerHeight*.66;
+  let yarnStartFloor=NaN;
+  try {
+    yarnStartFloor=Number(JSON.parse(catScene?.dataset.catScrollMap||'{}').yarnStartFloor);
+  } catch {}
+  // Keep the strands still until the cat has landed on the starting pile.
+  // All three then share one motion-start milestone and drop at different
+  // speeds, leaving room for the cat to visit each hanging ball in order.
+  const contactStart=Number.isFinite(yarnStartFloor)?Math.max(sceneStart,yarnStartFloor):sceneStart;
+  const progress = clamp((scrollY-contactStart)/travel);
   balls.forEach((ball,i) => {
-    const t = reduced ? 1 : clamp((progress-i*.19)/(.46+i*.06));
-    // First roll along the shelf; then tip towards the viewer over its
-    // front edge. The final phase falls vertically and settles hanging.
-    const roll = clamp(t/.32);
-    const tip = clamp((t-.32)/.12);
-    const descent = clamp((t-.32)/.68);
+    // The cat scene reads this live document-space milestone to time contact
+    // with the exact scroll point where this ball begins to move. Recompute
+    // after layout/resize; no fixed page offsets or one-shot events.
+    ball.dataset.catContactScroll = String(Math.round(contactStart));
+    const t = reduced ? 1 : clamp(progress/YARN_DROP_SPEEDS[i]);
+    // Each ball gets a clear cause-and-effect beat: roll along the shelf,
+    // tip over its front edge, then unspool vertically. The drop starts only
+    // after the tip finishes, so the phases cannot visually leapfrog.
+    const roll = clamp(t/.34);
+    const tip = clamp((t-.34)/.14);
+    const descent = clamp((t-.48)/.52);
     const tipEase = tip*tip*(3-2*tip);
     const rollEase = roll*roll*(3-2*roll);
     const x = layout.starts[i]+(layout.x[i]-layout.starts[i])*rollEase;
@@ -110,8 +146,7 @@ function updateMotion() {
     const radius = ball.offsetWidth/2;
     const rollAngle = (x-layout.starts[i])/1000*layout.width/radius*180/Math.PI;
     ball.style.setProperty('--roll',`${reduced ? 0 : rollAngle-tipEase*12}deg`);
-    const depth = clamp((t-.32)/.38);
-    const forward = Math.sin(Math.PI*depth*depth*(3-2*depth));
+    const forward = tipEase*(1-clamp(descent/.3));
     ball.style.setProperty('--depth-scale',String(reduced ? 1 : 1+forward*.07));
     ball.style.setProperty('--tip',`${reduced ? 0 : -forward*20}deg`);
 

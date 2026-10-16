@@ -1,5 +1,19 @@
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
 
+// All three balls share a motion start; differing durations stagger their
+// edge drops and give the cat room to land on each one in order.
+export const YARN_DROP_SPEEDS = Object.freeze([.46,.64,.82]);
+export const YARN_START_SETTLE_SCROLL = 24;
+export const YARN_LANDING_PROGRESS = .84;
+
+export function yarnMotionTravel(sceneHeight, viewportHeight) {
+  return Math.max(600,sceneHeight-viewportHeight*.22);
+}
+
+export function yarnBallLandingScroll(commonStart, travel, speed) {
+  return commonStart+travel*speed*YARN_LANDING_PROGRESS;
+}
+
 // Stable frame identity is kept separate from the atlas-local pose index.
 // Atlas-local indices remain separate from stable IDs used in the review aid.
 export const FALL_SEQUENCE = [
@@ -7,7 +21,6 @@ export const FALL_SEQUENCE = [
   ['fall','fall-2','recoil',1],
   ['fall','fall-3','back-first',2],
   ['fall','fall-4','supine',3],
-  ['transition','twist-1','twist',0],
   ['fall','fall-5','supine',4],
   ['transition','twist-2','twist',1],
   ['transition','twist-3','twist',2],
@@ -26,10 +39,11 @@ export const FALL_SEQUENCE = [
   ['transition','land-4','landing',9],
   ['transition','land-5','landing',10],
   ['transition','land-6','landing',11],
-  ['fall','fall-12','settled',11],
 ].map(([atlas,id,phase,pose]) => Object.freeze({atlas,id,phase,pose}));
 
-export const FLIGHT_FRAME_COUNT = 15;
+// One transition drawing was cut and the old terminal fall-12 placeholder was
+// removed; keep flight duration stable and let land-6 hold the tile landing.
+export const FLIGHT_FRAME_COUNT = 14;
 export const RECOVERY_FRAME_COUNT = FALL_SEQUENCE.length - FLIGHT_FRAME_COUNT;
 
 export function flightFrame(progress) {
@@ -69,4 +83,16 @@ export function measureCatScroll({tileFootDocumentY, landingScroll, viewportHeig
 
 export function catWorldOffset(scrollY, motion) {
   return clamp(scrollY, 0, motion.landingScroll) * motion.offsetRate;
+}
+
+// Convert an element's live viewport coordinate into the scroll position at
+// which it reaches a chosen viewport line. This works after the temporary
+// falling-world offset has settled and adapts to responsive layout changes.
+export function anchorArrivalScroll(rectTop, scrollY, viewportLine, minimum = 0) {
+  return Math.max(minimum, rectTop + scrollY - viewportLine);
+}
+
+export function routeProgress(scrollY, departure, arrival) {
+  if (arrival <= departure) return scrollY >= arrival ? 1 : 0;
+  return clamp((scrollY - departure) / (arrival - departure));
 }

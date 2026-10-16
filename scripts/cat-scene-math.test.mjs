@@ -43,15 +43,15 @@ test('unusual layouts retain positive motion and a finite footer offset',()=>{
 });
 
 test('interleaved pose map keeps stable IDs and the registered transition order',()=>{
-  assert.equal(FALL_SEQUENCE.length,24);
-  assert.equal(new Set(FALL_SEQUENCE.map(frame=>frame.id)).size,24);
+  assert.equal(FALL_SEQUENCE.length,23);
+  assert.equal(new Set(FALL_SEQUENCE.map(frame=>frame.id)).size,23);
   assert.deepEqual(FALL_SEQUENCE.slice(0,6).map(frame=>frame.id),[
-    'fall-1','fall-2','fall-3','fall-4','twist-1','fall-5',
+    'fall-1','fall-2','fall-3','fall-4','fall-5','twist-2',
   ]);
-  assert.deepEqual(FALL_SEQUENCE.slice(15).map(frame=>frame.id),[
+  assert.deepEqual(FALL_SEQUENCE.slice(14).map(frame=>frame.id),[
     'fall-10','land-1','land-2','fall-11','land-3','land-4','land-5','land-6','fall-12',
   ]);
-  assert.equal(FLIGHT_FRAME_COUNT,15);
+  assert.equal(FLIGHT_FRAME_COUNT,14);
 });
 
 test('flight hands directly from the contact pose into the staged landing',()=>{
@@ -147,7 +147,7 @@ test('rapid atlas reversals keep each source fixed and atomically switch its cro
   const cat={dataset:{}};
   const state={currentPoseId:''};
   const changes=[
-    ['idle',0,'idle-1'],['fall',1,'fall-2'],['transition',0,'twist-1'],
+    ['idle',0,'idle-1'],['fall',1,'fall-2'],['transition',1,'twist-2'],
     ['fall',0,'fall-1'],['transition',1,'land-2'],['idle',1,'idle-2'],
   ];
 
