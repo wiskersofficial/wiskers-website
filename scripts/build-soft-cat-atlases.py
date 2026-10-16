@@ -7,6 +7,7 @@ from pathlib import Path
 import json
 import struct
 import zlib
+import argparse
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / 'artifacts/cat-motion-proxy-v2'
@@ -118,14 +119,16 @@ TRANSITION = [
     file_pose('pose-05-supine-recreated.png'),
     file_pose('pose-05a-half-twist-intermediate.png'),
     file_pose('pose-05a-half-twist-intermediate.png'),
-    file_pose('pose-06-righting-recreated.png'),
+    file_pose('twist-4-bridge-v3.png'),
     file_pose('reference-R7-pose.png'), file_pose('reference-R7-pose.png'),
     file_pose('keyframe-04-impact-compression.png'),
     file_pose('land-2-rebound-v3.png'),
     file_pose('land-3-chest-lift-v2.png'),
     file_pose('land-3-chest-lift-v2.png'),
     file_pose('reference-R9-pose.png'), file_pose('reference-R9-pose.png'),
+    file_pose('toggle-paw-press-v1.png'),
 ]
+GROOM = [file_pose('groom-paw-lick-v1.png')]
 
 
 def load_pose(spec, cache):
@@ -201,18 +204,22 @@ def place_pose(atlas, frame_index, spec, cache):
 
 
 def build(name, specs, cache):
-    image = bytearray(ATLAS_W*ATLAS_H*4)
+    atlas_height = CELL*max(ROWS,(len(specs)+COLS-1)//COLS)
+    image = bytearray(ATLAS_W*atlas_height*4)
     rects, boxes = [], []
     for index,spec in enumerate(specs):
         rect, box = place_pose(image,index,spec,cache)
         rects.append(rect); boxes.append(box)
     folder = OUT/f'cat-{name}-soft-v1'
     folder.mkdir(parents=True,exist_ok=True)
-    image_name = {'idle':'idle-atlas.png','fall':'fall-atlas.png','transition':'transition-atlas.png'}[name]
-    write_png(folder/image_name,ATLAS_W,ATLAS_H,image)
+    image_name = {
+        'idle':'idle-atlas.png','fall':'fall-atlas.png',
+        'transition':'transition-atlas.png','groom':'groom-atlas.png',
+    }[name]
+    write_png(folder/image_name,ATLAS_W,atlas_height,image)
     manifest = {
         'url':f'/art/cat-{name}-soft-v1/{image_name}',
-        'width':ATLAS_W,'height':ATLAS_H,
+        'width':ATLAS_W,'height':atlas_height,
         'viewport':{'width':128,'height':128,'anchorX':ANCHOR_X,'anchorY':ANCHOR_Y},
         'viewBoxes':boxes,'cellRects':rects,
     }
@@ -221,10 +228,21 @@ def build(name, specs, cache):
 
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--groom-only',action='store_true',help='Build only the new grooming atlas, preserving existing atlas outputs.')
+    parser.add_argument('--transition-only',action='store_true',help='Build only the transition atlas, preserving other atlas outputs.')
+    args=parser.parse_args()
     cache = {}
+    if args.groom_only:
+        build('groom',GROOM,cache)
+        return
+    if args.transition_only:
+        build('transition',TRANSITION,cache)
+        return
     build('idle',IDLE,cache)
     build('fall',FALL,cache)
     build('transition',TRANSITION,cache)
+    build('groom',GROOM,cache)
 
 
 if __name__ == '__main__':

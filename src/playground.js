@@ -1,5 +1,17 @@
 const panel = document.querySelector('#problem-panel');
 
+// A real button keeps this control keyboard accessible; the cat can activate
+// the same stable [data-cat-toggle] hook on impact.
+document.querySelectorAll('[data-cat-toggle]').forEach(button => {
+  button.addEventListener('click', () => {
+    const card = button.closest('[data-cat-toggle-card]');
+    if (!card) return;
+    const active = button.getAttribute('aria-pressed') !== 'true';
+    button.setAttribute('aria-pressed', String(active));
+    card.dataset.active = String(active);
+  });
+});
+
 document.querySelector('.problem-trigger')?.addEventListener('click', () => {
   panel?.showModal();
   if (panel) panel.scrollTop = 0;
@@ -88,13 +100,23 @@ function updateMotion() {
   const bounds = scene.getBoundingClientRect();
   const travel = Math.max(600,bounds.height-innerHeight*.22);
   const progress = clamp((innerHeight*.66-bounds.top)/travel);
+  const sceneDocumentTop = bounds.top + scrollY;
   balls.forEach((ball,i) => {
-    const t = reduced ? 1 : clamp((progress-i*.19)/(.46+i*.06));
-    // First roll along the shelf; then tip towards the viewer over its
-    // front edge. The final phase falls vertically and settles hanging.
-    const roll = clamp(t/.32);
-    const tip = clamp((t-.32)/.12);
-    const descent = clamp((t-.32)/.68);
+    const stagger = i*.19;
+    // The cat scene reads this live document-space milestone to time contact
+    // with the exact scroll point where this ball begins to move. Recompute
+    // after layout/resize; no fixed page offsets or one-shot events.
+    ball.dataset.catContactProgress = String(stagger);
+    ball.dataset.catContactScroll = String(Math.round(
+      sceneDocumentTop-innerHeight*.66+travel*stagger,
+    ));
+    const t = reduced ? 1 : clamp((progress-stagger)/(.46+i*.06));
+    // Each ball gets a clear cause-and-effect beat: roll along the shelf,
+    // tip over its front edge, then unspool vertically. The drop starts only
+    // after the tip finishes, so the phases cannot visually leapfrog.
+    const roll = clamp(t/.34);
+    const tip = clamp((t-.34)/.14);
+    const descent = clamp((t-.48)/.52);
     const tipEase = tip*tip*(3-2*tip);
     const rollEase = roll*roll*(3-2*roll);
     const x = layout.starts[i]+(layout.x[i]-layout.starts[i])*rollEase;
@@ -110,8 +132,7 @@ function updateMotion() {
     const radius = ball.offsetWidth/2;
     const rollAngle = (x-layout.starts[i])/1000*layout.width/radius*180/Math.PI;
     ball.style.setProperty('--roll',`${reduced ? 0 : rollAngle-tipEase*12}deg`);
-    const depth = clamp((t-.32)/.38);
-    const forward = Math.sin(Math.PI*depth*depth*(3-2*depth));
+    const forward = tipEase*(1-clamp(descent/.3));
     ball.style.setProperty('--depth-scale',String(reduced ? 1 : 1+forward*.07));
     ball.style.setProperty('--tip',`${reduced ? 0 : -forward*20}deg`);
 

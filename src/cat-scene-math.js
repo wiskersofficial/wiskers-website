@@ -25,11 +25,10 @@ export const FALL_SEQUENCE = [
   ['transition','land-4','landing',9],
   ['transition','land-5','landing',10],
   ['transition','land-6','landing',11],
-  ['fall','fall-12','settled',11],
 ].map(([atlas,id,phase,pose]) => Object.freeze({atlas,id,phase,pose}));
 
-// One transition drawing was cut; keep the same flight duration so each
-// remaining pose gets a little more scroll time. Recovery still starts at fall-10.
+// One transition drawing was cut and the old terminal fall-12 placeholder was
+// removed; keep flight duration stable and let land-6 hold the tile landing.
 export const FLIGHT_FRAME_COUNT = 14;
 export const RECOVERY_FRAME_COUNT = FALL_SEQUENCE.length - FLIGHT_FRAME_COUNT;
 
@@ -70,4 +69,16 @@ export function measureCatScroll({tileFootDocumentY, landingScroll, viewportHeig
 
 export function catWorldOffset(scrollY, motion) {
   return clamp(scrollY, 0, motion.landingScroll) * motion.offsetRate;
+}
+
+// Convert an element's live viewport coordinate into the scroll position at
+// which it reaches a chosen viewport line. This works after the temporary
+// falling-world offset has settled and adapts to responsive layout changes.
+export function anchorArrivalScroll(rectTop, scrollY, viewportLine, minimum = 0) {
+  return Math.max(minimum, rectTop + scrollY - viewportLine);
+}
+
+export function routeProgress(scrollY, departure, arrival) {
+  if (arrival <= departure) return scrollY >= arrival ? 1 : 0;
+  return clamp((scrollY - departure) / (arrival - departure));
 }

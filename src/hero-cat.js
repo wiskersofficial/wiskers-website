@@ -2,7 +2,7 @@
 // layer so a frame's crop and viewBox can never be paired with another sheet.
 import {
   FALL_SEQUENCE, flightFrame, recoveryFrame, impactDisplacement, idleFrame,
-  measureCatScroll, catWorldOffset,
+  measureCatScroll, catWorldOffset, anchorArrivalScroll, routeProgress,
 } from './cat-scene-math.js';
 import {prepareAtlasScene,applyAtlasFrame} from './cat-atlas-renderer.js';
 
@@ -11,6 +11,13 @@ const word = document.querySelector('.cat-word');
 const world = document.querySelector('.cat-scroll-world');
 const spacer = document.querySelector('.cat-world-spacer');
 const tile = document.querySelector('.insight-tile');
+const textWall = document.querySelector('.text-wall');
+const previewCard = document.querySelector('.tool-preview');
+const questionControl = document.querySelector('.select-shell');
+const demoGrid = document.querySelector('.demo-grid');
+const demoCopy = document.querySelector('.demo-copy');
+const answerCard = document.querySelector('.answer-card');
+const yarnScene = document.querySelector('.yarn-scene');
 const scene = document.querySelector('[data-cat-scene]');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const clamp = (value, low = 0, high = 1) => Math.max(low, Math.min(high, value));
@@ -19,6 +26,7 @@ const atlasPaths = {
   idle: '/art/cat-idle-soft-v1/atlas.json',
   fall: '/art/cat-fall-soft-v1/atlas.json',
   transition: '/art/cat-transition-soft-v1/atlas.json',
+  groom: '/art/cat-groom-soft-v1/atlas.json',
 };
 const EXPECTED_VIEWPORT = {width:128,height:128,anchorX:64,anchorY:113};
 const HEAD_TOP_IN_FRAME = 27.5;
@@ -26,12 +34,18 @@ const HEAD_TOP_IN_FRAME = 27.5;
 const HEAD_TOP_TRIGGER = 0;
 const SCARE_SCROLL = 30;
 const IDLE_SCROLL_SPAN = 96;
+const IDLE_IDS = ['idle-1','idle-2'];
+const FALL_GLOBAL_START = IDLE_IDS.length;
+const ROUTE_LINE = .54;
+const HOP_MAX_SCROLL = 132;
+const GROOM_HOLD_SCROLL = 120;
+const FIRST_SHELF_HOP_SCROLL = 80;
+const CARD_TO_GROOM_SCROLL = 80;
+const ROUTE_POSES = ['fall-8','fall-9','twist-6','fall-8','fall-9','twist-6','fall-8','fall-9'];
 const LANDING_X = 48;
 const LANDING_INSET = -8;
 const RECOVERY_SCROLL = 190;
 const IMPACT_SCROLL = 240;
-const IDLE_IDS = ['idle-1','idle-2'];
-const FALL_GLOBAL_START = IDLE_IDS.length;
 let atlases = {};
 const renderState = {currentPoseId:''};
 let triggerScroll = 0;
@@ -40,6 +54,13 @@ let fallDistance = 560;
 let baseWordCatAnchor = null;
 let scaredAnchor = null;
 let scrollMotion = null;
+let routeStops = [];
+let routeLandingScroll = 0;
+let routeStartScroll = 0;
+let routeStopsLocked = false;
+let routeRefreshPending = false;
+let manualToggleOverride = null;
+let autoToggleActive = false;
 let queued = false;
 
 // Opt-in review aid; IDs remain stable when the atlas order changes.
@@ -193,26 +214,81 @@ function setFallPose(frame) {
   setPose(frame.atlas,frame.pose,frame.id,FALL_GLOBAL_START + index);
 }
 
+function setActionPose(id) {
+  const frame=FALL_SEQUENCE.find(item=>item.id===id);
+  if(frame) setFallPose(frame);
+}
+
+function setGroomPose() {
+  setPose('groom',0,'groom-lick-1',FALL_GLOBAL_START+FALL_SEQUENCE.length);
+}
+
+function setTogglePressPose() {
+  setPose('transition',12,'toggle-paw-press',FALL_GLOBAL_START+FALL_SEQUENCE.length+1);
+}
+
 function setWorldOffset(offset) {
   const bounded = Math.max(0,offset);
   scene?.style.setProperty('--cat-world-offset',`${bounded}px`);
   if (spacer) spacer.style.height = `${bounded}px`;
 }
 
-function clearImpact() {
-  tile?.classList.remove('cat-impacting');
-  tile?.style.removeProperty('--cat-tile-rock');
-  tile?.style.removeProperty('--cat-tile-sink');
-}
-
 function resetCatToWord() {
   if (!cat || !word) return;
   if (cat.parentElement !== word) word.append(cat);
-  cat.classList.remove('is-flying','is-landed','is-scared');
+  cat.classList.remove('is-flying','is-landed','is-scared','is-attached','is-grooming');
   cat.style.removeProperty('left');
   cat.style.removeProperty('top');
   cat.style.removeProperty('bottom');
-  clearImpact();
+}
+
+function routeAnchorSpecs() {
+  const shelf = yarnScene?.querySelector('.yarn-shelf');
+  const ball = number => yarnScene?.querySelector(`[data-yarn="${number}"]`);
+  const ballContactScroll = number => Number(ball(number)?.dataset.catContactScroll);
+  const ballDropScroll = number => {
+    const element=ball(number);
+    const base=ballContactScroll(number);
+    if(!element || !Number.isFinite(base) || !yarnScene) return NaN;
+    const stagger=Number(element.dataset.catContactProgress)||0;
+    const duration=.46+(number-1)*.06;
+    const travel=Math.max(600,yarnScene.clientHeight-innerHeight*.22);
+    // Meet each ball once it has unspooled into the annotated lower section.
+    const dropProgress=stagger+duration*.84;
+    return base+travel*(dropProgress-stagger);
+  };
+  return [
+    {id:'text-wall',host:textWall,point:host=>({x:host.left+Math.min(34,host.width*.12),y:host.top}),line:()=>innerHeight*ROUTE_LINE},
+    {id:'card-toggle',host:previewCard,point:host=>{
+      const control=previewCard?.querySelector('[data-cat-toggle]');
+      const rect=control?.getBoundingClientRect();
+      return rect?{x:rect.left+rect.width/2,y:rect.top+rect.height/2}:{x:host.left+host.width*.52,y:host.top+host.height*.72};
+    },line:()=>innerHeight*.48},
+    {id:'buyer-question',host:demoGrid??questionControl,point:host=>{
+      const control=questionControl?.querySelector('select')?.getBoundingClientRect() ?? host;
+      const note=demoCopy?.querySelector('.demo-note')?.getBoundingClientRect();
+      if(innerWidth<=650 && note && answerCard) {
+        // On phones there is no left gutter beside the full-width select.
+        // Use the clear gap below its helper note and above the answer card.
+        const card=answerCard.getBoundingClientRect();
+        const freeGap=Math.max(0,card.top-note.bottom-8);
+        const scale=clamp(freeGap/160,.30,.68);
+        cat?.style.setProperty('--cat-groom-scale',String(scale));
+        return {x:host.right-8-64*scale,y:note.bottom+4+113*scale};
+      }
+      // On wider layouts, use the open lane below the helper note. Keeping
+      // the cat inside the demo panel avoids a clipped left-gutter landing.
+      const freeGap=Math.max(0,host.bottom-note.bottom-8);
+      const scale=clamp(freeGap/128,.3,.64);
+      cat?.style.setProperty('--cat-groom-scale',String(scale));
+      return {x:control.left+Math.min(100,control.width*.2),y:note.bottom+4+113*scale};
+    },line:()=>innerHeight*.62},
+    ...[1,2,3].map(number=>({id:`yarn-shelf-${number}`,host:shelf,arrival:()=>ballContactScroll(number),point:host=>{
+      const target=ball(number)?.getBoundingClientRect();
+      return target?{x:target.left+target.width/2,y:target.top+6}:{x:host.left+host.width*(.2+.28*(number-1)),y:host.top+innerHeight*.17};
+    },line:()=>innerHeight*.32})),
+    ...[1,2,3].map(number=>({id:`yarn-ball-${number}`,host:ball(number),arrival:()=>ballDropScroll(number),point:host=>({x:host.left+host.width/2,y:host.top+6}),line:()=>innerHeight*.42})),
+  ].filter(stop=>stop.host);
 }
 
 function measureTrigger() {
@@ -226,33 +302,106 @@ function measureTrigger() {
   takeoffScroll = triggerScroll + SCARE_SCROLL;
   fallDistance = innerWidth <= 650 ? 650 : 560;
   scaredAnchor = {x:baseWordCatAnchor.x,y:baseWordCatAnchor.y-triggerScroll};
-  const tileRect = tile.getBoundingClientRect();
+  const tileRect=tile?.getBoundingClientRect();
+  const tileFootDocumentY=tileRect?tileRect.bottom+scrollY-LANDING_INSET:innerHeight+scrollY;
   scrollMotion = measureCatScroll({
-    tileFootDocumentY:tileRect.bottom + scrollY - LANDING_INSET,
+    tileFootDocumentY,
     landingScroll:takeoffScroll + fallDistance,
     viewportHeight:innerHeight,
   });
-  tile.style.setProperty('--cat-landing-x',`${LANDING_X}px`);
-  tile.style.setProperty('--cat-landing-inset',`${LANDING_INSET}px`);
+  routeLandingScroll = takeoffScroll + fallDistance;
+  routeStartScroll=routeLandingScroll+IMPACT_SCROLL;
+  routeStopsLocked = false;
+  measureRouteStops();
+}
+
+function measureRouteStops() {
+  const specs=routeAnchorSpecs();
+  const firstBall= yarnScene?.querySelector('[data-yarn="1"]');
+  const firstContact=Number(firstBall?.dataset.catContactScroll);
+  const groomLead=GROOM_HOLD_SCROLL+FIRST_SHELF_HOP_SCROLL;
+  const questionLead=groomLead+CARD_TO_GROOM_SCROLL;
+  let previousArrival=routeStartScroll;
+  routeStops=specs.map((spec,index)=>{
+    const rect=spec.host.getBoundingClientRect();
+    const point=spec.point(rect);
+    const authoredArrival=spec.arrival?.();
+    let arrival=Number.isFinite(authoredArrival)?Math.max(previousArrival+1,authoredArrival):anchorArrivalScroll(point.y,scrollY,spec.line(),previousArrival+1);
+    // Keep the selector stop long enough to read as grooming before the first
+    // yarn contact. Pull the preceding card stop too if the DOM anchors are
+    // unusually close, while leaving the ball's actual contact scroll intact.
+    if(Number.isFinite(firstContact) && spec.id==='card-toggle') {
+      arrival=Math.max(previousArrival+1,Math.min(arrival,firstContact-questionLead));
+    }
+    if(Number.isFinite(firstContact) && spec.id==='buyer-question') {
+      arrival=Math.max(previousArrival+1,Math.min(arrival,firstContact-groomLead));
+    }
+    const gap=Math.max(0,arrival-previousArrival);
+    const duration=spec.id==='yarn-shelf-1'
+      ? Math.min(FIRST_SHELF_HOP_SCROLL,gap)
+      : Math.min(HOP_MAX_SCROLL,gap*.72);
+    const stop={...spec,arrival,departure:Math.max(previousArrival,arrival-duration),pointAt:spec.point};
+    previousArrival=arrival;
+    return stop;
+  });
+  if(scene) {
+    const scrollMap={tileLand:routeLandingScroll,tileSettled:routeStartScroll};
+    routeStops.forEach(stop=>{
+      scrollMap[stop.id]=Math.round(stop.arrival);
+      scrollMap[`${stop.id}Departure`]=Math.round(stop.departure);
+    });
+    scene.dataset.catScrollMap=JSON.stringify(scrollMap);
+  }
 }
 
 function showFlyingCat(anchorX, anchorY) {
   if (!cat || !word) return;
   if (cat.parentElement !== word) word.append(cat);
   cat.classList.add('is-flying');
-  cat.classList.remove('is-scared','is-landed');
+  cat.classList.remove('is-scared','is-landed','is-attached','is-grooming');
   cat.style.left = `${anchorX - EXPECTED_VIEWPORT.anchorX}px`;
   cat.style.top = `${anchorY - EXPECTED_VIEWPORT.anchorY}px`;
 }
 
-function landCat() {
-  if (!cat || !tile) return;
-  if (cat.parentElement !== tile) tile.append(cat);
-  cat.classList.remove('is-flying','is-scared');
+function attachCat(stop) {
+  if (!cat || !stop?.host) return;
+  if(getComputedStyle(stop.host).position==='static') stop.host.classList.add('cat-anchor-host');
+  if (cat.parentElement !== stop.host) stop.host.append(cat);
+  const rect=stop.host.getBoundingClientRect();
+  const point=stop.pointAt(rect);
+  cat.classList.remove('is-flying','is-scared','is-landed','is-grooming');
+  cat.classList.add('is-attached');
+  cat.style.left=`${point.x-rect.left-EXPECTED_VIEWPORT.anchorX}px`;
+  cat.style.top=`${point.y-rect.top-EXPECTED_VIEWPORT.anchorY}px`;
+  cat.style.removeProperty('bottom');
+}
+
+function tileRouteStop() {
+  if(!tile) return null;
+  return {id:'insight-tile',host:tile,pointAt:rect=>({x:rect.left+LANDING_X,y:rect.bottom-LANDING_INSET})};
+}
+
+function attachCatToTile() {
+  if(!cat || !tile) return;
+  tile.classList.add('cat-anchor-host');
+  if(cat.parentElement!==tile) tile.append(cat);
+  cat.classList.remove('is-flying','is-scared','is-attached','is-grooming');
   cat.classList.add('is-landed');
   cat.style.removeProperty('left');
   cat.style.removeProperty('top');
   cat.style.removeProperty('bottom');
+}
+
+function clearImpact() {
+  tile?.classList.remove('cat-impacting');
+  tile?.style.removeProperty('--cat-tile-rock');
+  tile?.style.removeProperty('--cat-tile-sink');
+}
+
+function resetCardToggle() {
+  manualToggleOverride=null;
+  autoToggleActive=false;
+  syncCardToggle(false);
 }
 
 function updateScene() {
@@ -261,11 +410,15 @@ function updateScene() {
     scrollCounterLabel.textContent = `scroll ${Math.round(scrollY)}px`;
     frameCounter.dataset.scrollY = String(Math.round(scrollY));
   }
-  if (!cat || !word || !world || !tile || !scene || !atlases.idle || !atlases.fall || !atlases.transition) return;
+  if (!cat || !word || !world || !scene || !atlases.idle || !atlases.fall || !atlases.transition || !atlases.groom) return;
 
   if (reducedMotion.matches) {
     resetCatToWord();
+    clearImpact();
     setWorldOffset(0);
+    manualToggleOverride=null;
+    autoToggleActive=false;
+    syncCardToggle(false);
     setIdlePose(0);
     scene.dataset.catScenePhase = 'reduced-motion-static';
     return;
@@ -274,9 +427,16 @@ function updateScene() {
   const y = scrollY;
   const fallProgress = clamp((y - takeoffScroll) / fallDistance);
   setWorldOffset(catWorldOffset(y,scrollMotion));
+  // Lock route thresholds after the original impact offset has settled. The
+  // yarn worker's contact milestones then use the same final transformed world.
+  if(y>=routeStartScroll && !routeStopsLocked && !routeRefreshPending) {
+    measureRouteStops();
+    routeStopsLocked=true;
+  }
 
   if (y < takeoffScroll) {
     clearImpact();
+    resetCardToggle();
     if (y >= triggerScroll) {
       showFlyingCat(scaredAnchor.x,scaredAnchor.y);
       cat.classList.add('is-scared');
@@ -293,10 +453,11 @@ function updateScene() {
   }
 
   if (fallProgress < 1) {
+    resetCardToggle();
     clearImpact();
-    const tileRect = tile.getBoundingClientRect();
-    const targetX = tileRect.left + LANDING_X;
-    const targetY = tileRect.bottom - LANDING_INSET;
+    const tileRect=tile.getBoundingClientRect();
+    const targetX=tileRect.left+LANDING_X;
+    const targetY=tileRect.bottom-LANDING_INSET;
     const eased = smooth(fallProgress);
     const anchorX = scaredAnchor.x + (targetX-scaredAnchor.x)*eased;
     const anchorY = scaredAnchor.y + (targetY-scaredAnchor.y)*fallProgress*fallProgress;
@@ -304,32 +465,134 @@ function updateScene() {
     setFallPose(flightFrame(fallProgress));
     scene.dataset.catScenePhase = 'falling';
     scene.dataset.catSceneProgress = String(fallProgress.toFixed(3));
+    scene.dataset.catRouteStop='insight-tile';
+    scene.dataset.catContact='';
     return;
   }
 
-  // Clear tile transform before reading its box. That keeps reverse contact and
-  // resize measurements independent from the previous impact frame.
+  if(y<routeStartScroll) {
+    resetCardToggle();
+    const recovery=Math.max(0,y-routeLandingScroll);
+    attachCatToTile();
+    setFallPose(recoveryFrame(recovery/RECOVERY_SCROLL));
+    const impactProgress=clamp(recovery/IMPACT_SCROLL);
+    const impact=1-smooth(impactProgress);
+    tile.classList.add('cat-impacting');
+    tile.style.setProperty('--cat-tile-rock',`${-2.2*impact}deg`);
+    tile.style.setProperty('--cat-tile-sink',`${impactDisplacement(impactProgress)}px`);
+    scene.dataset.catScenePhase=recovery<RECOVERY_SCROLL?'impact-recovery':'tile-settled';
+    scene.dataset.catSceneProgress=String(clamp(recovery/RECOVERY_SCROLL).toFixed(3));
+    scene.dataset.catRouteStop='insight-tile';
+    scene.dataset.catContact='insight-tile';
+    scene.dataset.catYarnStop='';
+    scene.dataset.catYarnContact='';
+    return;
+  }
+
   clearImpact();
-  const recovery = Math.max(0,y-(takeoffScroll+fallDistance));
-  landCat();
-  setFallPose(recoveryFrame(recovery/RECOVERY_SCROLL));
-  const impactProgress = clamp(recovery/IMPACT_SCROLL);
-  const impact = 1-smooth(impactProgress);
-  tile.classList.add('cat-impacting');
-  tile.style.setProperty('--cat-tile-rock',`${-2.2*impact}deg`);
-  tile.style.setProperty('--cat-tile-sink',`${impactDisplacement(impactProgress)}px`);
-  scene.dataset.catScenePhase = recovery < RECOVERY_SCROLL ? 'impact-recovery' : 'landed';
-  scene.dataset.catSceneProgress = String(clamp(recovery/RECOVERY_SCROLL).toFixed(3));
+  if(routeRefreshPending) {
+    scene.dataset.catScenePhase='route-layout-refresh';
+    return;
+  }
+
+  const stops=routeStops;
+  if(!stops.length) return;
+  let currentIndex=-1;
+  for(let index=0;index<stops.length;index++) {
+    if(y>=stops[index].arrival) currentIndex=index;
+    else break;
+  }
+  const current=currentIndex<0?tileRouteStop():stops[currentIndex];
+  const next=currentIndex<0?stops[0]:stops[currentIndex+1];
+  const cardIndex=stops.findIndex(stop=>stop.id==='card-toggle');
+  const shouldActivateCard=cardIndex>=0 && y>=stops[cardIndex].arrival;
+  if(shouldActivateCard!==autoToggleActive) {
+    manualToggleOverride=null;
+    autoToggleActive=shouldActivateCard;
+  }
+  syncCardToggle(shouldActivateCard);
+  scene.dataset.catRouteStop=current.id;
+  scene.dataset.catContact=current.id==='insight-tile'?'insight-tile':current.id;
+  scene.dataset.catYarnStop=current.id.startsWith('yarn-')?current.id.replace('yarn-',''):'';
+  scene.dataset.catYarnContact=current.id.startsWith('yarn-')?current.id.replace('yarn-',''):'';
+  scene.dataset.catYarnTarget='';
+
+  if(next && y>=next.departure && y<next.arrival) {
+    const progress=routeProgress(y,next.departure,next.arrival);
+    const sourceRect=current.host.getBoundingClientRect();
+    const targetRect=next.host.getBoundingClientRect();
+    const source=current.pointAt(sourceRect);
+    const target=next.pointAt(targetRect);
+    const arc=Math.min(116,Math.max(34,Math.abs(target.x-source.x)*.18+Math.abs(target.y-source.y)*.12));
+    showFlyingCat(source.x+(target.x-source.x)*progress,
+      source.y+(target.y-source.y)*progress-4*arc*progress*(1-progress));
+    const pose=ROUTE_POSES[(Math.max(0,currentIndex)+Math.floor(progress*2))%ROUTE_POSES.length];
+    setActionPose(pose);
+    scene.dataset.catScenePhase=`jumping-to-${next.id}`;
+    scene.dataset.catSceneProgress=String(progress.toFixed(3));
+    scene.dataset.catRouteStop=next.id;
+    scene.dataset.catContact='';
+    scene.dataset.catYarnStop='';
+    scene.dataset.catYarnContact='';
+    scene.dataset.catYarnTarget=next.id.startsWith('yarn-')?next.id.replace('yarn-',''):'';
+    return;
+  }
+
+  if(current.id==='insight-tile') {
+    attachCatToTile();
+    setFallPose(FALL_SEQUENCE[FALL_SEQUENCE.length-1]);
+  } else attachCat(current);
+  scene.dataset.catSceneProgress='1.000';
+  if(current.id==='buyer-question') {
+    cat.classList.add('is-grooming');
+    scene.dataset.catScenePhase='grooming';
+    scene.dataset.catNeedsArt='';
+    cat.dataset.groomAction='paw-lick';
+    setGroomPose();
+  } else {
+    scene.dataset.catScenePhase=current.id.startsWith('yarn-')?'yarn-contact':'landed';
+    scene.dataset.catNeedsArt='';
+    if(current.id==='text-wall') setActionPose('land-6');
+    else if(current.id==='card-toggle') setTogglePressPose();
+    else if(current.id==='yarn-ball-3') setActionPose('land-6');
+    else if(current.id.startsWith('yarn-')) setActionPose('fall-10');
+  }
+}
+
+function syncCardToggle(active) {
+  const toggle=previewCard?.querySelector('[data-cat-toggle]');
+  const value=manualToggleOverride ?? active;
+  if(toggle) {
+    toggle.setAttribute('aria-pressed',String(value));
+    toggle.classList.toggle('is-active',value);
+  }
+  if(!previewCard) return;
+  previewCard.dataset.catActive=String(value);
+  previewCard.dataset.active=String(value);
 }
 
 function requestUpdate() {if(!queued){queued=true;requestAnimationFrame(updateScene);}}
 
 addEventListener('scroll',requestUpdate,{passive:true});
 addEventListener('resize',()=>{
-  resetCatToWord();
-  setWorldOffset(0);
-  measureTrigger();
-  updateScene();
+  // playground.js updates its yarn contact-scroll milestones on the next
+  // animation frame. Wait for that layout pass before measuring route stops.
+  routeRefreshPending=true;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    resetCatToWord();
+    setWorldOffset(0);
+    measureTrigger();
+    setWorldOffset(catWorldOffset(scrollY,scrollMotion));
+    measureRouteStops();
+    routeStopsLocked=scrollY>=routeStartScroll;
+    routeRefreshPending=false;
+    updateScene();
+  }));
+});
+previewCard?.querySelector('[data-cat-toggle]')?.addEventListener('click',event=>{
+  // playground.js handles the real button first; capture its resulting state
+  // so manual use remains authoritative until the cat crosses a route edge.
+  manualToggleOverride=event.currentTarget.getAttribute('aria-pressed')==='true';
 });
 reducedMotion.addEventListener('change',requestUpdate);
 
