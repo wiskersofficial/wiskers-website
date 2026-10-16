@@ -18,6 +18,9 @@ VIEW_W = VIEW_H = 470
 VIEW_LEFT = (CELL - VIEW_W) / 2
 ANCHOR_X, ANCHOR_Y = 64, 113
 ART_MAX = 300
+# The long tail on this startled recoil was shrinking the torso when fit to the
+# shared cell bounds. Its foot/pivot stays unchanged; only its art scale grows.
+ART_LAYOUT_BY_SOURCE = {'fall-2-shocked-large-v3.png': {'max_size': 340, 'cell_foot': 350}}
 CELL_FOOT = 330
 
 
@@ -100,12 +103,12 @@ def file_pose(name):
 
 # Approved or reviewed poses only. The two repeated holds are intentional:
 # the scroll route has more stable IDs than unique key drawings.
-IDLE = [sheet_pose(0), sheet_pose(1), sheet_pose(8)]
+IDLE = [sheet_pose(0), sheet_pose(1)]
 FALL = [
-    sheet_pose(2), file_pose('keyframe-01-lift-off.png'), sheet_pose(3),
+    sheet_pose(2), file_pose('fall-2-shocked-large-v3.png'), sheet_pose(3),
     file_pose('keyframe-02-back-first-fall.png'),
-    file_pose('pose-05-supine-recreated.png'),
-    file_pose('pose-06-righting-recreated.png'),
+    file_pose('fall-5-bridge-v2.png'),
+    file_pose('fall-6-bridge-v2.png'),
     file_pose('reference-R7-pose.png'), file_pose('reference-R7-pose.png'),
     file_pose('fall-9-near-contact-v2.png'),
     file_pose('fall-10-first-contact-v2.png'),
@@ -118,7 +121,7 @@ TRANSITION = [
     file_pose('pose-06-righting-recreated.png'),
     file_pose('reference-R7-pose.png'), file_pose('reference-R7-pose.png'),
     file_pose('keyframe-04-impact-compression.png'),
-    file_pose('land-2-small-rebound.png'),
+    file_pose('land-2-rebound-v3.png'),
     file_pose('land-3-chest-lift-v2.png'),
     file_pose('land-3-chest-lift-v2.png'),
     file_pose('reference-R9-pose.png'), file_pose('reference-R9-pose.png'),
@@ -176,11 +179,14 @@ def place_pose(atlas, frame_index, spec, cache):
     (width,height,source), region = load_pose(spec,cache)
     x0,y0,x1,y1 = crop_bounds(width,height,source,region)
     sw,sh = x1-x0,y1-y0
-    scale = min(ART_MAX/max(sw,sh), 1.0)
+    layout = ART_LAYOUT_BY_SOURCE.get(spec[1], {}) if spec[0] == 'file' else {}
+    max_art = layout.get('max_size', ART_MAX)
+    cell_foot = layout.get('cell_foot', CELL_FOOT)
+    scale = min(max_art/max(sw,sh), 1.0)
     dw,dh = max(1,round(sw*scale)), max(1,round(sh*scale))
     cell_x,cell_y = (frame_index%COLS)*CELL,(frame_index//COLS)*CELL
     dx0 = cell_x + (CELL-dw)//2
-    dy0 = cell_y + CELL_FOOT - dh
+    dy0 = cell_y + cell_foot - dh
     for dy in range(dh):
         sy = y0 + (dy+0.5)/scale - 0.5
         for dx in range(dw):
@@ -189,7 +195,7 @@ def place_pose(atlas, frame_index, spec, cache):
             dest = ((dy0+dy)*ATLAS_W + dx0+dx)*4
             atlas[dest:dest+4] = px
     return [cell_x,cell_y,CELL,CELL], [
-        round(cell_x+VIEW_LEFT,2), round(cell_y+CELL_FOOT-ANCHOR_Y*(VIEW_H/128),2),
+        round(cell_x+VIEW_LEFT,2), round(cell_y+cell_foot-ANCHOR_Y*(VIEW_H/128),2),
         VIEW_W,VIEW_H,
     ]
 

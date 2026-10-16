@@ -12,8 +12,9 @@
     button{font:inherit;padding:6px 10px;border:1px solid #b9c0c6;border-radius:6px;background:white;color:inherit;cursor:pointer}
     button[aria-pressed="true"]{background:#dce8f4;border-color:#52758f}
     .sequence{display:grid;grid-template-columns:repeat(6,minmax(128px,1fr));gap:10px;margin:0 0 24px}
-    figure{margin:0;min-width:0;padding:5px;border:1px solid #d6d5d2;border-radius:7px;background:#fff}
+    figure{position:relative;margin:0;min-width:0;padding:5px;border:1px solid #d6d5d2;border-radius:7px;background:#fff}
     .stage{width:100%;aspect-ratio:1;overflow:hidden;background:#f9f7f3;border-radius:4px}
+    figure.approved::after{content:"✓";position:absolute;right:5px;bottom:5px;width:18px;height:18px;border-radius:0 0 5px 0;background:#37a866;color:white;text-align:center;font:700 13px/18px system-ui}
     .stage svg{display:block;width:100%;height:100%}
     figcaption{display:flex;justify-content:space-between;gap:8px;padding:5px 2px 1px;font:11px/1.3 ui-monospace,monospace;color:#35414a}
     .phase{color:#78838c}
@@ -27,7 +28,7 @@
 </head>
 <body>
   <h1>Soft cat motion sequence</h1>
-  <p>Frames are displayed through the same atlas crops and view boxes as the website. The original 128 px viewport is preserved. Check pose order, facing, scale, paws, and tail through the full scroll arc.</p>
+  <p>Frames are displayed through the same atlas crops and view boxes as the website. The original 128 px viewport is preserved. Check pose order, facing, scale, paws, tail, and expression continuity through the full scroll arc. A green corner means Josh approved both that frame's image and its placement.</p>
   <div class="controls" aria-label="Review controls">
     <button id="play" type="button">Play sequence</button>
     <button data-theme="light" aria-pressed="true">Light</button>
@@ -53,7 +54,8 @@
       ['fall','fall-11','ground crouch',10],['transition','land-3','chest lift',8],['transition','land-4','crouch hold',9],
       ['transition','land-5','seated',10],['transition','land-6','seated hold',11],['fall','fall-12','settled hold',11],
     ];
-    const idleIds=['idle-1','idle-2','idle-3'];
+    const idleIds=['idle-1','idle-2'];
+    const approvedPoseIds=new Set(['fall-1']);
     const data=Object.fromEntries(await Promise.all(Object.entries(routes).map(async([name,url])=>[name,await (await fetch(url)).json()])));
     const NS='http://www.w3.org/2000/svg';
     function card(section,name,index,id,phase){
@@ -67,6 +69,7 @@
       svg.append(defs,image);stage.append(svg);figure.append(stage);
       const caption=document.createElement('figcaption');caption.innerHTML=`<span>${id}</span><span class="phase">${phase}</span>`;figure.append(caption);
       figure.dataset.index=String(index);figure.dataset.id=id;figure.dataset.atlas=name;figure.dataset.section=section;
+      if(approvedPoseIds.has(id))figure.classList.add('approved');
       return figure;
     }
     idleIds.forEach((id,index)=>document.querySelector('#idle').append(card('idle','idle',index,id,'perched')));
