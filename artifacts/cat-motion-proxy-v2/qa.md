@@ -10,6 +10,7 @@
 - A 390 × 844 viewport check confirmed the mobile route uses its existing 650px fall distance and the cat lands at the lower-left of the blue tile. The art remains legible at its prior approximate display size.
 - Day/night theme controls load and retain the cat correctly; visual contrast was checked on the night background. No browser errors were observed.
 - The production Vite build succeeded using Vite’s runner config loader after the normal build encountered a temporary config-file permission error in `node_modules/.vite-temp`.
+- The opt-in frame overlay now shows the live page scroll offset in CSS pixels alongside the stable pose ID. Browser verification at `scrollY = 400` showed `scroll 400px` while the matching pose label remained visible.
 
 ## Earlier pixel-atlas review history
 

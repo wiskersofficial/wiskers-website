@@ -46,18 +46,21 @@ let queued = false;
 const showFrameCounter = import.meta.env.DEV || new URLSearchParams(location.search).get('cat-debug') === '1';
 const frameCounter = showFrameCounter ? document.createElement('div') : null;
 const frameCounterLabel = frameCounter ? document.createElement('span') : null;
+const scrollCounterLabel = frameCounter ? document.createElement('span') : null;
 const copyFrameButton = frameCounter ? document.createElement('button') : null;
 let copyFeedbackTimer = 0;
 if (frameCounter) {
   frameCounter.className = 'cat-frame-counter';
   frameCounterLabel.className = 'cat-frame-counter-label';
   frameCounterLabel.textContent = 'Frames loading…';
+  scrollCounterLabel.className = 'cat-scroll-counter';
+  scrollCounterLabel.textContent = `scroll ${Math.round(scrollY)}px`;
   copyFrameButton.type = 'button';
   copyFrameButton.className = 'cat-frame-copy';
   copyFrameButton.textContent = 'Copy';
   copyFrameButton.setAttribute('aria-label','Copy current cat frame reference');
   copyFrameButton.title = 'Copy frame reference';
-  frameCounter.append(frameCounterLabel,copyFrameButton);
+  frameCounter.append(frameCounterLabel,scrollCounterLabel,copyFrameButton);
   document.body.append(frameCounter);
 
   copyFrameButton.addEventListener('click',async()=>{
@@ -254,6 +257,10 @@ function landCat() {
 
 function updateScene() {
   queued = false;
+  if (scrollCounterLabel) {
+    scrollCounterLabel.textContent = `scroll ${Math.round(scrollY)}px`;
+    frameCounter.dataset.scrollY = String(Math.round(scrollY));
+  }
   if (!cat || !word || !world || !tile || !scene || !atlases.idle || !atlases.fall || !atlases.transition) return;
 
   if (reducedMotion.matches) {
