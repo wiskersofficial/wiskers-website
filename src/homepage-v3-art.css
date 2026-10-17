@@ -1,0 +1,111 @@
+/* The visual system: a question is sorted into a tool, then resolves into a useful answer. */
+:root {
+  --art-navy: var(--navy);
+  --art-blue: var(--blue);
+  --art-coral: var(--coral);
+  --art-seaweed: var(--green);
+  --art-paper: var(--cream);
+  --art-progress: clamp(0, var(--scene-progress, 0), 1);
+  --art-open: clamp(0, var(--document-open, 0), 1);
+  --art-assembly: clamp(0, var(--tool-assembly, 0), 1);
+  --art-answer: clamp(0, var(--answer-progress, 0), 1);
+  --art-release: clamp(0, var(--scene-release, 0), 1);
+  --art-tool-exit: clamp(0, calc((var(--art-progress) - .62) / .12), 1);
+}
+
+/* Hero: oversized input becomes a legible answer mark. */
+.v3-hero-art {
+  --art-size: min(100%, 650px);
+  position: relative;
+  width: var(--art-size);
+  aspect-ratio: 1;
+  justify-self: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--art-navy);
+  color: var(--art-paper);
+  border: 1px solid color-mix(in srgb, var(--art-navy) 78%, transparent);
+}
+.v3-hero-art::before, .v3-hero-art::after { content:""; position:absolute; z-index:-1; }
+.v3-hero-art::before {
+  inset: 10%; border: 1px solid color-mix(in srgb, var(--art-paper) 25%, transparent);
+  background: linear-gradient(90deg, transparent 49.8%, color-mix(in srgb, var(--art-paper) 15%, transparent) 50%, transparent 50.2%), linear-gradient(transparent 49.8%, color-mix(in srgb, var(--art-paper) 15%, transparent) 50%, transparent 50.2%);
+}
+.v3-hero-art::after { width:46%;height:46%;left:27%;top:27%; background:var(--art-blue); transform:translate(34%,26%); transition:transform .25s linear; }
+.v3-art-stamp { position:absolute;left:9%;top:9%;font-size:clamp(13px,2vw,22px);line-height:.9;font-weight:700;letter-spacing:-.05em;color:var(--art-coral);text-transform:uppercase; }
+.v3-art-line { position:absolute;left:9%;right:9%;top:22%;height:2px;background:var(--art-paper);transform-origin:left;transform:scaleX(calc(.42 + var(--art-open))); }
+.v3-art-word { position:absolute;z-index:2;left:14%;top:30%;font-size:clamp(48px,10vw,126px);line-height:.73;font-weight:700;letter-spacing:-.09em;transition:transform .3s ease;transform:translate(16%, -8%); }
+.v3-art-word b { color:var(--art-coral);font-size:.65em; }
+.v3-art-grid { position:absolute;right:9%;bottom:9%;width:31%;height:31%;background:repeating-linear-gradient(90deg,var(--art-paper) 0 2px,transparent 2px 19%),repeating-linear-gradient(0deg,var(--art-paper) 0 2px,transparent 2px 19%);opacity:calc(.35 + var(--art-progress));transform:rotate(90deg); }
+
+/* Thesis: an editorial paper slab, a decisive cut, and a usable tool. */
+.v3-thesis-art { position:relative;min-height:clamp(310px,42vw,570px);display:grid;grid-template-columns:1fr 70px 1fr;align-items:center;overflow:hidden;isolation:isolate; }
+.v3-thesis-art::before { content:"";position:absolute;inset:8% 3%;z-index:-1;background:var(--art-seaweed); }
+.v3-paper,.v3-tool-card { position:relative;min-height:clamp(220px,28vw,380px);padding:clamp(17px,3vw,36px);display:flex;flex-direction:column;justify-content:space-between;box-shadow:14px 14px 0 color-mix(in srgb,var(--art-navy) 22%,transparent); }
+.v3-paper { z-index:1;background:var(--art-paper);color:var(--art-navy);transform:translateY(-9%) rotate(-2deg); }
+.v3-tool-card { z-index:2;background:var(--art-blue);color:var(--art-paper);transform:translateY(8%) rotate(1deg); }
+.v3-paper span,.v3-tool-card span,.v3-paper i,.v3-tool-card i { font-style:normal;font-size:clamp(9px,1.15vw,13px);font-weight:700;letter-spacing:.12em; }
+.v3-paper b,.v3-tool-card b { font-size:clamp(24px,4vw,49px);line-height:.95;letter-spacing:-.065em; }
+.v3-pixel-arrow { z-index:3;align-self:center;text-align:center;color:var(--art-coral);font-size:clamp(38px,6vw,76px);font-weight:700;transform:translateX(14px); }
+
+/* Process scene: one document breaks into planes, assembles into a tool, then resolves into an answer. */
+.v3-process-visual {
+  --stage: min(58vw, 68vh, 700px);
+  position:relative;width:min(100%, var(--stage));height:auto;aspect-ratio:1;min-height:0;max-width:100%;margin-inline:auto;
+  overflow:hidden;isolation:isolate;background:var(--art-navy);color:var(--art-paper);
+  border:1px solid color-mix(in srgb,var(--art-navy) 70%,transparent);container-type:inline-size;
+}
+.v3-process-visual::before { content:"";position:absolute;inset:7%;border:1px solid color-mix(in srgb,var(--art-paper) 25%,transparent);background:linear-gradient(90deg,transparent 49.8%,color-mix(in srgb,var(--art-paper) 15%,transparent) 50%,transparent 50.2%),linear-gradient(transparent 49.8%,color-mix(in srgb,var(--art-paper) 15%,transparent) 50%,transparent 50.2%); }
+.v3-process-visual::after { content:"IDEA / INPUT / INSIGHT";position:absolute;left:8%;bottom:7%;font-size:clamp(9px,1.6cqw,14px);font-weight:700;letter-spacing:.15em;color:color-mix(in srgb,var(--art-paper) 68%,transparent);opacity:calc(.55 + var(--art-progress)); }
+/* The old diagonal orbit outlines competed with the block construction. */
+.v3-process-orbit { display:none; }
+.v3-process-core { position:absolute;z-index:4;left:40%;top:34%;width:20%;aspect-ratio:1;display:grid;place-items:center;background:var(--art-coral);color:var(--art-navy);font-size:clamp(54px,14cqw,120px);font-weight:700;line-height:1;box-shadow:9px 9px 0 color-mix(in srgb,var(--art-navy) 35%,transparent);opacity:calc(1 - var(--art-assembly));transform:scale(calc(1 - var(--art-assembly)));transition:opacity .16s linear,transform .16s linear; }
+.v3-process-fragment { position:absolute;z-index:3;display:grid;place-items:center;padding:.2em .35em;background:var(--art-paper);color:var(--art-navy);font-size:clamp(16px,4.8cqw,42px);font-weight:700;letter-spacing:-.07em;box-shadow:8px 8px 0 color-mix(in srgb,var(--art-blue) 70%,transparent);transition:transform .16s linear,translate .16s linear,scale .16s linear,opacity .16s linear; }
+/* At zero these three planes read as one typeset document. Opening scales the page into substantial blocks; assembly restores the sheet as the tool appears. */
+.v3-process-fragment { opacity:clamp(0,calc(1 - var(--art-assembly) - var(--art-answer) - var(--art-release)),1);scale:1;transform-origin:center; }
+.v3-process-fragment.fragment-one { left:10%;top:19%;width:80%;height:19%;background:var(--art-paper);translate:var(--plane-one-x, 0px) var(--plane-one-y, 0px); }
+.v3-process-fragment.fragment-two { left:10%;top:40%;width:80%;height:19%;background:var(--art-blue);color:var(--art-paper);translate:var(--plane-two-x, 0px) var(--plane-two-y, 0px); }
+.v3-process-fragment.fragment-three { left:10%;top:61%;width:80%;height:19%;background:var(--art-seaweed);color:var(--art-paper);translate:var(--plane-three-x, 0px) var(--plane-three-y, 0px); }
+.v3-process-tool { position:absolute;z-index:5;left:25%;top:19%;width:52%;height:61%;padding:7% 6%;display:flex;flex-direction:column;gap:7%;background:var(--art-paper);color:var(--art-navy);border-top:9px solid var(--art-seaweed);box-shadow:12px 12px 0 color-mix(in srgb,var(--art-coral) 82%,transparent);opacity:clamp(0,calc(min(1,calc(var(--art-assembly) + var(--art-assembly) + var(--art-assembly))) - var(--art-tool-exit)),1);scale:min(1,calc(.55 + var(--art-assembly) - var(--art-answer)));transform-origin:center;transition:opacity .16s linear,scale .16s linear; }
+.v3-process-tool i { display:block;position:relative;height:14%;background:color-mix(in srgb,var(--art-blue) 18%,var(--art-paper));border-left:5px solid var(--art-blue); }
+.v3-process-tool i:nth-child(2) { width:76%;border-color:var(--art-coral); }
+.v3-process-tool i:nth-child(3) { width:89%;border-color:var(--art-seaweed); }
+.v3-process-tool b { margin-top:auto;padding:6% 7%;background:var(--art-blue);color:var(--art-paper);font-size:clamp(12px,3.5cqw,28px);letter-spacing:.04em; }
+/* The signal grows into a legible answer panel from 0.60 onward and occupies the square at launch. */
+.v3-process-signal { position:absolute;z-index:7;right:8%;bottom:8%;width:84%;height:78%;display:grid;place-items:center;overflow:hidden;padding:5%;background:var(--art-seaweed);border:1px solid var(--art-paper);color:transparent;font-size:0;font-weight:700;opacity:var(--art-tool-exit);scale:min(1,calc(.56 + var(--art-tool-exit)));transform-origin:bottom right;transition:opacity .16s linear,scale .16s linear;box-shadow:-10px -10px 0 color-mix(in srgb,var(--art-coral) 78%,transparent); }
+.v3-process-signal::before { content:"YOUR NEXT MOVE";display:block;width:100%;padding:8% 0;border-bottom:2px solid color-mix(in srgb,var(--art-paper) 65%,transparent);color:var(--art-paper);font-size:clamp(11px,3.2cqw,28px);line-height:1.05;letter-spacing:.08em; }
+.v3-process-signal::after { content:"Start with the choice that gives you the clearest value.";display:block;width:100%;padding-top:9%;color:var(--art-paper);font-size:clamp(10px,2.4cqw,20px);line-height:1.3;font-weight:500; }
+
+/* Closing echo of the same question-to-insight block system. */
+.v3-close-art { display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:clamp(12px,3vw,42px);max-width:780px;margin:0 0 clamp(34px,6vw,78px) auto;padding:clamp(16px,3vw,32px);background:var(--art-navy);color:var(--art-paper); }
+.v3-close-art span { display:flex;min-height:clamp(54px,9vw,104px);align-items:center;padding:clamp(10px,2vw,22px);background:var(--art-blue);font-size:clamp(13px,2.2vw,26px);font-weight:700;letter-spacing:.04em; }
+.v3-close-art span:last-child { background:var(--art-seaweed); }
+.v3-close-art b { color:var(--art-coral);font-size:clamp(34px,6vw,68px); }
+
+@media (max-width: 800px) {
+  .v3-hero-art { --art-size:min(100%, 560px); }
+  .v3-thesis-art { min-height:360px;grid-template-columns:1fr 40px 1fr; }
+  .v3-paper,.v3-tool-card { min-height:250px;padding:18px; }
+  :root.process-motion-ready .v3-process-visual { --stage:min(88vw, 42svh, 560px, 100%);width:min(100%,var(--stage));height:auto;min-height:0;aspect-ratio:1;flex:0 0 auto; }
+  .v3-process-visual { --stage:min(88vw, 42svh, 560px, 100%);width:min(100%,var(--stage));height:auto;min-height:0;aspect-ratio:1; }
+}
+@media (min-width: 761px) and (max-width: 900px) {
+  :root.process-motion-ready .v3-process-visual { --stage:min(100%, 42svh, 560px); }
+}
+@media (max-width: 520px) {
+  .v3-thesis-art { min-height:310px;grid-template-columns:1fr 28px 1fr; }
+  .v3-paper,.v3-tool-card { min-height:218px;padding:12px;box-shadow:7px 7px 0 color-mix(in srgb,var(--art-navy) 22%,transparent); }
+  .v3-paper b,.v3-tool-card b { font-size:clamp(19px,6vw,28px); }
+  :root.process-motion-ready .v3-process-visual { --stage:min(92vw, 38svh, 420px, 100%);width:min(100%,var(--stage));height:auto;min-height:0;aspect-ratio:1;flex:0 0 auto; }
+  .v3-process-visual { --stage:min(92vw, 38svh, 420px, 100%);width:min(100%,var(--stage));height:auto;min-height:0;aspect-ratio:1; }
+  .v3-process-tool { border-top-width:6px;padding:7% 6%; }
+  .v3-process-fragment { box-shadow:4px 4px 0 color-mix(in srgb,var(--art-blue) 70%,transparent); }
+  .v3-close-art { gap:8px;padding:12px;margin-bottom:30px; }
+  .v3-close-art span { min-height:60px;padding:8px;font-size:clamp(11px,3.2vw,16px); }
+}
+:root.process-motion-ready .v3-process-visual { width:min(100%,var(--stage));height:auto;min-height:0;aspect-ratio:1;flex:0 0 auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --art-progress:0;--art-open:0;--art-assembly:0;--art-answer:0;--art-release:0; }
+  .v3-hero-art::after,.v3-art-word,.v3-paper,.v3-tool-card,.v3-pixel-arrow,.v3-process-orbit,.v3-process-core,.v3-process-fragment,.v3-process-tool,.v3-process-signal { transition:none !important; }
+}
