@@ -2,6 +2,7 @@ import "./layout.css";
 import "./glyph-wave.css";
 import { homeMarkup, mountHomeInteractions } from "./markup.js";
 import { initGlyphWaves } from "./glyph-wave.js";
+import { measureDocumentBoxes, observeLayoutChanges, progressAcrossRange, progressAcrossViewport } from "./scroll-timing.js";
 
 const main = document.querySelector("#main-content");
 if (main) {
@@ -26,17 +27,16 @@ if (main) {
   let frame = 0;
   let paused = false;
   let pageHeight = 1;
-  let viewportHeight = window.innerHeight || 1;
+  let viewportHeight = window.visualViewport?.height || window.innerHeight || 1;
 
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
 
   function measure() {
-    viewportHeight = window.innerHeight || 1;
+    viewportHeight = window.visualViewport?.height || window.innerHeight || 1;
     const scrollY = window.scrollY || 0;
-    for (const element of [...scenes, ...glyphTargets, ...examples, ...stages]) {
-      const rect = element.getBoundingClientRect();
-      rects.set(element, { top: rect.top + scrollY, height: rect.height });
-    }
+    const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages], scrollY);
+    rects.clear();
+    for (const [element, box] of measured) rects.set(element, box);
     pageHeight = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
     schedule();
   }
@@ -46,11 +46,22 @@ if (main) {
     frame = requestAnimationFrame(update);
   }
 
-  function progressWhenCrossing(element, enterAt = 0.82, range = 0.48) {
-    const box = rects.get(element);
-    if (!box) return 0;
-    const line = (window.scrollY || 0) + viewportHeight * enterAt;
-    return clamp((line - box.top) / Math.max(1, box.height + viewportHeight * range));
+  function progressWhenCrossing(element, startAt = 0.88, endAt = 0.52) {
+    return progressAcrossViewport(
+      rects.get(element),
+      window.scrollY || 0,
+      viewportHeight,
+      startAt,
+      endAt,
+      window.visualViewport?.offsetTop || 0,
+    );
+  }
+
+  function progressForGlyph(target) {
+    // Revealed children move visually; anchor their timing to the untransformed
+    // row so resize measurements never inherit a previous animation offset.
+    const stableRow = target.closest(".v6-example, .v6-process-steps article");
+    return progressWhenCrossing(stableRow || target, 0.9, 0.52);
   }
 
   function update() {
@@ -62,8 +73,7 @@ if (main) {
 
     const heroBox = rects.get(hero);
     if (heroBox) {
-      const heroTravel = Math.max(1, heroBox.height * 0.58);
-      const heroProgress = clamp((scrollY - heroBox.top + viewportHeight * 0.02) / heroTravel);
+      const heroProgress = progressAcrossRange(scrollY, heroBox.top, heroBox.top + viewportHeight * 0.26);
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
       hero?.style.setProperty("--v6-hero-depth", `${(depart * 22).toFixed(1)}px`);
@@ -75,8 +85,7 @@ if (main) {
 
     for (const target of glyphTargets) {
       if (target.closest(".v6-hero")) continue;
-      const p = progressWhenCrossing(target, 0.84, 0.52);
-      glyphs.update(target, p);
+      glyphs.update(target, progressForGlyph(target));
     }
 
     if (thesis) {
@@ -87,12 +96,12 @@ if (main) {
     }
 
     for (const example of examples) {
-      const p = progressWhenCrossing(example, 0.9, 0.12);
+      const p = progressWhenCrossing(example, 0.9, 0.52);
       example.style.setProperty("--v6-reveal", p.toFixed(3));
     }
 
     for (const stage of stages) {
-      const p = progressWhenCrossing(stage, 0.9, 0.2);
+      const p = progressWhenCrossing(stage, 0.9, 0.52);
       stage.style.setProperty("--v6-stage-progress", p.toFixed(3));
     }
   }
@@ -133,8 +142,10 @@ if (main) {
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onResize, { passive: true });
+  window.visualViewport?.addEventListener("resize", onResize, { passive: true });
   motionPreference.addEventListener?.("change", onMotionPreference);
   onMotionPreference();
+  const disconnectLayoutObserver = observeLayoutChanges([...scenes, ...glyphTargets, ...examples, ...stages, main], onResize);
   document.fonts?.ready.then(measure);
   measure();
 
@@ -145,5 +156,7 @@ if (main) {
     if (frame) cancelAnimationFrame(frame);
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onResize);
+    window.visualViewport?.removeEventListener("resize", onResize);
+    disconnectLayoutObserver();
   }, { once: true });
 }

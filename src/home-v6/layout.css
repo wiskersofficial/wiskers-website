@@ -130,6 +130,7 @@ html[data-theme="night"] .wordmark-logo, html[data-theme="twilight"] .wordmark-l
 .v6-contact .v6-overline { color: color-mix(in srgb, #091540 74%, var(--v6-coral)); }
 .v6-contact h2 { margin-bottom: 40px; font-size: clamp(58px, 9.5vw, 126px); }
 .v6-contact h2 span { color: #091540; font-family: var(--v6-serif); font-weight: 400; }
+.v6-contact .glyph-wave { --glyph-wave-sans-color: #091540; --glyph-wave-serif-color: #091540; }
 .v6-email-link { font-size: 14px; }
 .v6-contact .v6-email-link, .v6-contact .v6-buyer-question a { border-color: #091540; }
 .v6-contact .v6-email-link:hover, .v6-contact .v6-buyer-question a:hover { color: #091540; border-color: #091540; }
