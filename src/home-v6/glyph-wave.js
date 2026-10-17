@@ -34,10 +34,12 @@ function buildVisual(text) {
  * A Map<Element, number> may be passed to update() to update several targets
  * in one call. The optional data-glyph-stagger attribute controls the progress
  * margin around the letter sequence (default 0.08); the remaining interval is
- * distributed evenly across each glyph's change point.
+ * distributed evenly across each glyph's change point. `getTravelDistance()`
+ * returns the scroll distance needed to keep successive changes a chosen
+ * number of CSS pixels apart.
  *
  * @param {Element|Document} root Search root (defaults to document).
- * @returns {{update(targetOrProgressMap:Element|Map<Element,number>,progress?:number):void,setPaused(paused:boolean):void,destroy():void}}
+ * @returns {{update(targetOrProgressMap:Element|Map<Element,number>,progress?:number):void,setPaused(paused:boolean):void,getTravelDistance(target:Element,pixelsPerLetter?:number):number,destroy():void}}
  */
 export function initGlyphWaves(root = document) {
   const records = new Map();
@@ -95,6 +97,14 @@ export function initGlyphWaves(root = document) {
     paused = Boolean(value);
   }
 
+  function getTravelDistance(target, pixelsPerLetter = 32) {
+    const record = records.get(target);
+    if (!record || record.cells.length < 2) return 0;
+    const transition = clamp(Number(target.dataset.glyphStagger ?? 0.08));
+    const step = Math.max(0.025, (1 - transition) / (record.cells.length - 1));
+    return Math.max(0, Number(pixelsPerLetter) || 0) / step;
+  }
+
   function destroy() {
     if (destroyed) return;
     destroyed = true;
@@ -105,5 +115,5 @@ export function initGlyphWaves(root = document) {
     records.clear();
   }
 
-  return { update, setPaused, destroy };
+  return { update, setPaused, getTravelDistance, destroy };
 }

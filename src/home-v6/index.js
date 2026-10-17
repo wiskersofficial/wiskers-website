@@ -61,7 +61,15 @@ if (main) {
     // Revealed children move visually; anchor their timing to the untransformed
     // row so resize measurements never inherit a previous animation offset.
     const stableRow = target.closest(".v6-example, .v6-process-steps article");
-    return progressWhenCrossing(stableRow || target, 0.9, 0.52);
+    const anchor = stableRow || target;
+    const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, 32));
+    const endAt = Math.max(0.06, 0.92 - travel / viewportHeight);
+    return progressWhenCrossing(anchor, 0.92, endAt);
+  }
+
+  function revealProgressForGlyph(target, progress) {
+    const stagger = clamp(Number(target.dataset.glyphStagger ?? 0.08));
+    return clamp((progress - stagger / 2) / Math.max(0.05, 1 - stagger));
   }
 
   function update() {
@@ -73,7 +81,15 @@ if (main) {
 
     const heroBox = rects.get(hero);
     if (heroBox) {
-      const heroProgress = progressAcrossRange(scrollY, heroBox.top, heroBox.top + viewportHeight * 0.26);
+      const heroTarget = glyphTargets.find((target) => target.closest(".v6-hero"));
+      const heroTargetBox = heroTarget && rects.get(heroTarget);
+      const targetVisibleEnd = heroTargetBox
+        ? Math.max(1, heroTargetBox.top + heroTargetBox.height - viewportHeight * 0.06)
+        : heroBox.top + viewportHeight * 0.26;
+      // The hero has a shorter visible runway; use a 24px character cadence
+      // there and finish before the line leaves the viewport.
+      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, 24));
+      const heroProgress = progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
       hero?.style.setProperty("--v6-hero-depth", `${(depart * 22).toFixed(1)}px`);
@@ -96,12 +112,18 @@ if (main) {
     }
 
     for (const example of examples) {
-      const p = progressWhenCrossing(example, 0.9, 0.52);
+      const target = example.querySelector("[data-glyph-wave]");
+      const p = target
+        ? revealProgressForGlyph(target, progressForGlyph(target))
+        : progressWhenCrossing(example, 0.92, 0.06);
       example.style.setProperty("--v6-reveal", p.toFixed(3));
     }
 
     for (const stage of stages) {
-      const p = progressWhenCrossing(stage, 0.9, 0.52);
+      const target = stage.querySelector("[data-glyph-wave]");
+      const p = target
+        ? revealProgressForGlyph(target, progressForGlyph(target))
+        : progressWhenCrossing(stage, 0.92, 0.06);
       stage.style.setProperty("--v6-stage-progress", p.toFixed(3));
     }
   }
