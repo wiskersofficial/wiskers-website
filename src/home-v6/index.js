@@ -24,6 +24,7 @@ if (main) {
   const pauseButton = document.querySelector("[data-v6-pause]");
   const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const rects = new Map();
+  const glyphPixelsPerLetter = 48;
   let frame = 0;
   let paused = false;
   let pageHeight = 1;
@@ -62,7 +63,7 @@ if (main) {
     // row so resize measurements never inherit a previous animation offset.
     const stableRow = target.closest(".v6-example, .v6-process-steps article");
     const anchor = stableRow || target;
-    const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, 56));
+    const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, glyphPixelsPerLetter));
     const endAt = Math.max(0.06, 0.92 - travel / viewportHeight);
     return progressWhenCrossing(anchor, 0.92, endAt);
   }
@@ -86,9 +87,9 @@ if (main) {
       const targetVisibleEnd = heroTargetBox
         ? Math.max(1, heroTargetBox.top + heroTargetBox.height - viewportHeight * 0.06)
         : heroBox.top + viewportHeight * 0.26;
-      // The hero has a shorter visible runway; use a 48px cadence target
-      // there and finish before the line leaves the viewport.
-      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, 48));
+      // Use the same character cadence as every other heading; cap the hero's
+      // shorter runway so its final glyph changes while the line is visible.
+      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, glyphPixelsPerLetter));
       const heroProgress = progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
