@@ -1,0 +1,50 @@
+.home-v4-motion-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+  min-height: 38px;
+  padding: 7px 11px;
+  border: 1px solid var(--line, currentColor);
+  border-radius: 999px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.home-v4-motion-control:hover,
+.home-v4-motion-control[data-paused="true"] {
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.home-v4-motion-control:focus-visible {
+  outline: 2px solid var(--signal, currentColor);
+  outline-offset: 3px;
+}
+
+.home-v4-motion-control__preference {
+  font-size: 0.9em;
+  opacity: 0.72;
+}
+
+@media (max-width: 760px) {
+  .home-v4-motion-control {
+    min-height: 36px;
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+  .home-v4-motion-control__preference { display: none; }
+}
+
+@media (max-width: 520px) {
+  .home-v4-motion-control { padding-inline: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-v4-motion-control { transition: none; }
+}

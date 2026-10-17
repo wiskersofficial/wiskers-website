@@ -1,0 +1,56 @@
+/* Decorative layer for the existing live example. The original controls and
+   result remain in normal flow and retain their native focus behavior. */
+.v3-example-shell.example-instrument {
+  --example-progress: 0;
+  --example-interaction: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--signal) 43%, var(--line));
+  background: var(--surface-page);
+  box-shadow: 0 24px 65px color-mix(in srgb, var(--ink) 9%, transparent);
+}
+.example-instrument__stage { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; color: var(--signal); }
+.example-instrument__stage::before { content: ""; position: absolute; inset: 0; opacity: .62; background: radial-gradient(ellipse at 75% 48%, color-mix(in srgb, var(--signal) 13%, transparent), transparent 54%), linear-gradient(115deg, transparent 45%, color-mix(in srgb, var(--signal) 4%, transparent)); }
+.example-instrument__stage::after { content: var(--example-readout, "12"); position: absolute; right: clamp(16px, 5vw, 72px); top: 50%; transform: translateY(-50%); color: color-mix(in srgb, var(--signal) 10%, transparent); font-family: "Roboto Flex", sans-serif; font-size: clamp(150px, 27vw, 390px); font-weight: 800; font-variation-settings: "wdth" 72; line-height: .8; letter-spacing: -.1em; }
+.example-instrument__halo { position: absolute; width: clamp(290px, 44vw, 600px); aspect-ratio: 1; right: 3%; top: 50%; transform: translate(0, -50%) rotate(calc(var(--example-progress) * 24deg)); border: 1px solid color-mix(in srgb, var(--signal) 24%, transparent); border-radius: 50%; opacity: .54; }
+.example-instrument__halo span, .example-instrument__halo i, .example-instrument__halo b { position: absolute; inset: 8%; border: 1px dashed color-mix(in srgb, var(--signal) 27%, transparent); border-radius: 50%; }
+.example-instrument__halo i { inset: 19%; border-style: solid; border-color: color-mix(in srgb, var(--signal) 13%, transparent); }
+.example-instrument__halo b { inset: 35%; border-style: dotted; border-color: color-mix(in srgb, var(--signal) 36%, transparent); }
+.example-instrument__seal { position: absolute; top: 50%; right: clamp(50px, 14vw, 200px); width: clamp(124px, 16vw, 210px); aspect-ratio: 1; transform: translateY(-50%) rotate(calc((var(--example-interaction) - 3) * 1deg)); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--signal) 43%, transparent); border-radius: 50%; background: color-mix(in srgb, var(--surface-page) 79%, transparent); box-shadow: 0 0 0 8px color-mix(in srgb, var(--surface-page) 48%, transparent), 0 0 0 9px color-mix(in srgb, var(--signal) 24%, transparent); text-align: center; }
+.example-instrument__seal::before, .example-instrument__seal::after { content: ""; position: absolute; width: 8px; height: 8px; border: 1px solid currentColor; border-radius: 50%; top: 50%; transform: translateY(-50%); }
+.example-instrument__seal::before { left: 12px; } .example-instrument__seal::after { right: 12px; }
+.example-instrument__seal span, .example-instrument__seal small { font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.example-instrument__seal strong { margin: 4px 0; font-size: clamp(32px, 5vw, 58px); font-weight: 400; line-height: 1; }
+.example-instrument__seal small { line-height: 1.5; }
+.example-instrument__orbit { position: absolute; z-index: 1; top: 50%; right: clamp(29px, 10vw, 148px); width: clamp(170px, 21vw, 270px); aspect-ratio: 1; transform: translateY(-50%); border: 1px solid color-mix(in srgb, var(--signal) 15%, transparent); border-radius: 50%; }
+.example-instrument__orbit--two { right: clamp(20px, 8vw, 126px); width: clamp(190px, 24vw, 302px); border-style: dashed; }
+.example-instrument__ticks { position: absolute; right: clamp(110px, 23vw, 320px); top: 50%; width: 2px; height: 2px; }
+.example-instrument__ticks i { position: absolute; width: 1px; height: 11px; top: -5px; left: 0; background: currentColor; transform: rotate(calc(var(--tick, 0) * 30deg)) translateY(-155px); transform-origin: 0 5px; opacity: .55; }
+.example-instrument__ticks i:nth-child(2) { --tick: 1; }.example-instrument__ticks i:nth-child(3) { --tick: 2; }.example-instrument__ticks i:nth-child(4) { --tick: 3; }.example-instrument__ticks i:nth-child(5) { --tick: 4; }.example-instrument__ticks i:nth-child(6) { --tick: 5; }.example-instrument__ticks i:nth-child(7) { --tick: 6; }.example-instrument__ticks i:nth-child(8) { --tick: 7; }.example-instrument__ticks i:nth-child(9) { --tick: 8; }.example-instrument__ticks i:nth-child(10) { --tick: 9; }.example-instrument__ticks i:nth-child(11) { --tick: 10; }.example-instrument__ticks i:nth-child(12) { --tick: 11; }
+.example-instrument__annotation, .example-instrument__reading { position: absolute; z-index: 2; color: var(--signal); font-size: 9px; font-weight: 700; letter-spacing: .13em; line-height: 1.5; }
+.example-instrument__annotation--top { top: 20px; right: 24px; text-align: right; }
+.example-instrument__annotation--bottom { bottom: 18px; right: 25px; }
+.example-instrument__reading { left: 24px; bottom: 18px; opacity: .75; }
+.v3-example-shell.example-instrument > :not(.example-instrument__stage) { position: relative; z-index: 1; }
+.v3-example-shell.example-instrument .v3-example-prompt { background: color-mix(in srgb, var(--panel) 94%, transparent); }
+.v3-example-shell.example-instrument .v3-example-result { background: color-mix(in srgb, var(--surface-page) 93%, transparent); }
+.v3-example-shell.example-instrument--touched .example-instrument__halo { opacity: .8; }
+.v3-example-shell.example-instrument[data-example-priority="1"] .example-instrument__seal { border-radius: 42% 58% 53% 47% / 49% 43% 57% 51%; }
+.v3-example-shell.example-instrument[data-example-priority="2"] .example-instrument__seal { border-radius: 45% 55% 42% 58% / 55% 46% 54% 45%; }
+.v3-example-shell.example-instrument--paused .example-instrument__halo { transition: none !important; }
+@media (max-width: 760px) {
+  .v3-example-shell.example-instrument { box-shadow: 0 13px 35px color-mix(in srgb, var(--ink) 8%, transparent); }
+  .example-instrument__halo { width: min(88vw, 430px); right: -22%; top: 38%; opacity: .34; }
+  .example-instrument__seal { width: 118px; right: 7%; top: 28%; opacity: .56; }
+  .example-instrument__orbit { width: 166px; right: 4%; top: 28%; }
+  .example-instrument__orbit--two { width: 185px; right: 1%; }
+  .example-instrument__ticks, .example-instrument__annotation--top { display: none; }
+  .example-instrument__annotation--bottom { right: 12px; bottom: 10px; font-size: 8px; }
+  .example-instrument__reading { left: 12px; bottom: 10px; font-size: 8px; }
+  .v3-example-shell.example-instrument .v3-example-prompt { background: color-mix(in srgb, var(--panel) 97%, transparent); }
+  .v3-example-shell.example-instrument .v3-example-result { background: color-mix(in srgb, var(--surface-page) 97%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .example-instrument__halo, .example-instrument__seal, .example-instrument__orbit { transition: none !important; }
+}

@@ -1,0 +1,64 @@
+/* Optional v4 process-word layer. Load after homepage-v3.css. */
+.v4-process-words {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  contain: layout paint;
+  color: var(--ink, #091540);
+}
+
+.v4-process-words__word {
+  position: absolute;
+  left: var(--word-x, 50%);
+  top: var(--word-y, 50%);
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(3.5rem, 12vw, 12.5rem);
+  font-weight: 800;
+  line-height: .78;
+  letter-spacing: -.09em;
+  text-transform: uppercase;
+  opacity: var(--word-opacity, 0);
+  transform: translate3d(calc(-50% + var(--word-drift-x, 0px)), calc(-50% + var(--word-drift-y, 0px)), 0) rotate(var(--word-rotate, -7deg)) scale(var(--word-scale, .84));
+  transform-origin: center;
+  color: var(--word-color, currentColor);
+  will-change: transform, opacity;
+  transition: opacity 220ms linear;
+}
+
+.v4-process-words__word[data-word="conception"] {
+  --word-x: 54%;
+  --word-y: 56%;
+  --word-color: var(--blue, #2f97c1);
+  font-size: clamp(3.25rem, 9.4vw, 10.5rem);
+}
+
+.v4-process-words__word[data-word="idea"] {
+  --word-x: 46%;
+  --word-y: 48%;
+  --word-color: var(--coral, #ef767a);
+}
+
+.v4-process-words__word[data-word="launch"] {
+  --word-x: 50%;
+  --word-y: 53%;
+  --word-color: var(--green, #25a583);
+}
+
+/* Keep all current copy and process illustration above this decorative layer. */
+.v3-process-sticky > :not(.v4-process-words) { z-index: 1; }
+.v3-process-visual, .v3-process-stages { position: relative; }
+
+@media (max-width: 700px) {
+  .v4-process-words__word { font-size: clamp(3.25rem, 17vw, 7rem); }
+  .v4-process-words__word[data-word="conception"] { font-size: clamp(2.9rem, 12vw, 5.6rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v4-process-words__word { will-change: auto; transition: none; }
+}

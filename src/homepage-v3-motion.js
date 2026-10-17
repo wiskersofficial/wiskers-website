@@ -58,6 +58,9 @@
     if (Math.abs(value - lastProgress) >= 0.0005) {
       lastProgress = value;
       root.style.setProperty('--scene-progress', motionValue.toFixed(4));
+      // Keep independently mounted artwork in sync with the easing pass, even
+      // when scrolling pauses before the visual progress reaches its target.
+      window.dispatchEvent(new CustomEvent('wiskers:process-progress'));
       root.style.setProperty('--document-open', clamp(motionValue / 0.31).toFixed(4));
       root.style.setProperty('--tool-assembly', clamp((motionValue - 0.22) / 0.44).toFixed(4));
       root.style.setProperty('--answer-progress', clamp((motionValue - 0.55) / 0.45).toFixed(4));

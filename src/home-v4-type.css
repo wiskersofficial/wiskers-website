@@ -1,0 +1,116 @@
+/* Homepage v4: variable display type, scoped to the root homepage. */
+.home-v4 {
+  --home-v4-ink-axis: 0.5;
+  --home-v4-weight-axis: 520;
+  --home-v4-width-axis: 100;
+  --home-v4-grade-axis: 0;
+  --home-v4-auto-weight-axis: 0;
+  --home-v4-auto-width-axis: 0;
+  --home-v4-auto-grade-axis: 0;
+}
+
+@property --home-v4-weight-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 520;
+}
+
+@property --home-v4-width-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 100;
+}
+
+@property --home-v4-grade-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --home-v4-auto-weight-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --home-v4-auto-width-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --home-v4-auto-grade-axis {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.home-v4 :is(h1, h2, h3, h4) {
+  font-family: "Roboto Flex", "Arial", sans-serif;
+  font-variation-settings: "opsz" 72, "wdth" calc(var(--home-v4-width-axis) + var(--home-v4-auto-width-axis)), "wght" calc(var(--home-v4-weight-axis) + var(--home-v4-auto-weight-axis)), "GRAD" calc(var(--home-v4-grade-axis) + var(--home-v4-auto-grade-axis));
+  font-synthesis: none;
+}
+
+.home-v4 h1 {
+  --home-v4-weight-axis: 650;
+  font-size: clamp(68px, 9.4vw, 142px);
+  line-height: .98;
+  letter-spacing: -.055em;
+  transform: scaleX(var(--home-v4-scale-x, 1));
+  transform-origin: left center;
+  min-height: 2em;
+}
+
+@media (max-width: 700px) {
+  .home-v4 h1 { font-size: clamp(55px, 13.8vw, 82px); }
+}
+
+.home-v4 h1 em,
+.home-v4 :is(h2, h3, h4) em {
+  font: inherit;
+  color: var(--signal);
+}
+
+.home-v4 :is(h2, h3, h4) {
+  --home-v4-weight-axis: 540;
+  transform: scaleX(var(--home-v4-scale-x, 1));
+  transform-origin: left center;
+}
+
+.home-v4 h2 {
+  --home-v4-weight-axis: 570;
+  letter-spacing: -.045em;
+}
+
+.home-v4 h3 {
+  --home-v4-weight-axis: 560;
+  letter-spacing: -.035em;
+}
+
+.home-v4 h4 {
+  --home-v4-weight-axis: 540;
+  letter-spacing: -.025em;
+}
+
+.home-v4 :is(.v3-hero, .hero) h1 {
+  --home-v4-weight-axis: 680;
+  --home-v4-width-axis: 100;
+  --home-v4-grade-axis: 0;
+  animation: home-v4-hero-type-cycle 18s ease-in-out infinite alternate;
+}
+
+@keyframes home-v4-hero-type-cycle {
+  0% { --home-v4-auto-weight-axis: 0; --home-v4-auto-width-axis: 0; --home-v4-auto-grade-axis: 0; }
+  52% { --home-v4-auto-weight-axis: 36; --home-v4-auto-width-axis: 7; --home-v4-auto-grade-axis: 35; }
+  100% { --home-v4-auto-weight-axis: 12; --home-v4-auto-width-axis: 2; --home-v4-auto-grade-axis: 10; }
+}
+
+.home-v4.home-v4-type-paused :is(.v3-hero, .hero) h1 { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-v4 :is(h1, h2, h3, h4) {
+    animation: none !important;
+    transform: none !important;
+    font-variation-settings: "opsz" 72, "wdth" 100, "wght" 520, "GRAD" 0 !important;
+  }
+}

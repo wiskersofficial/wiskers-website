@@ -1,0 +1,83 @@
+/* Pixel sculpture for the v4 homepage opening. Everything is scoped to its mount. */
+[data-hero-art] {
+  --hero-art-navy: var(--ink, #091540);
+  --hero-art-blue: var(--accent, #2f97c1);
+  --hero-art-green: var(--green, #25a583);
+  --hero-art-coral: var(--coral, #ef767a);
+  position: relative;
+  width: min(44vw, 570px);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  isolation: isolate;
+  pointer-events: none;
+  transform: translate3d(var(--hero-x, 0px), var(--hero-y, 0px), 0) scale(var(--hero-scale, 1));
+  transform-origin: 50% 50%;
+  transition: transform 700ms cubic-bezier(.2,.7,.2,1);
+}
+[data-hero-art] .hero-sculpture {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  filter: drop-shadow(0 26px 24px color-mix(in srgb, var(--hero-art-navy) 22%, transparent));
+}
+[data-hero-art] .hero-sculpture__back {
+  fill: color-mix(in srgb, var(--hero-art-navy) 78%, transparent);
+  transform: translate(13px, 17px);
+  opacity: .45;
+}
+[data-hero-art] .hero-sculpture__face { fill: var(--hero-art-blue); }
+[data-hero-art] .hero-sculpture__edge { fill: var(--hero-art-navy); opacity: .82; }
+[data-hero-art] .hero-sculpture__detail { fill: var(--hero-art-coral); }
+[data-hero-art] .hero-sculpture__mark { opacity: 0; transform-origin: center; }
+[data-hero-art] .hero-sculpture__mark--question { animation: hero-mark-question 11s ease-in-out infinite; }
+[data-hero-art] .hero-sculpture__mark--inputs { animation: hero-mark-inputs 11s ease-in-out infinite; }
+[data-hero-art] .hero-sculpture__mark--forward { animation: hero-mark-forward 11s ease-in-out infinite; }
+[data-hero-art] .hero-sculpture__halo {
+  position: absolute;
+  inset: 13%;
+  border: 1px solid color-mix(in srgb, var(--hero-art-blue) 38%, transparent);
+  transform: rotate(45deg) scaleX(.72);
+  opacity: .48;
+  z-index: -1;
+}
+[data-hero-art] .hero-sculpture__aperture {
+  position: absolute;
+  inset: 31%;
+  border: 1px solid color-mix(in srgb, var(--hero-art-green) 58%, transparent);
+  transform: rotate(45deg);
+  transition: inset 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1), opacity 700ms;
+  opacity: .7;
+}
+[data-hero-art][data-scroll-state="deep"] .hero-sculpture__aperture { inset: 21%; transform: rotate(45deg) scale(.85); opacity: 1; }
+[data-hero-art][data-scroll-state="deep"] .hero-sculpture__halo { transform: rotate(45deg) scaleX(.94); }
+[data-hero-art][data-scroll-state="near"] .hero-sculpture__aperture { inset: 37%; opacity: .42; }
+
+@keyframes hero-mark-question {
+  0%, 29% { opacity: 1; transform: translateY(0) scale(1); }
+  34%, 95% { opacity: 0; transform: translateY(-8px) scale(.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes hero-mark-inputs {
+  0%, 29% { opacity: 0; transform: translateY(10px) scale(.96); }
+  34%, 61% { opacity: 1; transform: translateY(0) scale(1); }
+  67%, 100% { opacity: 0; transform: translateY(-8px) scale(.96); }
+}
+@keyframes hero-mark-forward {
+  0%, 61% { opacity: 0; transform: translateX(-12px) scale(.94); }
+  67%, 95% { opacity: 1; transform: translateX(0) scale(1); }
+  100% { opacity: 0; transform: translateX(12px) scale(.94); }
+}
+[data-hero-art].is-paused .hero-sculpture__mark { animation-play-state: paused; }
+[data-hero-art].is-static .hero-sculpture__mark { animation: none; opacity: 0; }
+[data-hero-art].is-static .hero-sculpture__mark--question { opacity: 1; }
+@media (max-width: 700px) {
+  [data-hero-art] { width: min(76vw, 410px); }
+  [data-hero-art] .hero-sculpture__back { transform: translate(9px, 12px); }
+  [data-hero-art] [data-mark="question"] > .hero-sculpture__block:nth-child(n+15),
+  [data-hero-art] [data-mark="inputs"] > .hero-sculpture__block:nth-child(n+17),
+  [data-hero-art] [data-mark="forward"] > .hero-sculpture__block:nth-child(n+15) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-art] { transition: none; }
+  [data-hero-art] .hero-sculpture__mark { animation: none; }
+}
