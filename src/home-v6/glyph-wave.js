@@ -32,9 +32,10 @@ function buildVisual(text) {
  * The parent owns all scroll observation and animation scheduling. Call
  * update(element, progress) from its shared rAF loop, where progress is 0–1.
  * A Map<Element, number> may be passed to update() to update several targets
- * in one call. The optional data-glyph-stagger attribute controls the progress
- * margin around the letter sequence (default 0.08); the remaining interval is
- * distributed evenly across each glyph's change point. Each glyph crossfades
+ * in one call. The optional data-glyph-stagger attribute sets the maximum
+ * crossfade window (default 0.08); it is narrowed to roughly half the distance
+ * between glyph change points. The remaining interval is distributed evenly
+ * across the sequence. Each glyph crossfades
  * through the change within a window narrower than its stagger interval, so
  * only one or two neighboring glyphs visibly morph at once. `getTravelDistance()`
  * returns the scroll distance needed to keep successive changes a chosen
