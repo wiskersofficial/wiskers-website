@@ -1,0 +1,78 @@
+/* Broad, stepped transition planes in the approved Wiskers palette. */
+.home-v4-transition {
+  --mark-blue: var(--blue-green, #2f97c1);
+  --mark-green: var(--seaweed, #25a583);
+  --mark-coral: var(--light-coral, #ef767a);
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 0;
+  width: min(100vw, 1440px);
+  height: clamp(104px, 17vw, 224px);
+  transform: translate(-50%, -48%);
+  pointer-events: none;
+  overflow: hidden;
+  opacity: calc(.82 + var(--transition-progress, 0) * .12);
+  contain: layout paint;
+  isolation: isolate;
+}
+.home-v4-transition__plane,
+.home-v4-transition__cut,
+.home-v4-transition__step,
+.home-v4-transition__spark { position: absolute; display: block; }
+.home-v4-transition ~ * { position: relative; z-index: 1; }
+.home-v4-transition__plane {
+  left: 8%; right: 8%; top: 15%; bottom: 14%;
+  background: color-mix(in srgb, var(--mark-blue) 16%, var(--surface-page, #f3f0e9));
+  clip-path: polygon(0 0, 31% 0, 31% 16%, 69% 16%, 69% 0, 100% 0, 100% 100%, 74% 100%, 74% 82%, 27% 82%, 27% 100%, 0 100%);
+  transform: translate3d(calc(var(--transition-depth, 0) * -12px), 0, 0);
+  animation: home-v4-plane-breathe 12s ease-in-out infinite alternate;
+}
+.home-v4-transition__cut {
+  left: 50%; top: 50%; width: clamp(94px, 16vw, 210px); aspect-ratio: 1;
+  transform: translate(-50%, -50%) rotate(45deg) scale(calc(.9 + var(--transition-depth, 0) * .1));
+  background: var(--surface-page, #f3f0e9);
+  border: clamp(5px, .8vw, 10px) solid var(--mark-green);
+  box-shadow: 0 0 0 clamp(8px, 1.3vw, 18px) color-mix(in srgb, var(--mark-coral) 80%, transparent);
+  animation: home-v4-aperture 10s ease-in-out infinite alternate;
+}
+.home-v4-transition__step {
+  top: 50%; width: clamp(20px, 4vw, 54px); aspect-ratio: 1;
+  transform: translateY(-50%);
+  background: var(--mark-blue);
+  clip-path: polygon(0 0, 100% 0, 100% 25%, 75% 25%, 75% 100%, 0 100%);
+}
+.home-v4-transition__step:nth-of-type(3) { left: 18%; height: auto; background: var(--mark-coral); }
+.home-v4-transition__step:nth-of-type(4) { left: 78%; transform: translateY(-50%) rotate(180deg); background: var(--mark-green); }
+.home-v4-transition__step:nth-of-type(5) { left: 29%; width: clamp(10px, 2vw, 26px); background: var(--mark-green); }
+.home-v4-transition__spark {
+  left: 50%; top: 50%; width: 7px; height: 7px; background: var(--mark-coral);
+  transform: translate(34px, -50%);
+  animation: home-v4-spark 3s steps(2, end) infinite alternate;
+}
+.home-v4-transition[data-transition="process-example"] .home-v4-transition__plane {
+  background: color-mix(in srgb, var(--mark-green) 16%, var(--surface-page, #f3f0e9));
+  clip-path: polygon(0 15%, 18% 15%, 18% 0, 48% 0, 48% 26%, 83% 26%, 83% 0, 100% 0, 100% 85%, 80% 85%, 80% 100%, 37% 100%, 37% 75%, 0 75%);
+}
+.home-v4-transition[data-transition="value-contact"] .home-v4-transition__plane {
+  background: color-mix(in srgb, var(--mark-coral) 17%, var(--surface-page, #f3f0e9));
+  clip-path: polygon(0 0, 23% 0, 23% 22%, 77% 22%, 77% 0, 100% 0, 100% 100%, 61% 100%, 61% 76%, 39% 76%, 39% 100%, 0 100%);
+}
+.home-v4-transition[data-transition="value-contact"] .home-v4-transition__cut { border-color: var(--mark-coral); }
+.home-v4-transition.is-paused * { animation-play-state: paused !important; }
+.home-v4-transition.is-static * { animation: none !important; }
+@keyframes home-v4-plane-breathe { from { filter: brightness(.98); } to { filter: brightness(1.04); } }
+@keyframes home-v4-aperture { from { margin-top: -3px; } to { margin-top: 3px; } }
+@keyframes home-v4-spark { from { opacity: .25; } to { opacity: 1; } }
+@media (max-width: 650px) {
+  .home-v4-transition { width: 100vw; height: 116px; transform: translate(-50%, -42%); }
+  .home-v4-transition__plane { left: 2%; right: 2%; top: 13%; bottom: 12%; }
+  .home-v4-transition__step:nth-of-type(3) { left: 11%; }
+  .home-v4-transition__step:nth-of-type(4) { left: 84%; }
+  .home-v4-transition__step:nth-of-type(5) { left: 23%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-v4-transition *, .home-v4-transition::before, .home-v4-transition::after { animation: none !important; }
+  .home-v4-transition__plane { transform: none; }
+  .home-v4-transition__cut { transform: translate(-50%, -50%) rotate(45deg); }
+}

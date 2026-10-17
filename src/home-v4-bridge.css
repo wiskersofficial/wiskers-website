@@ -1,0 +1,38 @@
+.v3-value.has-buyer-bridge { --bridge-ink: var(--ink, #20221f); --bridge-paper: var(--surface-page, #f4f1e9); --bridge-line: var(--line, #c8c7bf); --bridge-signal: var(--signal, #e7654d); }
+.buyer-bridge { position: relative; grid-column: 2; min-height: clamp(220px, 27vw, 350px); margin-top: clamp(35px, 5vw, 66px); padding: clamp(25px, 4vw, 48px) clamp(20px, 4vw, 52px); overflow: hidden; color: var(--bridge-ink); background: var(--bridge-paper); border-block: 1px solid var(--bridge-line); isolation: isolate; }
+.buyer-bridge::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .24; background-image: linear-gradient(to right, var(--bridge-line) 1px, transparent 1px), linear-gradient(to bottom, var(--bridge-line) 1px, transparent 1px); background-size: 26px 26px; mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); }
+.buyer-bridge__label { position: absolute; top: 50%; z-index: 2; width: 24%; transform: translateY(-50%); }
+.buyer-bridge__label--buyer { left: 5%; }
+.buyer-bridge__label--client { right: 5%; text-align: right; }
+.buyer-bridge__label > span { display: block; margin-bottom: 10px; color: var(--bridge-signal); font: 700 10px/1.2 var(--font-mono, monospace); letter-spacing: .15em; }
+.buyer-bridge__label strong { display: block; font-size: clamp(26px, 4.4vw, 60px); line-height: .89; letter-spacing: -.065em; }
+.buyer-bridge__blocks { display: flex; gap: 4px; margin-top: 16px; }
+.buyer-bridge__label--client .buyer-bridge__blocks { justify-content: flex-end; }
+.buyer-bridge__blocks b { width: 8px; height: 8px; background: var(--bridge-signal); }
+.buyer-bridge__blocks b:nth-child(2), .buyer-bridge__blocks b:nth-child(4) { opacity: .52; }
+.buyer-bridge__blocks b:nth-child(3) { opacity: .25; }
+.buyer-bridge__path { position: absolute; top: 50%; left: 29%; right: 29%; height: 2px; transform: translateY(-50%); background: var(--bridge-line); }
+.buyer-bridge__track { position: absolute; inset: 0 auto 0 0; width: calc(var(--bridge-progress, .5) * 100%); background: var(--bridge-signal); transform-origin: left; }
+.buyer-bridge__node { position: absolute; top: 50%; width: 12px; height: 12px; border: 2px solid var(--bridge-signal); background: var(--bridge-paper); transform: translate(-50%, -50%); }
+.buyer-bridge__node--one { left: 0; }.buyer-bridge__node--two { left: 50%; width: 17px; height: 17px; background: var(--bridge-signal); }.buyer-bridge__node--three { left: 100%; }
+.buyer-bridge__signal { position: absolute; z-index: 1; top: 50%; left: calc(var(--bridge-progress, .5) * 100%); width: 10px; height: 10px; background: var(--bridge-signal); transform: translate(calc(-50% + var(--signal-drift, 0px)), -50%); box-shadow: 0 0 0 5px color-mix(in srgb, var(--bridge-signal) 17%, transparent); }
+.buyer-bridge__arrow { position: absolute; top: -23px; right: -2px; color: var(--bridge-signal); font-size: 22px; }
+.buyer-bridge__rail { position: absolute; left: clamp(20px, 4vw, 52px); right: clamp(20px, 4vw, 52px); display: flex; justify-content: space-between; color: color-mix(in srgb, var(--bridge-ink) 60%, transparent); font: 700 9px/1 var(--font-mono, monospace); letter-spacing: .12em; }
+.buyer-bridge__rail--top { top: 18px; height: 1px; background: var(--bridge-line); }
+.buyer-bridge__rail--bottom { bottom: 18px; }
+.buyer-bridge__rail--top::before, .buyer-bridge__rail--top::after { content: ""; position: absolute; top: -3px; width: 7px; height: 7px; border: 1px solid var(--bridge-line); background: var(--bridge-paper); }
+.buyer-bridge__rail--top::after { right: 0; }
+.buyer-bridge__readout { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); color: var(--bridge-signal); font: 700 9px/1 var(--font-mono, monospace); letter-spacing: .12em; white-space: nowrap; }
+.buyer-bridge--paused .buyer-bridge__signal { transition: none; }
+.buyer-bridge--settled .buyer-bridge__track { width: 100%; }
+@media (max-width: 760px) {
+  .buyer-bridge { grid-column: 1; min-height: 214px; margin: 34px 0 0; padding-inline: 14px; }
+  .buyer-bridge__label { width: 30%; }
+  .buyer-bridge__label--buyer { left: 5%; }.buyer-bridge__label--client { right: 5%; }
+  .buyer-bridge__label strong { font-size: clamp(25px, 8vw, 38px); }
+  .buyer-bridge__path { left: 37%; right: 37%; }
+  .buyer-bridge__rail { left: 14px; right: 14px; }
+  .buyer-bridge__rail--bottom span:last-child { max-width: 40%; text-align: right; }
+  .buyer-bridge__readout { bottom: 40px; font-size: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .buyer-bridge__signal { display: none; } }
