@@ -62,14 +62,14 @@ if (main) {
     // row so resize measurements never inherit a previous animation offset.
     const stableRow = target.closest(".v6-example, .v6-process-steps article");
     const anchor = stableRow || target;
-    const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, 32));
+    const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, 56));
     const endAt = Math.max(0.06, 0.92 - travel / viewportHeight);
     return progressWhenCrossing(anchor, 0.92, endAt);
   }
 
   function revealProgressForGlyph(target, progress) {
-    const stagger = clamp(Number(target.dataset.glyphStagger ?? 0.08));
-    return clamp((progress - stagger / 2) / Math.max(0.05, 1 - stagger));
+    const { transition } = glyphs.getTiming(target);
+    return clamp((progress - transition / 2) / Math.max(0.05, 1 - transition));
   }
 
   function update() {
@@ -86,9 +86,9 @@ if (main) {
       const targetVisibleEnd = heroTargetBox
         ? Math.max(1, heroTargetBox.top + heroTargetBox.height - viewportHeight * 0.06)
         : heroBox.top + viewportHeight * 0.26;
-      // The hero has a shorter visible runway; use a 24px character cadence
+      // The hero has a shorter visible runway; use a 48px cadence target
       // there and finish before the line leaves the viewport.
-      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, 24));
+      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, 48));
       const heroProgress = progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));

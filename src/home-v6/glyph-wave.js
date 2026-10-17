@@ -34,12 +34,15 @@ function buildVisual(text) {
  * A Map<Element, number> may be passed to update() to update several targets
  * in one call. The optional data-glyph-stagger attribute controls the progress
  * margin around the letter sequence (default 0.08); the remaining interval is
- * distributed evenly across each glyph's change point. `getTravelDistance()`
+ * distributed evenly across each glyph's change point. Each glyph crossfades
+ * through the change within a window narrower than its stagger interval, so
+ * only one or two neighboring glyphs visibly morph at once. `getTravelDistance()`
  * returns the scroll distance needed to keep successive changes a chosen
- * number of CSS pixels apart.
+ * number of CSS pixels apart. `getTiming()` exposes the effective per-target
+ * crossfade window so accompanying reveals can finish with the final glyph.
  *
  * @param {Element|Document} root Search root (defaults to document).
- * @returns {{update(targetOrProgressMap:Element|Map<Element,number>,progress?:number):void,setPaused(paused:boolean):void,getTravelDistance(target:Element,pixelsPerLetter?:number):number,destroy():void}}
+ * @returns {{update(targetOrProgressMap:Element|Map<Element,number>,progress?:number):void,setPaused(paused:boolean):void,getTravelDistance(target:Element,pixelsPerLetter?:number):number,getTiming(target:Element):{transition:number,step:number},destroy():void}}
  */
 export function initGlyphWaves(root = document) {
   const records = new Map();
@@ -69,14 +72,16 @@ export function initGlyphWaves(root = document) {
   function applyProgress(record, element, progress) {
     const p = reducedMotion.matches ? 1 : clamp(Number(progress) || 0);
     const { cells } = record;
-    const transition = clamp(Number(element.dataset.glyphStagger ?? 0.08));
+    const transition = transitionFor(element, records.get(element));
     const step = cells.length > 1 ? Math.max(0.025, (1 - transition) / (cells.length - 1)) : 0;
     for (let i = 0; i < cells.length; i += 1) {
       const offset = i * step;
       const local = clamp((p - offset) / Math.max(0.01, transition));
-      // Switch one face at a time. The per-letter offset makes the font change
-      // read as a travelling wave without ever drawing two glyphs together.
-      cells[i].style.setProperty("--glyph-progress", local >= 0.5 ? "1" : "0");
+      // Crossfade both type and color from the same scroll progress. Narrowing
+      // the window below one stagger interval keeps the change legible as a
+      // travelling letter wave instead of turning the whole word at once.
+      const eased = local * local * (3 - 2 * local);
+      cells[i].style.setProperty("--glyph-progress", eased.toFixed(4));
     }
   }
 
@@ -97,12 +102,27 @@ export function initGlyphWaves(root = document) {
     paused = Boolean(value);
   }
 
-  function getTravelDistance(target, pixelsPerLetter = 32) {
+  function getTiming(target) {
     const record = records.get(target);
-    if (!record || record.cells.length < 2) return 0;
-    const transition = clamp(Number(target.dataset.glyphStagger ?? 0.08));
+    if (!record || record.cells.length < 2) return { transition: 0, step: 1 };
+    const transition = transitionFor(target, record);
     const step = Math.max(0.025, (1 - transition) / (record.cells.length - 1));
+    return { transition, step };
+  }
+
+  function getTravelDistance(target, pixelsPerLetter = 48) {
+    const { step } = getTiming(target);
     return Math.max(0, Number(pixelsPerLetter) || 0) / step;
+  }
+
+  function transitionFor(element, record) {
+    const requested = clamp(Number(element.dataset.glyphStagger ?? 0.08));
+    const count = record?.cells.length ?? 0;
+    if (count < 2) return requested;
+    // Keep each morph to about half the space between neighboring glyphs.
+    // Older authored values (0.18–0.30) are retained as upper bounds only.
+    const isolatedWindow = 0.52 / (count - 1 + 0.52);
+    return Math.min(requested, isolatedWindow);
   }
 
   function destroy() {
@@ -115,5 +135,5 @@ export function initGlyphWaves(root = document) {
     records.clear();
   }
 
-  return { update, setPaused, getTravelDistance, destroy };
+  return { update, setPaused, getTravelDistance, getTiming, destroy };
 }
