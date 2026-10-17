@@ -1,0 +1,88 @@
+.v5-capability-art {
+  --ca-ink: var(--v5-ink, #162c29);
+  --ca-blue: var(--v5-blue, #a9d7e6);
+  --ca-green: var(--v5-green, #b9d5a1);
+  --ca-coral: var(--v5-coral, #ed9b7a);
+  --ca-cream: var(--v5-cream, #f7f0df);
+  width: 100%;
+  margin: clamp(1.35rem, 3vw, 2.6rem) 0 0;
+  overflow: hidden;
+  color: var(--ca-ink);
+  background-color: var(--ca-cream);
+  background-image: radial-gradient(color-mix(in srgb, var(--ca-ink) 17%, transparent) 1px, transparent 1.2px);
+  background-size: 13px 13px;
+  border: 1px solid color-mix(in srgb, var(--ca-ink) 24%, transparent);
+  box-shadow: 5px 5px 0 color-mix(in srgb, var(--ca-ink) 10%, transparent);
+  aspect-ratio: 1.74 / 1;
+}
+
+.v5-capability-art svg { display: block; width: 100%; height: 100%; overflow: visible; shape-rendering: geometricPrecision; }
+.v5-capability-art text { fill: var(--ca-ink); font-family: inherit; }
+.v5-capability-art .ca-rule,
+.v5-capability-art .ca-grid,
+.v5-capability-art .ca-midline { fill: none; stroke: color-mix(in srgb, var(--ca-ink) 22%, transparent); stroke-width: 1; stroke-dasharray: 2 5; }
+.v5-capability-art .ca-grid { stroke-dasharray: 1 6; }
+.v5-capability-art .ca-kicker { font-size: 9px; font-weight: 800; letter-spacing: 1.25px; }
+.v5-capability-art .ca-label { font-size: 9px; font-weight: 800; letter-spacing: .55px; }
+.v5-capability-art .ca-value { font-size: 13px; font-weight: 700; }
+.v5-capability-art .ca-small { font-size: 8px; font-weight: 800; letter-spacing: .35px; }
+.v5-capability-art .ca-input,
+.v5-capability-art .ca-question,
+.v5-capability-art .ca-choice,
+.v5-capability-art .ca-formula,
+.v5-capability-art .ca-result,
+.v5-capability-art .ca-loop-card,
+.v5-capability-art .ca-weight,
+.v5-capability-art .ca-tag { stroke: var(--ca-ink); stroke-width: 1.5; }
+.v5-capability-art .ca-input,
+.v5-capability-art .ca-question { fill: var(--ca-blue); }
+.v5-capability-art .ca-input--green,
+.v5-capability-art .ca-choice--green,
+.v5-capability-art .ca-loop-card--green,
+.v5-capability-art .ca-weight--green,
+.v5-capability-art .ca-tag--green { fill: var(--ca-green); }
+.v5-capability-art .ca-input--coral,
+.v5-capability-art .ca-choice--coral,
+.v5-capability-art .ca-loop-card--coral { fill: var(--ca-coral); }
+.v5-capability-art .ca-choice,
+.v5-capability-art .ca-formula,
+.v5-capability-art .ca-loop-card,
+.v5-capability-art .ca-tag { fill: var(--ca-cream); }
+.v5-capability-art .ca-result { fill: var(--ca-green); }
+.v5-capability-art .ca-flow,
+.v5-capability-art .ca-branch,
+.v5-capability-art .ca-arrow,
+.v5-capability-art .ca-pan,
+.v5-capability-art .ca-cord,
+.v5-capability-art .ca-base,
+.v5-capability-art .ca-accent,
+.v5-capability-art .ca-tick,
+.v5-capability-art .ca-spark { fill: none; stroke: var(--ca-ink); stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+.v5-capability-art .ca-branch { stroke-width: 2.25; }
+.v5-capability-art .ca-accent { stroke: var(--ca-coral); stroke-width: 3; }
+.v5-capability-art .ca-accent--green { stroke: var(--ca-blue); }
+.v5-capability-art .ca-node,
+.v5-capability-art .ca-feedback { fill: var(--ca-coral); stroke: var(--ca-ink); stroke-width: 1.5; }
+.v5-capability-art .ca-feedback--green { fill: var(--ca-green); }
+.v5-capability-art .ca-feedback--coral { fill: var(--ca-blue); }
+.v5-capability-art .ca-dot { fill: var(--ca-coral); }
+.v5-capability-art .ca-beam { fill: color-mix(in srgb, var(--ca-blue) 68%, var(--ca-cream)); stroke: var(--ca-ink); stroke-width: 1.5; }
+.v5-capability-art .ca-beam--green { fill: color-mix(in srgb, var(--ca-green) 76%, var(--ca-cream)); }
+.v5-capability-art .ca-pivot { fill: none; stroke: var(--ca-ink); stroke-width: 1.5; }
+.v5-capability-art .ca-diamond { fill: var(--ca-coral); stroke: var(--ca-ink); stroke-width: 1.25; }
+
+@media (max-width: 560px) {
+  .v5-capability-art { margin-top: 1.2rem; aspect-ratio: 1.42 / 1; background-size: 11px 11px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .v5-capability-art .ca-feedback,
+  .v5-capability-art .ca-node { transform-box: fill-box; transform-origin: center; animation: ca-pulse 3.8s steps(2, end) infinite; }
+  .v5-capability-art .ca-feedback--green { animation-delay: .35s; }
+  .v5-capability-art .ca-feedback--coral { animation-delay: .7s; }
+  @keyframes ca-pulse { 50% { transform: scale(1.18); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v5-capability-art * { animation: none !important; }
+}

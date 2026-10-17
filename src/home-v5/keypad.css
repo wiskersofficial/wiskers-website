@@ -1,0 +1,87 @@
+.v5-keypad {
+  --ink: #091540;
+  --muted: #41536e;
+  --line: #9aa8ac;
+  --panel: #dbe5df;
+  --panel-raised: #fffdf8;
+  --surface-page: #f3f0e9;
+  --keypad-ink: #091540;
+  --keypad-muted: #41536e;
+  --keypad-line: var(--line);
+  --keypad-accent: var(--blue-green);
+  display: grid;
+  grid-template-columns: minmax(230px, .76fr) minmax(0, 1.24fr);
+  align-items: center;
+  gap: clamp(42px, 8vw, 120px);
+  padding: clamp(70px, 10vw, 145px) clamp(6%, calc((100vw - 1280px) / 2), 10%);
+  color: inherit;
+  overflow: hidden;
+}
+.v5-keypad__intro { max-width: 390px; position: relative; z-index: 1; }
+.v5-keypad__eyebrow { margin: 0 0 25px; color: color-mix(in srgb,currentColor 72%,transparent); font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.v5-keypad__eyebrow span { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: var(--seaweed); }
+.v5-keypad__intro h2 { max-width: 360px; margin: 0 0 23px; font-size: clamp(42px, 5.3vw, 76px); line-height: .99; letter-spacing: -.065em; font-weight: 500; }
+.v5-keypad__lede { max-width: 345px; margin: 0; color: color-mix(in srgb,currentColor 74%,transparent); font-size: 15px; line-height: 1.55; }
+.v5-keypad__instrument {
+  color: var(--keypad-ink);
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 780px;
+  min-height: 540px;
+  margin: auto;
+  padding: clamp(24px, 4vw, 54px) clamp(22px, 5vw, 66px) 25px;
+  border: 1px solid color-mix(in srgb, var(--ink) 38%, var(--line));
+  border-radius: 18px 18px 8px 8px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--panel-raised) 82%, white), var(--panel) 62%, color-mix(in srgb, var(--blue-green) 9%, var(--panel)));
+  box-shadow: 0 28px 0 -8px color-mix(in srgb, var(--ink) 14%, transparent), 0 52px 76px color-mix(in srgb, var(--ink) 18%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent), inset 0 -10px 18px color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.v5-keypad__instrument::before { content: ""; position: absolute; z-index: -1; inset: 12px -17px -22px 17px; border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent); border-radius: 17px 17px 9px 9px; background: linear-gradient(100deg, color-mix(in srgb, var(--blue-green) 24%, var(--panel)), color-mix(in srgb, var(--ink) 12%, var(--panel))); box-shadow: 10px 17px 30px color-mix(in srgb, var(--ink) 12%, transparent); }
+.v5-keypad__instrument::after { content: ""; position: absolute; z-index: -2; height: 16px; left: 28px; right: 28px; bottom: -33px; border-radius: 50%; background: color-mix(in srgb, var(--ink) 24%, transparent); filter: blur(17px); }
+.v5-keypad__topline, .v5-keypad__base { display: flex; align-items: center; justify-content: space-between; color: var(--keypad-muted); font-size: 9px; font-weight: 700; letter-spacing: .16em; }
+.v5-keypad__topline { padding-bottom: 18px; border-bottom: 1px solid var(--keypad-line); }
+.v5-keypad__aperture { position: relative; min-height: 180px; margin: 27px 0 30px; padding: 28px clamp(23px, 4vw, 46px); overflow: hidden; border: 1px solid color-mix(in srgb, var(--blue-green) 45%, var(--line)); border-radius: 8px; background: radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--blue-green) 17%, transparent), transparent 60%), linear-gradient(135deg, color-mix(in srgb, var(--panel-raised) 93%, transparent), color-mix(in srgb, var(--surface-page) 78%, var(--panel))); box-shadow: inset 0 5px 18px color-mix(in srgb, var(--ink) 9%, transparent), 0 2px 0 color-mix(in srgb, white 50%, transparent); }
+.v5-keypad__aperture::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .35; background: repeating-linear-gradient(0deg, transparent 0 5px, color-mix(in srgb, var(--blue-green) 9%, transparent) 6px); }
+.v5-keypad__readout-code { position: relative; z-index: 1; display: inline-block; margin-bottom: 13px; color: var(--seaweed); font-size: 9px; font-weight: 800; letter-spacing: .19em; }
+.v5-keypad__question { position: relative; z-index: 1; margin: 0 0 10px; max-width: 500px; font-size: clamp(23px, 3vw, 38px); line-height: 1.05; font-weight: 500; letter-spacing: -.045em; }
+.v5-keypad__answer { position: relative; z-index: 1; max-width: 475px; margin: 0; color: var(--keypad-muted); font-size: 13px; line-height: 1.55; }
+.v5-keypad__aperture-mark { position: absolute; right: 22px; bottom: 15px; color: color-mix(in srgb, var(--blue-green) 50%, transparent); font-size: 37px; line-height: 1; }
+.v5-keypad__keys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2vw, 25px); align-items: start; padding: 0 3px 24px; }
+.v5-keypad__key { position: relative; display: flex; min-width: 0; min-height: 132px; flex-direction: column; align-items: stretch; justify-content: space-between; padding: 15px 15px 13px; border: 1px solid color-mix(in srgb, var(--ink) 45%, var(--line)); border-radius: 9px 9px 5px 5px; background: linear-gradient(150deg, color-mix(in srgb, var(--panel-raised) 94%, white), var(--panel-raised)); color: var(--keypad-ink); text-align: left; cursor: pointer; box-shadow: 0 8px 0 color-mix(in srgb, var(--ink) 18%, var(--line)), 0 11px 16px color-mix(in srgb, var(--ink) 11%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent); transition: background-color .16s ease, box-shadow .16s ease, border-color .16s ease; }
+.v5-keypad__key::before { content: ""; position: absolute; inset: 4px; border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); border-radius: 6px 6px 3px 3px; pointer-events: none; }
+.v5-keypad__key:hover { border-color: var(--blue-green); background: color-mix(in srgb, var(--panel-raised) 86%, var(--blue-green)); }
+.v5-keypad__key:active, .v5-keypad__key.is-selected { border-color: var(--blue-green); background: linear-gradient(145deg, color-mix(in srgb, var(--blue-green) 21%, var(--panel-raised)), color-mix(in srgb, var(--panel-raised) 87%, var(--seaweed))); box-shadow: 0 4px 0 color-mix(in srgb, var(--blue-green) 45%, var(--ink)), 0 7px 13px color-mix(in srgb, var(--ink) 10%, transparent), inset 0 2px 5px color-mix(in srgb, var(--ink) 9%, transparent); }
+.v5-keypad__key:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+.v5-keypad__key-cap { display: flex; justify-content: space-between; align-items: flex-start; }
+.v5-keypad__key-index { color: var(--keypad-muted); font-size: 9px; letter-spacing: .12em; }
+.v5-keypad__key-glyph { color: var(--blue-green); font-size: 26px; line-height: .9; }
+.v5-keypad__key-label { position: relative; z-index: 1; padding-right: 5px; font-size: clamp(12px, 1.15vw, 15px); line-height: 1.25; font-weight: 600; }
+.v5-keypad__key-side { position: absolute; width: 10px; right: -11px; top: 7px; bottom: 5px; border: 1px solid color-mix(in srgb, var(--ink) 35%, var(--line)); border-left: 0; transform: skewY(-28deg); transform-origin: left; background: linear-gradient(90deg, color-mix(in srgb, var(--blue-green) 19%, var(--panel)), color-mix(in srgb, var(--ink) 12%, var(--panel))); border-radius: 0 4px 3px 0; }
+.v5-keypad__base { min-height: 30px; gap: 13px; padding-top: 14px; border-top: 1px solid var(--keypad-line); font-size: 8px; }
+.v5-keypad__base-line { flex: 1; height: 1px; background: color-mix(in srgb, var(--blue-green) 48%, var(--line)); }
+.v5-keypad__footnote { grid-column: 2; justify-self: center; margin: -14px 0 0; color: var(--keypad-muted); font-size: 11px; letter-spacing: .04em; }
+.v5-keypad__footnote span { margin-right: 8px; color: var(--seaweed); }
+@media (max-width: 820px) {
+  .v5-keypad { grid-template-columns: 1fr; gap: 40px; padding-top: 75px; padding-bottom: 85px; }
+  .v5-keypad__intro { max-width: 580px; }
+  .v5-keypad__intro h2 { max-width: 520px; }
+  .v5-keypad__instrument { max-width: 700px; }
+  .v5-keypad__footnote { grid-column: 1; margin-top: -22px; }
+}
+@media (max-width: 560px) {
+  .v5-keypad { gap: 32px; padding-left: 6%; padding-right: 8%; }
+  .v5-keypad__instrument { min-height: 0; padding: 22px 19px 19px; border-radius: 13px 13px 6px 6px; }
+  .v5-keypad__instrument::before { inset: 9px -12px -17px 12px; }
+  .v5-keypad__topline { font-size: 7px; letter-spacing: .1em; }
+  .v5-keypad__aperture { min-height: 190px; margin: 20px 0 25px; padding: 24px 19px; }
+  .v5-keypad__question { font-size: 26px; }
+  .v5-keypad__answer { max-width: 280px; font-size: 12px; }
+  .v5-keypad__keys { gap: 9px; padding: 0 3px 21px; }
+  .v5-keypad__key { min-height: 124px; padding: 12px 10px 11px; }
+  .v5-keypad__key-label { font-size: 12px; }
+  .v5-keypad__key-side { width: 7px; right: -8px; }
+  .v5-keypad__base { font-size: 6px; gap: 8px; letter-spacing: .12em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v5-keypad__key { transition: none; }
+}
