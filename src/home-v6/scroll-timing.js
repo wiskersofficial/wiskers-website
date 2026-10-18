@@ -21,8 +21,13 @@ export function measureDocumentBoxes(elements, scrollY = window.scrollY || 0) {
 export function progressAcrossViewport(box, scrollY, viewportHeight, startAt = 0.88, endAt = 0.52, viewportOffsetTop = 0) {
   if (!box || viewportHeight <= 0) return 0;
   const visibleTop = scrollY + viewportOffsetTop;
-  const startLine = box.top - viewportHeight * startAt;
+  const rawStartLine = box.top - viewportHeight * startAt;
   const endLine = box.top - viewportHeight * endAt;
+  // If the animation would finish above the document's first viewport, treat
+  // it as already complete. If only its start line is above, begin at the
+  // document top so visible content never loads halfway through a reveal.
+  if (endLine <= viewportOffsetTop) return 1;
+  const startLine = Math.max(viewportOffsetTop, rawStartLine);
   return clamp01((visibleTop - startLine) / Math.max(1, endLine - startLine));
 }
 

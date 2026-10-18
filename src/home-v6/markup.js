@@ -26,16 +26,16 @@ export const homeMarkup = String.raw`<div class="v6-home">
   </section>
 
   <section class="v6-scene v6-examples" id="v6-examples" aria-labelledby="v6-examples-title">
-    <div class="v6-examples-intro"><p class="v6-overline">Useful by design</p><h2 id="v6-examples-title">Make the answer<br><em>the experience.</em></h2></div>
+    <div class="v6-examples-intro"><p class="v6-overline">Useful by design</p><h2 id="v6-examples-title">Make the answer<br><em data-glyph-wave data-glyph-stagger="0.3">the experience.</em></h2></div>
     <div class="v6-example-list" data-v6-spiral-gallery>
       <svg class="v6-spiral-route" viewBox="0 0 52 900" preserveAspectRatio="none" aria-hidden="true"><path data-v6-spiral-path pathLength="1" d="M26 0 C26 80 4 78 4 150 C4 220 48 220 48 300 C48 375 4 382 4 455 C4 530 48 540 48 615 C48 690 4 700 4 775 C4 850 26 840 26 900"/></svg>
       <article class="v6-example" aria-labelledby="v6-calculate-title">
-        <div class="v6-example-title"><div><h3 id="v6-calculate-title" data-glyph-wave data-glyph-stagger="0.3">Calculate.</h3><p>Turn a number into a clearer picture.</p></div></div>
+        <div class="v6-example-title"><div><h3 id="v6-calculate-title" data-glyph-wave data-glyph-stagger="0.3">Calculate.</h3><p>See the time in an untargeted list.</p></div></div>
         <form class="v6-calc" data-v6-calc>
-          <label>Amount <span><span aria-hidden="true">£</span><input name="amount" type="number" inputmode="decimal" min="0" step="100" value="1200" aria-label="Amount in pounds"></span></label>
+          <label>Accounts <span><input name="accounts" type="number" inputmode="numeric" min="0" step="10" value="120" aria-label="Number of accounts to research"></span></label>
           <span class="v6-times" aria-hidden="true">×</span>
-          <label>Months <span><input name="months" type="number" inputmode="numeric" min="0" max="120" step="1" value="6" aria-label="Number of months"></span></label>
-          <output data-v6-calc-output aria-live="polite">£7,200</output>
+          <label>Minutes each <span><input name="minutes" type="number" inputmode="numeric" min="0" max="120" step="1" value="6" aria-label="Minutes spent researching each account"></span></label>
+          <output data-v6-calc-output aria-live="polite" aria-label="Estimated hours to research">12 h</output>
         </form>
       </article>
       <article class="v6-example" aria-labelledby="v6-diagnose-title">
@@ -48,7 +48,7 @@ export const homeMarkup = String.raw`<div class="v6-home">
       </article>
       <article class="v6-example" aria-labelledby="v6-compare-title">
         <div class="v6-example-title"><div><h3 id="v6-compare-title" data-glyph-wave data-glyph-stagger="0.3">Compare.</h3><p>Choose what matters to your decision.</p></div></div>
-        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p></fieldset>
+        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label><label><input type="checkbox" value="intent"><span>Buyer intent</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p></fieldset>
       </article>
     </div>
   </section>
@@ -79,12 +79,12 @@ export function mountHomeInteractions(root) {
   };
 
   root.querySelectorAll('[data-v6-calc]').forEach((form) => {
-    const amount = form.elements.amount;
-    const months = form.elements.months;
+    const accounts = form.elements.accounts;
+    const minutes = form.elements.minutes;
     const output = form.querySelector('[data-v6-calc-output]');
     const update = () => {
-      const total = Math.max(0, Number(amount.value) || 0) * Math.max(0, Number(months.value) || 0);
-      output.value = `£${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 0 }).format(total)}`;
+      const totalHours = (Math.max(0, Number(accounts.value) || 0) * Math.max(0, Number(minutes.value) || 0)) / 60;
+      output.value = `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(totalHours)} h`;
       output.textContent = output.value;
     };
     listen(form, 'input', update);

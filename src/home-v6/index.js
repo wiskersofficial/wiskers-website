@@ -67,6 +67,12 @@ if (main) {
     // row so resize measurements never inherit a previous animation offset.
     const stableRow = target.closest(".v6-example, .v6-process-steps article");
     const anchor = stableRow || target;
+    if (target.closest(".v6-contact")) {
+      const box = rects.get(anchor);
+      if (!box) return 0;
+      const startScroll = Math.max(0, box.top - viewportHeight * 0.9);
+      return progressAcrossRange(window.scrollY || 0, startScroll, pageHeight);
+    }
     const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, glyphPixelsPerLetter));
     const endAt = Math.max(0.06, 0.92 - travel / viewportHeight);
     return progressWhenCrossing(anchor, 0.92, endAt);
@@ -88,12 +94,14 @@ if (main) {
     if (heroBox) {
       const heroTarget = glyphTargets.find((target) => target.closest(".v6-hero"));
       const heroTargetBox = heroTarget && rects.get(heroTarget);
-      const targetVisibleEnd = heroTargetBox
-        ? Math.max(1, heroTargetBox.top + heroTargetBox.height - viewportHeight * 0.06)
-        : heroBox.top + viewportHeight * 0.26;
-      // Use the same character cadence as every other heading; cap the hero's
-      // shorter runway so its final glyph changes while the line is visible.
-      const heroTravel = Math.min(targetVisibleEnd, glyphs.getTravelDistance(heroTarget, glyphPixelsPerLetter));
+      // Complete the hero's letter wave while the full target line is still
+      // readable: its top edge should reach the upper viewport, not leave
+      // only a few pixels of the last glyph on screen. Keep the shared per-
+      // glyph cadence when the viewport offers a longer runway.
+      const heroVisibleTravel = heroTargetBox
+        ? Math.max(1, heroTargetBox.top - viewportHeight * 0.04)
+        : viewportHeight * 0.34;
+      const heroTravel = Math.min(heroVisibleTravel, glyphs.getTravelDistance(heroTarget, glyphPixelsPerLetter));
       const heroProgress = progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
