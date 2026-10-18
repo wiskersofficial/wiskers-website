@@ -23,7 +23,7 @@ export function progressAcrossViewport(box, scrollY, viewportHeight, startAt = 0
   const visibleTop = scrollY + viewportOffsetTop;
   const startLine = box.top - viewportHeight * startAt;
   const endLine = box.top - viewportHeight * endAt;
-  return clamp01((visibleTop - startLine) / Math.max(1, startLine - endLine));
+  return clamp01((visibleTop - startLine) / Math.max(1, endLine - startLine));
 }
 
 /** Progress through an explicit document-scroll interval. */

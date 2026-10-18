@@ -15,10 +15,11 @@ export const homeMarkup = String.raw`<div class="v6-home">
       <h2 id="v6-thesis-title"><span class="v6-outline-word" data-v6-outline>Insight</span> takes<br><span data-glyph-wave data-glyph-stagger="0.24">input.</span></h2>
     </div>
     <div class="v6-thesis-body">
-      <p>We turn your expertise into useful tools that help buyers find their own answer.</p>
+      <p class="v6-wrap-copy"><span class="v6-wrap-orbit" aria-hidden="true"><span>W</span></span>We turn your expertise into useful tools that help buyers find their own answer.</p>
       <div class="v6-line-array" role="img" aria-label="A buyer's question and context flow through your expertise to a useful answer">
         <div class="v6-array-ends"><span>Question<br><small>+ context</small></span><span>Useful<br><small>answer</small></span></div>
-        <svg viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><path class="v6-flow v6-flow-one" pathLength="1" d="M0 35 C150 35 150 75 300 75 S450 35 600 35"/><path class="v6-flow v6-flow-two" pathLength="1" d="M0 75 C150 75 150 75 300 75 S450 75 600 75"/><path class="v6-flow v6-flow-three" pathLength="1" d="M0 115 C150 115 150 75 300 75 S450 115 600 115"/><circle cx="300" cy="75" r="7"/></svg>
+        <canvas class="v6-ascii-field" data-v6-ascii aria-hidden="true"></canvas>
+        <svg viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="v6-water-ripple" x="-8%" y="-25%" width="116%" height="150%"><feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="1" seed="8" result="water-noise"/><feDisplacementMap data-v6-water-map in="SourceGraphic" in2="water-noise" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></defs><path class="v6-flow v6-flow-one" pathLength="1" d="M0 35 C150 35 150 75 300 75 S450 35 600 35"/><path class="v6-flow v6-flow-two" data-v6-trail-path pathLength="1" d="M0 75 C150 75 150 75 300 75 S450 75 600 75"/><path class="v6-flow v6-flow-three" pathLength="1" d="M0 115 C150 115 150 75 300 75 S450 115 600 115"/><circle class="v6-flow-core" cx="300" cy="75" r="7"/><g class="v6-flow-trail" data-v6-trail="0"><path d="M-4 0H4M0-4V4"/></g><g class="v6-flow-trail" data-v6-trail="1"><path d="M-3 0H3M0-3V3"/></g><g class="v6-flow-trail" data-v6-trail="2"><path d="M-2 0H2M0-2V2"/></g></svg>
         <span class="v6-array-core">Your expertise</span>
       </div>
     </div>
@@ -26,7 +27,8 @@ export const homeMarkup = String.raw`<div class="v6-home">
 
   <section class="v6-scene v6-examples" id="v6-examples" aria-labelledby="v6-examples-title">
     <div class="v6-examples-intro"><p class="v6-overline">Useful by design</p><h2 id="v6-examples-title">Make the answer<br><em>the experience.</em></h2></div>
-    <div class="v6-example-list">
+    <div class="v6-example-list" data-v6-spiral-gallery>
+      <svg class="v6-spiral-route" viewBox="0 0 52 900" preserveAspectRatio="none" aria-hidden="true"><path data-v6-spiral-path pathLength="1" d="M26 0 C26 80 4 78 4 150 C4 220 48 220 48 300 C48 375 4 382 4 455 C4 530 48 540 48 615 C48 690 4 700 4 775 C4 850 26 840 26 900"/></svg>
       <article class="v6-example" aria-labelledby="v6-calculate-title">
         <div class="v6-example-title"><div><h3 id="v6-calculate-title" data-glyph-wave data-glyph-stagger="0.3">Calculate.</h3><p>Turn a number into a clearer picture.</p></div></div>
         <form class="v6-calc" data-v6-calc>
@@ -46,13 +48,13 @@ export const homeMarkup = String.raw`<div class="v6-home">
       </article>
       <article class="v6-example" aria-labelledby="v6-compare-title">
         <div class="v6-example-title"><div><h3 id="v6-compare-title" data-glyph-wave data-glyph-stagger="0.3">Compare.</h3><p>Choose what matters to your decision.</p></div></div>
-        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p></fieldset>
+        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p></fieldset>
       </article>
     </div>
   </section>
 
   <section class="v6-scene v6-process" id="v6-process" aria-labelledby="v6-process-title">
-    <div class="v6-process-head"><p class="v6-overline">From question to conversation</p><h2 id="v6-process-title">A better conversation<br><span data-glyph-wave data-glyph-stagger="0.24">starts here.</span></h2></div>
+    <div class="v6-process-head"><p class="v6-overline">From question to conversation</p><h2 id="v6-process-title">A better conversation<br><span data-glyph-wave data-glyph-stagger="0.24">starts here.</span></h2><div class="v6-hanging-note" data-v6-hanging-note aria-hidden="true"><span class="v6-hanging-thread"></span><span class="v6-hanging-card"><i></i><b>Buyer signal</b></span></div></div>
     <div class="v6-process-steps">
       <article><h3 data-glyph-wave data-glyph-stagger="0.18">QUESTION</h3><p>Start with the decision your buyer needs to make.</p></article>
       <article><h3 data-glyph-wave data-glyph-stagger="0.18">TOOL</h3><p>Shape your expertise into a useful self-serve answer.</p></article>

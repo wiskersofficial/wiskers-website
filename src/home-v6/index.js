@@ -2,6 +2,7 @@ import "./layout.css";
 import "./glyph-wave.css";
 import { homeMarkup, mountHomeInteractions } from "./markup.js";
 import { initGlyphWaves } from "./glyph-wave.js";
+import { initScrollVisuals } from "./visual-modules.js";
 import { measureDocumentBoxes, observeLayoutChanges, progressAcrossRange, progressAcrossViewport } from "./scroll-timing.js";
 
 const main = document.querySelector("#main-content");
@@ -12,6 +13,7 @@ if (main) {
   const root = main.querySelector(".v6-home");
   const disposeInteractions = mountHomeInteractions(root);
   const glyphs = initGlyphWaves(root);
+  const visuals = initScrollVisuals(root);
   const glyphTargets = [...root.querySelectorAll("[data-glyph-wave]")];
   const scenes = [...root.querySelectorAll(".v6-scene")];
   const examples = [...root.querySelectorAll(".v6-example")];
@@ -19,6 +21,8 @@ if (main) {
   const hero = root.querySelector(".v6-hero");
   const heroLines = [...root.querySelectorAll("[data-v6-hero-line]")];
   const thesis = root.querySelector(".v6-thesis");
+  const examplesScene = root.querySelector(".v6-examples");
+  const processScene = root.querySelector(".v6-process");
   const outlineWord = root.querySelector("[data-v6-outline]");
   const progressBar = document.querySelector("[data-v6-progress]");
   const pauseButton = document.querySelector("[data-v6-pause]");
@@ -110,6 +114,9 @@ if (main) {
       const fill = clamp((thesisProgress - 0.08) / 0.5);
       outlineWord?.style.setProperty("--v6-outline-fill", `${(fill * 100).toFixed(1)}%`);
       thesis.style.setProperty("--v6-draw", thesisProgress.toFixed(3));
+      const galleryProgress = progressWhenCrossing(examplesScene, 0.92, 0.08);
+      const processProgress = progressWhenCrossing(processScene, 0.92, 0.08);
+      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress });
     }
 
     for (const example of examples) {
@@ -117,6 +124,9 @@ if (main) {
       const p = target
         ? revealProgressForGlyph(target, progressForGlyph(target))
         : progressWhenCrossing(example, 0.92, 0.06);
+      const orbit = Math.sin(p * Math.PI * 2 + examples.indexOf(example) * (Math.PI * 2 / 3));
+      example.style.setProperty("--v6-spiral-x", `${(orbit * 12).toFixed(1)}px`);
+      example.style.setProperty("--v6-spiral-tilt", `${(orbit * 0.72).toFixed(2)}deg`);
       example.style.setProperty("--v6-reveal", p.toFixed(3));
     }
 
@@ -140,6 +150,7 @@ if (main) {
       examples.forEach((example) => example.style.setProperty("--v6-reveal", "1"));
       stages.forEach((stage) => stage.style.setProperty("--v6-stage-progress", "1"));
       root.classList.add("motion-reduced");
+      visuals.update({ thesis: 1, examples: 1, process: 1 });
     } else {
       root.classList.remove("motion-reduced");
       measure();
@@ -150,6 +161,7 @@ if (main) {
     paused = Boolean(value);
     document.body.classList.toggle("motion-paused", paused);
     glyphs.setPaused(paused);
+    visuals.setPaused(paused);
     if (pauseButton) {
       pauseButton.setAttribute("aria-pressed", String(paused));
       pauseButton.textContent = paused ? "Resume motion" : "Pause motion";
@@ -176,6 +188,7 @@ if (main) {
     if (event.persisted) return;
     disposeInteractions();
     glyphs.destroy();
+    visuals.destroy();
     if (frame) cancelAnimationFrame(frame);
     window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onResize);
