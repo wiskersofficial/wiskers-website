@@ -1,6 +1,6 @@
 # Scrollo concept demo
 
-Route: `/scroll/` (also reachable at `/scroll`). This is an isolated demonstration of a steerable, continuous curiosity feed. It does not change the Wiskers homepage, `/cat/`, contact information, or legal pages.
+Route: `/scrollo/` (also reachable at `/scrollo`). The original `/scroll/` address remains available. This is an isolated demonstration of a steerable, continuous curiosity feed. It does not change the Wiskers homepage, `/cat/`, contact information, or legal pages.
 
 ## Product interpretation and build plan
 
@@ -26,7 +26,7 @@ The build has four parts:
 
 ## Showing the demo
 
-Open `/scroll/` and scroll normally. The opening harmonic sculpture, galaxy, and living-light scenes make good first stops. Sliders alter the graphics live. The double pendulum uses integrated equations, and the three-door game can be played repeatedly.
+Open `/scrollo/` and scroll normally. The opening harmonic sculpture, galaxy, and living-light scenes make good first stops. Sliders alter the graphics live. The double pendulum uses integrated equations, and the three-door game can be played repeatedly.
 
 The four corner controls mirror the gestures. For a diagonal gesture, begin sideways and move into a corner; release after the action preview says “Release”. A mostly vertical motion remains a normal browser scroll. Gesture decisions have a visual preview, edge colour, and optional vibration on supported devices.
 
@@ -77,4 +77,4 @@ npm run dev -- --host 127.0.0.1 --port 5190 --configLoader runner
 npm run build -- --configLoader runner
 ```
 
-Build output includes `dist/scroll/index.html` alongside the existing root and `/cat/` pages.
+Build output includes `dist/scrollo/index.html` and `dist/scroll/index.html` alongside the existing root and `/cat/` pages. The Vite route alias emits the same built page at both addresses and serves the alias during development; there is one HTML source to maintain.
