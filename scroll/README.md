@@ -1,74 +1,80 @@
-# Scrollo concept demo
+# Scrollo: a continuous, gesture-led feed
 
-Route: `/scrollo/` (also reachable at `/scrollo`). The original `/scroll/` address remains available. This is an isolated demonstration of a steerable, continuous curiosity feed. It does not change the Wiskers homepage, `/cat/`, contact information, or legal pages.
+Public routes: `/scrollo/` and `/scroll/`. The same HTML source is built at both addresses. Root Wiskers pages and `/cat/` are unchanged.
 
-## Product interpretation and build plan
+## Current experience
 
-The primary experience is continuous scrolling through short explanations and living diagrams. Diagonal gestures steer the experience without turning it into a stack of swipe cards. The four actions follow the original requested map:
+The feed combines photographs, short headlines, quoted social exchanges, moving typography, visual wordplay, and procedural models. There are no per-scene sliders, feed-tuning forms, snap points, or next-card controls. Scrolling transforms images, letters, and models; the next moments enter while the preceding ones are still leaving. The prepared mix includes current news, politics, environment, tech, music, internet humour, art, and occasional science.
 
-| Gesture | Action |
+The four original corner actions remain:
+
+| Direction | Action |
 | --- | --- |
-| Top left | Less like this; reduce related topics and move on |
-| Top right | Start a conversation with a friend |
-| Bottom left | Like; collect the idea and increase related topics |
-| Bottom right | Open the thread for this exact topic |
+| Top left | Less of this; change the mix and move on |
+| Top right | Bring a friend into a topic-linked demo conversation |
+| Bottom left | Like and ask for more related material |
+| Bottom right | Comments on the current topic |
 
-Separate feed controls change mood, depth, discovery, and interests. Treating bottom-left as a tuning gesture would replace the requested like action, so tuning has its own control.
+A short diagonal drag progressively lights the thin corner bezel. An armed gesture lights the whole path. Release commits, requests a haptic pulse where supported, and confirms with a new colour. A short or cancelled swipe returns to rest without acting. A positive swipe is consistently positive, including repeated swipes on a liked item.
 
-The implementation uses native vertical scrolling with readable HTML text over one procedural WebGL layer. A full 3D text canvas is not necessary for this experience. No scroll snapping, wheel interception, or pinned article transitions are used. Graphics follow measured document positions, with small differential motion and sideways feedback during deliberate diagonal gestures. The release preserves the original site's route split.
+## Gesture mechanics
 
-The build has four parts:
+The former `touch-action: pan-y` handler let the browser own and cancel diagonal pointers before the application claimed them. The new feed claims a primary pointer immediately and uses `touch-action: pinch-zoom`. Vertical pointer drags move the actual document, with velocity-based coast on release. Desktop wheel scrolling and keyboard scrolling remain native. Diagonal trackpad movement is supported separately through a cancellable wheel listener.
 
-1. A prepared library of twelve topics with stable topic IDs, original explanatory copy, source links, and topic-specific demo comments.
-2. A continuous responsive layout with procedural graphics, interactive experiments, gesture previews, haptic support where available, and explicit button alternatives.
-3. Browser-local social and preference state: likes, dislikes, comments, replies, simulated friend conversations, shared wandering, and feed reordering.
-4. Browser review at desktop and narrow widths, production build, dev push, and the repository's standing main release workflow.
+Pointer intent is classified after a small movement. Vertical intent stays vertical; diagonal intent previews an action. Both axes must contribute before a corner action can arm. Pointer cancellation and window blur cancel the action. Text selection and image dragging do not take over a feed swipe. Gestures can begin over source labels as well as text and images; a tap still opens the source.
 
-## Showing the demo
+Source, social, and settings sheets keep normal internal vertical scrolling. A rightward swipe dismisses a sheet. Closing stops intercepting feed input immediately, while the visual transition finishes.
 
-Open `/scrollo/` and scroll normally. The opening harmonic sculpture, galaxy, and living-light scenes make good first stops. Sliders alter the graphics live. The double pendulum uses integrated equations, and the three-door game can be played repeatedly.
+Corner buttons and keyboard controls are retained as accessible alternatives. `J` / `K` scroll; `L`, `C`, and `F` invoke like, comments, and friends; `?` opens help; `Escape` closes a panel. Dialogs trap focus and restore it on dismissal.
 
-The four corner controls mirror the gestures. For a diagonal gesture, begin sideways and move into a corner; release after the action preview says “Release”. A mostly vertical motion remains a normal browser scroll. Gesture decisions have a visual preview, edge colour, and optional vibration on supported devices.
+## Haptics
 
-“Make it your flow” opens a gesture and keyboard guide. “Tune your feed” previews and replaces upcoming topics while retaining the current article and reading position. Likes and dislikes also influence upcoming ordering. Source links open an explanation and attribution panel. The explore icon offers topic search. The profile opens liked ideas, motion settings, a guided tour, and reset.
+The implementation requests the real Vibration API on arm and confirmation. A web page cannot force physical feedback on browsers or hardware that do not expose it. In particular, Safari and desktop hardware may provide no usable web vibration. No unsupported iOS checkbox trick is presented as reliable haptics. The bezel preview, threshold, and colour confirmation always remain available.
 
-Friend conversations are simulated. “Wander together” adds a labelled demo companion pointer and shared-session indicator. Clicking the indicator ends the shared wander.
+Reference: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/vibrate
 
-The guided flow advances through nine ideas, every 7.5 seconds. Wheel input, touch, or keyboard input cancels it. Reduced motion disables the tour and animated graphics while preserving all reading and social controls. Use “Keep wandering” to append another prepared stretch.
+## Content and provenance
 
-Keyboard shortcuts:
+News snapshot checked **18 October 2026**. Dated reporting includes:
 
-- `J` / `K`: next / previous topic
-- `L`: like the current topic
-- `C`: comments
-- `F`: friends
-- `T`: feed tuning
-- `?`: interaction guide
-- `Escape`: close a panel or cancel a gesture
+- COP17 opening day and the 19–30 October biodiversity conference, from the Convention on Biological Diversity.
+- Portugal housing and cost-of-living demonstrations, from Euronews, 17 October.
+- Sponge-city approaches to urban water, from Euronews, 17 October.
+- Research into Martian building materials inspired by freeze-dried fruit, from Euronews, 17 October.
+- An adviser's concerns about the siting of AI data centres, from Euronews, 17 October.
+- Brussels' pumpkin festival, from Euronews Culture, 17 October.
 
-Panels trap keyboard focus, keep the current topic context, and restore focus when closed. Comments and messages are escaped before rendering. User content is never evaluated or sent to a service.
+Reddit excerpts link to their actual original threads and are labelled as archive material. The medieval-music exchange is from r/musictheory; the work-tomorrow quote is from a dated r/CasualUK thread. The YouTube moment links to NPR Music's Dua Lipa Tiny Desk home concert. The Bluesky explainer links to the platform's own custom-feed explanation. No invented platform usernames, engagement counts, or live popularity claims are shown.
 
-## Demo boundaries
+Each source panel includes the exact source URL, date, context, and image credit. News imagery is illustrative and is not represented as photography of a reported event. This is a prepared demo, not a live source-ingestion or news service.
 
-There is no backend, live AI generation, source ingestion, real social messaging, or external posting. Likes, comments, messages, and preferences are saved to `scrollo-demo-v1` in localStorage on the current browser. The reset control clears only that demo state. Background sound is synthesised locally and starts only after a user clicks the audio control.
+## Images
 
-All artwork is drawn from code. No generated bitmap, stock video, or article image is needed. Illustrations are explicitly conceptual; they are not observational data or physical simulations unless the explanation says otherwise. The source drawer links to NASA, NOAA, the University of Toronto, the Exploratorium, and the cited network research. Linking a source here does not establish rights for a future ingestion pipeline.
+Three licensed Unsplash photographs are stored locally for reliable loading, under the Unsplash license (https://unsplash.com/license):
 
-The font request uses Google Fonts; system fonts are fallbacks if unavailable. The demo otherwise needs only the website's existing Three.js and Vite dependencies.
+- `public/scroll-media/cat.jpg`: Gaelle Marcel, https://unsplash.com/photos/an-orange-cat-sleeps-peacefully-on-a-bed-f6ZQIQ6wAmE
+- `public/scroll-media/forest.jpg`: Red Zeppelin, https://unsplash.com/photos/aerial-photography-of-forest-with-trees-QgFAMvj8JXY
+- `public/scroll-media/lisbon.jpg`: elisadventure, https://unsplash.com/photos/h5kfWB9c8lA
 
-## Source map
+The music moment uses the original YouTube thumbnail as a link preview, credited to NPR Music. It does not download or autoplay the performance.
 
-- `scroll/index.html`: isolated route and fixed UI chrome
-- `src/scroll/data.js`: prepared topic library, attribution, icons
-- `src/scroll/app.js`: feed ordering, panels, local state, experiments, gestures, sound, and tour
-- `src/scroll/world.js`: procedural geometry, particles, shaders, bloom, scene lifecycle
-- `src/scroll/scroll.css`: responsive typography, composition, and interactions
-- `public/scroll-icon.svg`: route-specific favicon
-- `vite.config.js`: adds the route to the existing multi-page build
+Models, rain, geometry, and other graphics are generated from code. No external model assets are required. Objects approach, rotate, assemble, or change with the document's scroll position. Reduced motion keeps content and actions usable while suppressing moving graphics and type.
 
-The graphics layer creates scenes only when they approach the viewport and disposes removed scenes when the future feed changes. Pixel ratio is capped at 1.6. Native scrolling remains usable without WebGL, using a CSS visual fallback. The development server places frame timing diagnostics on the canvas as data attributes; they do not add visible production UI.
+## State and feed adaptation
 
-## Local preview and build
+Likes, hidden topics, affinity weights, comments, and simulated chats use `scrollo-flow-v2` in localStorage. There is no real messaging, external posting, or live AI backend. All user text is escaped before rendering. A reset starts a fresh mix without touching the website's other stored preferences.
+
+Likes and skips reorder the future mix. The current topic and the next visible moments are retained to avoid moving content under the reader. Topic IDs, rather than feed positions, own the social context. Additional prepared content appends as the reader approaches the end. Distant WebGL objects are disposed and recreated when needed; the scrolling document and topic history remain available.
+
+## Source map and build
+
+- `scroll/index.html`: minimal chrome, corner bezel paths, feed, social sheet
+- `src/scroll/gestures.js`: pointer arbitration, drag scrolling, momentum, trackpad gestures, bezel and haptic feedback
+- `src/scroll/app.js`: continuous composition, scroll-driven type, adaptation, source context, local social interactions
+- `src/scroll/data.js`: mixed prepared content, exact source links, attribution, and demo replies
+- `src/scroll/icons.js`: shared UI icons
+- `src/scroll/world.js`: procedural models and graphics, scroll transforms, resource lifecycle
+- `src/scroll/scroll.css`: responsive overlapping layouts, typography, bezels, dialogs, and reduced motion
 
 Use the existing dependencies:
 
@@ -77,4 +83,4 @@ npm run dev -- --host 127.0.0.1 --port 5190 --configLoader runner
 npm run build -- --configLoader runner
 ```
 
-Build output includes `dist/scrollo/index.html` and `dist/scroll/index.html` alongside the existing root and `/cat/` pages. The Vite route alias emits the same built page at both addresses and serves the alias during development; there is one HTML source to maintain.
+The build preserves both demo addresses and the existing root and cat entry points. Follow the repository's dev-to-main Cloudflare release workflow.
