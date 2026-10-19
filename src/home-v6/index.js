@@ -170,10 +170,12 @@ if (main) {
     const stableRow = target.closest(".v6-example");
     const anchor = stableRow || target;
     if (target.closest(".v6-contact")) {
+      if (document.documentElement.scrollHeight <= viewportHeight) return 1;
       const box = rects.get(anchor);
       if (!box) return 0;
-      const startScroll = Math.max(0, box.top - viewportHeight * 0.9);
-      return progressAcrossRange(window.scrollY || 0, startScroll, pageHeight);
+      const endScroll = clamp(box.top - viewportHeight * 0.1, 1, pageHeight);
+      const startScroll = clamp(box.top - viewportHeight * 0.9, 0, endScroll - 1);
+      return progressAcrossRange(window.scrollY || 0, startScroll, endScroll);
     }
     const travel = Math.min(viewportHeight * 0.86, glyphs.getTravelDistance(target, glyphPixelsPerLetter));
     const endAt = Math.max(0.06, 0.92 - travel / viewportHeight);
