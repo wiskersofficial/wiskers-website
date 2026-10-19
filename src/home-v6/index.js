@@ -23,6 +23,8 @@ if (main) {
   const thesis = root.querySelector(".v6-thesis");
   const examplesScene = root.querySelector(".v6-examples");
   const processScene = root.querySelector(".v6-process");
+  const processHead = root.querySelector(".v6-process-head");
+  const processHeadingWave = root.querySelector("[data-v6-process-heading-wave]");
   const outlineWord = root.querySelector("[data-v6-outline]");
   const progressBar = document.querySelector("[data-v6-progress]");
   const pauseButton = document.querySelector("[data-v6-pause]");
@@ -36,12 +38,31 @@ if (main) {
 
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
 
+  function usesWideProcessTimeline() {
+    return !motionPreference.matches && window.matchMedia("(min-width: 1000px) and (min-height: 700px)").matches;
+  }
+
   function measure() {
     viewportHeight = window.visualViewport?.height || window.innerHeight || 1;
     const scrollY = window.scrollY || 0;
     const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages], scrollY);
     rects.clear();
     for (const [element, box] of measured) rects.set(element, box);
+    // The process heading is sticky on wide, tall screens. Keep its wave tied
+    // to its normal document location, using the unshifted section box plus
+    // the target's stable offset inside the sticky heading.
+    if (usesWideProcessTimeline() && processScene && processHead && processHeadingWave) {
+      const sectionBox = rects.get(processScene);
+      const headingRect = processHead.getBoundingClientRect();
+      const targetRect = processHeadingWave.getBoundingClientRect();
+      const sectionPaddingTop = Number.parseFloat(getComputedStyle(processScene).paddingTop) || 0;
+      if (sectionBox) {
+        rects.set(processHeadingWave, {
+          top: sectionBox.top + sectionPaddingTop + targetRect.top - headingRect.top,
+          height: targetRect.height,
+        });
+      }
+    }
     pageHeight = Math.max(1, document.documentElement.scrollHeight - viewportHeight);
     schedule();
   }
@@ -67,6 +88,9 @@ if (main) {
     // row so resize measurements never inherit a previous animation offset.
     const stableRow = target.closest(".v6-example, .v6-process-steps article");
     const anchor = stableRow || target;
+    if (usesWideProcessTimeline() && target.closest(".v6-process-steps article")) {
+      return progressWhenCrossing(anchor, 0.60, 0.36);
+    }
     if (target.closest(".v6-contact")) {
       const box = rects.get(anchor);
       if (!box) return 0;
@@ -140,10 +164,14 @@ if (main) {
 
     for (const stage of stages) {
       const target = stage.querySelector("[data-glyph-wave]");
-      const p = target
-        ? revealProgressForGlyph(target, progressForGlyph(target))
-        : progressWhenCrossing(stage, 0.92, 0.06);
+      const glyphProgress = target ? progressForGlyph(target) : null;
+      const p = usesWideProcessTimeline()
+        ? (glyphProgress ?? progressWhenCrossing(stage, 0.60, 0.36))
+        : target
+          ? revealProgressForGlyph(target, glyphProgress)
+          : progressWhenCrossing(stage, 0.92, 0.06);
       stage.style.setProperty("--v6-stage-progress", p.toFixed(3));
+      stage.style.setProperty("--v6-stage-progress-percent", `${(p * 100).toFixed(1)}%`);
     }
   }
 
