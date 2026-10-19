@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f0e9">
+  <title>Creative component studies — Wiskers</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f3f0e9;
+      --ink: #091540;
+      --muted: #59657d;
+      --blue: #2f97c1;
+      --green: #25a583;
+      --coral: #ef767a;
+      --line: #d0d1d1;
+      --serif: Georgia, "Times New Roman", serif;
+      --mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+      --sans: "DM Sans", Inter, "Avenir Next", Avenir, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    button { color: inherit; font: inherit; }
+    .progress { position: fixed; z-index: 20; inset: 0 0 auto; height: 3px; pointer-events: none; }
+    .progress i { display: block; height: 100%; width: 100%; background: var(--coral); transform: scaleX(0); transform-origin: left; }
+    .masthead { width: min(1280px, calc(100% - 64px)); margin: auto; padding: 25px 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+    .wordmark { text-decoration: none; font-size: 17px; font-weight: 700; letter-spacing: -.08em; }
+    .wordmark span { color: var(--blue); }
+    .masthead nav { display: flex; gap: 22px; align-items: center; font-size: 12px; }
+    .masthead nav a { text-decoration: none; border-bottom: 1px solid transparent; padding: 6px 0; }
+    .masthead nav a:hover, .masthead nav a:focus-visible { border-color: currentColor; }
+    .masthead .back { display: inline-flex; gap: 8px; align-items: center; color: var(--muted); }
+    main { width: min(1280px, calc(100% - 64px)); margin: auto; }
+    .intro { min-height: 530px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(250px, .7fr); gap: 7vw; align-items: center; padding: 76px 0 86px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 25px; color: var(--muted); font: 11px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 23px; height: 1px; background: var(--coral); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 830px; margin-bottom: 22px; font-size: clamp(66px, 10.3vw, 144px); line-height: .81; font-weight: 500; letter-spacing: -.095em; }
+    h1 em { color: var(--coral); font-family: var(--serif); font-weight: 400; letter-spacing: -.08em; }
+    .intro-copy { max-width: 430px; margin: 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+    .intro-aside { justify-self: end; width: min(100%, 280px); padding-top: 25px; }
+    .intro-aside p { margin: 0 0 23px; color: var(--muted); font: 11px/1.7 var(--mono); text-transform: uppercase; letter-spacing: .045em; }
+    .jump-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+    .jump-list a { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 8px; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; font-size: 12px; }
+    .jump-list a span:first-child { color: var(--blue); font: 10px var(--mono); }
+    .jump-list a span:last-child { color: var(--coral); transition: transform .2s ease; }
+    .jump-list a:hover span:last-child { transform: translate(3px, -3px); }
+    .study { position: relative; display: grid; grid-template-columns: minmax(210px, .34fr) minmax(0, .66fr); gap: clamp(28px, 6vw, 90px); padding: 84px 0 98px; border-top: 1px solid var(--line); scroll-margin-top: 18px; }
+    .study-meta { position: relative; z-index: 1; }
+    .index { color: var(--blue); font: 12px var(--mono); }
+    .study h2 { margin: 13px 0 13px; font-size: clamp(27px, 3.1vw, 43px); line-height: .98; letter-spacing: -.065em; font-weight: 500; }
+    .study-meta > p:not(.index) { max-width: 250px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .meta-tag { display: inline-block; margin-top: 21px; padding: 6px 8px; border: 1px solid var(--line); color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+    .demo { position: relative; min-height: 390px; overflow: hidden; background: #e9e5dc; }
+    .demo-label { position: absolute; z-index: 5; top: 16px; left: 18px; color: var(--muted); font: 9px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .hint { position: absolute; z-index: 5; right: 18px; bottom: 16px; color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+
+    /* 03 — scrollable 3D spiral gallery */
+    /* 05 — smooth image trail */
+    .trail-demo { min-height: 480px; display: grid; place-items: center; background: #e7e3dc; touch-action: pan-y; cursor: none; }
+    .trail-caption { position: relative; z-index: 1; color: var(--ink); font-size: clamp(34px, 6.1vw, 78px); font-weight: 500; letter-spacing: -.09em; pointer-events: none; }
+    .trail-caption em { color: var(--coral); font: 400 1em var(--serif); }
+    .trail-cursor { position: absolute; z-index: 4; width: 12px; height: 12px; border-radius: 50%; background: var(--coral); transform: translate(-50%,-50%); pointer-events: none; opacity: 0; box-shadow: 0 0 0 7px rgba(239,118,122,.18); }
+    .trail-card { position: absolute; z-index: 2; width: clamp(84px, 13vw, 150px); aspect-ratio: .78; padding: 8px; border: 1px solid rgba(9,21,64,.2); background: var(--paper); box-shadow: 0 12px 34px rgba(9,21,64,.2); opacity: 0; transform: translate(-50%,-50%) rotate(var(--rot, 0deg)) scale(.82); pointer-events: none; will-change: transform, opacity; }
+    .trail-demo .demo-label, .trail-demo .hint { color: var(--muted); }
+
+    /* 06 — hanging card */
+    .hang-demo { min-height: 500px; display: grid; place-items: center; background: #e8e5de; perspective: 900px; }
+    .hang-scene { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+    .hang-rail { position: absolute; top: 0; left: 50%; width: 1px; height: 28%; background: rgba(9,21,64,.3); }
+    .hang-note { position: absolute; top: 28%; left: 50%; transform: translateX(-50%); transform-origin: 50% 0; animation: idle-sway 5.2s ease-in-out infinite; }
+    .hang-thread { width: 1px; height: clamp(50px, 8vw, 90px); margin: auto; background: var(--ink); }
+    .hang-card { position: relative; width: clamp(210px, 31vw, 340px); min-height: 205px; padding: 24px; border: 1px solid rgba(9,21,64,.25); background: var(--paper); box-shadow: 12px 16px 0 rgba(47,151,193,.18), 0 22px 55px rgba(9,21,64,.12); }
+    .hang-card::before { content: ""; position: absolute; top: -5px; left: calc(50% - 5px); width: 9px; height: 9px; border: 1px solid var(--ink); border-radius: 50%; background: var(--coral); }
+    .hang-card small { display: block; margin-bottom: 24px; color: var(--muted); font: 9px var(--mono); text-transform: uppercase; letter-spacing: .07em; }
+    .hang-card strong { display: block; max-width: 250px; font-size: clamp(24px, 3vw, 35px); font-weight: 500; line-height: .98; letter-spacing: -.065em; }
+    .hang-card span { display: block; margin-top: 23px; color: var(--blue); font: 10px var(--mono); }
+    .hang-demo .demo-label, .hang-demo .hint { color: var(--muted); }
+    @keyframes idle-sway { 0%,100% { rotate: -2.5deg; } 50% { rotate: 2.5deg; } }
+
+    /* The ASCII treatment is a shared page texture, not a single isolated tile. */
+    .intro, .demo { isolation: isolate; }
+    .intro > div, .intro > aside { position: relative; z-index: 1; }
+    .ascii-background { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; opacity: .58; pointer-events: none; }
+    .spiral-demo { height: clamp(480px, 55vw, 620px); min-height: 0; overflow: hidden; background: #091540; perspective: 1100px; }
+    .spiral-viewport { position: absolute; inset: 0; z-index: 1; perspective: 1100px; perspective-origin: 50% 43%; transform-style: preserve-3d; }
+    .spiral-ring { position: absolute; inset: 0; transform-style: preserve-3d; }
+    .spiral-card { position: absolute; top: 50%; left: 50%; width: clamp(114px, 13.6vw, 164px); height: clamp(171px, 20.8vw, 240px); margin: 0; padding: 6px 6px 10px; border: 1px solid rgba(243,240,233,.7); background: var(--paper); color: var(--ink); box-shadow: 0 15px 40px rgba(0,0,0,.3); backface-visibility: hidden; transform-style: preserve-3d; will-change: transform; }
+    .spiral-card img { display: block; width: 100%; height: calc(100% - 47px); object-fit: cover; }
+    .spiral-card figcaption { display: flex; flex-direction: column; justify-content: center; gap: 3px; height: 47px; padding-left: 5px; font-size: 12px; font-weight: 500; letter-spacing: -.03em; }
+    .spiral-card figcaption small { color: var(--muted); font: 8px var(--mono); letter-spacing: .04em; }
+    .spiral-core { position: absolute; z-index: 0; left: 50%; top: 43%; width: 210px; height: 210px; display: grid; place-items: center; border: 1px solid rgba(47,151,193,.45); border-radius: 50%; color: rgba(243,240,233,.65); transform: translate(-50%,-50%); box-shadow: 0 0 0 34px rgba(47,151,193,.07), 0 0 0 72px rgba(239,118,122,.045); }
+    .spiral-core span { color: var(--paper); font-size: 38px; font-weight: 700; letter-spacing: -.12em; }
+    .spiral-controls { position: absolute; z-index: 4; left: 17px; bottom: 15px; color: #c4ccda; font: 9px var(--mono); text-transform: uppercase; letter-spacing: .04em; pointer-events: none; }
+    .spiral-demo .demo-label, .spiral-demo .hint { color: #c4ccda; }
+    .trail-demo { position: relative; overflow: hidden; cursor: crosshair; }
+    .trail-demo .trail-caption { z-index: 1; }
+    .trail-card { position: absolute; z-index: 2; display: block; width: clamp(86px, 12vw, 144px); aspect-ratio: .82; height: auto; padding: 7px; border: 1px solid rgba(9,21,64,.25); background: var(--paper); object-fit: cover; box-shadow: 0 12px 34px rgba(9,21,64,.24); opacity: 0; transform: translate(-50%,-50%); pointer-events: none; will-change: transform, opacity; }
+    .trail-demo .trail-cursor { z-index: 3; }
+    .hang-demo .hang-scene { z-index: 1; }
+    .hang-demo .hang-note { animation-duration: 7s; }
+    @media (max-width: 760px) {
+      .spiral-demo { height: 460px; }
+      .spiral-viewport { perspective: 760px; perspective-origin: 50% 44%; }
+      .spiral-card { width: 109px; height: 162px; padding: 5px 5px 7px; }
+      .spiral-card img { height: calc(100% - 39px); }
+      .spiral-card figcaption { height: 39px; font-size: 10px; }
+      .spiral-card figcaption small { font-size: 7px; }
+      .spiral-core { width: 125px; height: 125px; }
+      .spiral-core span { font-size: 28px; }
+      .spiral-controls { left: 12px; bottom: 12px; font-size: 8px; }
+      .trail-demo { cursor: auto; }
+    }
+
+    /* 07 — interactive box grid */
+    .grid-demo { min-height: 500px; padding: 66px clamp(20px, 6vw, 75px); background: var(--ink); }
+    .grid-demo .demo-label, .grid-demo .hint { color: #bac5d5; }
+    .grid-head { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 24px; color: var(--paper); }
+    .grid-head span { color: #82c8dc; font: 9px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+    .grid-head strong { font-size: clamp(20px, 2.7vw, 32px); font-weight: 500; letter-spacing: -.06em; }
+    .box-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; perspective: 900px; }
+    .box-tile { position: relative; min-height: 102px; padding: 14px; border: 1px solid rgba(243,240,233,.36); background: rgba(243,240,233,.045); color: var(--paper); text-align: left; cursor: pointer; transform-style: preserve-3d; transition: transform .22s ease, background .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .box-tile:hover, .box-tile:focus-visible { z-index: 2; border-color: #78c7dd; background: rgba(47,151,193,.2); box-shadow: 0 14px 25px rgba(0,0,0,.22); }
+    .box-tile[aria-pressed="true"] { border-color: var(--coral); background: rgba(239,118,122,.16); }
+    .box-tile b { display: block; margin-bottom: 12px; color: #82c8dc; font: 9px var(--mono); }
+    .box-tile span { font-size: 13px; }
+    .grid-result { position: relative; z-index: 1; min-height: 40px; margin: 18px 0 0; color: #c2cce0; font-size: 11px; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 26px 0 42px; border-top: 1px solid var(--line); color: var(--muted); font: 10px var(--mono); }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .65s ease, transform .65s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+    :focus-visible { outline: 2px solid var(--coral); outline-offset: 4px; }
+    @media (max-width: 760px) {
+      .masthead, main { width: min(100% - 38px, 600px); }
+      .masthead { padding: 17px 0; }
+      .masthead nav { gap: 12px; font-size: 10px; }
+      .masthead nav a:nth-child(2) { display: none; }
+      .intro { min-height: auto; grid-template-columns: 1fr; gap: 36px; padding: 65px 0 60px; }
+      h1 { font-size: clamp(63px, 16vw, 106px); }
+      .intro-aside { justify-self: stretch; width: 100%; padding: 0; }
+      .intro-aside > p { max-width: 250px; }
+      .jump-list { grid-template-columns: 1fr 1fr; column-gap: 16px; }
+      .study { grid-template-columns: 1fr; gap: 27px; padding: 54px 0 66px; }
+      .study-meta { display: grid; grid-template-columns: auto 1fr; column-gap: 13px; align-items: baseline; }
+      .study-meta .index { grid-row: span 2; }
+      .study h2 { margin: 0 0 7px; }
+      .study-meta > p:not(.index) { grid-column: 2; max-width: 440px; }
+      .meta-tag { grid-column: 2; justify-self: start; margin-top: 10px; }
+      .demo { min-height: 335px; }
+      .spiral-demo { height: 460px; }
+      .trail-demo { min-height: 370px; cursor: auto; }
+      .trail-caption { font-size: clamp(35px, 9vw, 57px); }
+      .hang-demo { min-height: 420px; }
+      .hang-note { top: 24%; }
+      .hang-card { width: 235px; min-height: 175px; padding: 20px; }
+      .grid-demo { min-height: 465px; padding: 65px 17px 40px; }
+      .box-grid { gap: 6px; }
+      .box-tile { min-height: 94px; padding: 10px; }
+      .box-tile span { font-size: 11px; }
+    }
+    @media (max-width: 390px) {
+      .masthead nav { gap: 9px; }
+      .masthead nav a:first-child { display: none; }
+      .jump-list { column-gap: 10px; }
+      .jump-list a { grid-template-columns: 25px 1fr auto; font-size: 10px; }
+      .box-tile { min-height: 85px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><i id="page-progress"></i></div>
+  <header class="masthead">
+    <a class="wordmark" href="/" aria-label="Wiskers home">wiskers<span>.</span></a>
+    <nav aria-label="Page navigation">
+      <a href="#03-spiral">Spiral gallery</a><a href="#05-trail">Image trail</a><a href="#07-grid">Interactive grid</a>
+      <a class="back" href="/">Back to homepage <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="intro" id="04-ascii">
+      <canvas class="ascii-background" data-ascii-background aria-hidden="true"></canvas>
+      <div>
+        <p class="eyebrow">A component field guide</p>
+        <h1>Five studies.<br><em>Now in motion.</em></h1>
+        <p class="intro-copy">A true image spiral, an ASCII field that runs through the page, and a smooth image trail. Scroll each to feel how the effects work.</p>
+      </div>
+      <aside class="intro-aside">
+        <p>Scroll through the studies.<br>Each motion has a purpose and a cue.</p>
+        <nav class="jump-list" aria-label="Jump to a component">
+          <a href="#03-spiral"><span>03</span><span>Spiral gallery</span><span>↘</span></a>
+          <a href="#04-ascii"><span>04</span><span>ASCII through page</span><span>↘</span></a>
+          <a href="#05-trail"><span>05</span><span>Smooth image trail</span><span>↘</span></a>
+          <a href="#06-hanging"><span>06</span><span>Hanging card</span><span>↘</span></a>
+          <a href="#07-grid"><span>07</span><span>Interactive box grid</span><span>↘</span></a>
+        </nav>
+      </aside>
+    </section>
+
+    <section class="study" id="03-spiral">
+      <div class="study-meta reveal"><p class="index">03 / 07</p><h2>Spiral<br>gallery</h2><p>An image ribbon wraps around a 3D axis. Scroll turns the gallery; drag it to change the angle.</p><span class="meta-tag">Scroll / drag / zoom</span></div>
+      <div class="demo spiral-demo reveal" data-spiral-demo tabindex="0" aria-label="Interactive 3D spiral gallery. Scroll the page or drag horizontally to turn the images.">
+        <canvas class="ascii-background" data-ascii-background aria-hidden="true"></canvas>
+        <span class="demo-label">Wiskers / image ribbon / 3D</span>
+        <div class="spiral-core" aria-hidden="true"><span>W.</span></div>
+        <div class="spiral-viewport"><div class="spiral-ring">
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-signal.svg" alt=""/><figcaption>Signal <small>01 / INSIGHT</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-question.svg" alt=""/><figcaption>Question <small>02 / CONTEXT</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-context.svg" alt=""/><figcaption>Context <small>03 / LEARNING</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-launch.svg" alt=""/><figcaption>Launch <small>04 / EXPERIENCE</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-focus.svg" alt=""/><figcaption>Focus <small>05 / ACTION</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-signal.svg" alt=""/><figcaption>Momentum <small>06 / GROWTH</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-journey.svg" alt=""/><figcaption>Intent <small>07 / SIGNAL</small></figcaption></figure>
+          <figure class="spiral-card" data-spiral-card><img data-asset="component-studies/trail-market.svg" alt=""/><figcaption>Next <small>08 / MOVE</small></figcaption></figure>
+        </div></div>
+        <div class="spiral-controls"><span>Scroll the page or drag to turn</span></div>
+      </div>
+    </section>
+
+    <section class="study" id="05-trail">
+      <div class="study-meta reveal"><p class="index">05 / 07</p><h2>Smooth<br>image trail</h2><p>Real image cards follow the pointer at even distances, with individual scale, rotation and fade.</p><span class="meta-tag">Move / touch / spacing from distance</span></div>
+      <div class="demo trail-demo reveal" data-trail-demo>
+        <canvas class="ascii-background" data-ascii-background aria-hidden="true"></canvas>
+        <span class="demo-label">Drag / hover / follow</span>
+        <p class="trail-caption">Make the<br><em>idea</em> tangible.</p>
+        <div class="trail-cursor" aria-hidden="true"></div>
+        <img class="trail-card" data-asset="component-studies/trail-signal.svg" alt=""/><img class="trail-card" data-asset="component-studies/trail-question.svg" alt=""/><img class="trail-card" data-asset="component-studies/trail-context.svg" alt=""/><img class="trail-card" data-asset="component-studies/trail-launch.svg" alt=""/><img class="trail-card" data-asset="component-studies/trail-focus.svg" alt=""/>
+        <span class="hint">Move or drag across the panel</span>
+      </div>
+    </section>
+
+    <section class="study" id="06-hanging">
+      <div class="study-meta reveal"><p class="index">06 / 07</p><h2>Hanging<br>card</h2><p>A small physical cue sways from its anchor, adding a moment of life without taking over the page.</p><span class="meta-tag">Autonomous motion · reduced-motion aware</span></div>
+      <div class="demo hang-demo reveal" data-hang-demo><canvas class="ascii-background" data-ascii-background aria-hidden="true"></canvas><span class="demo-label">Suspended / softly moving</span><div class="hang-scene"><span class="hang-rail" aria-hidden="true"></span><div class="hang-note"><div class="hang-thread"></div><article class="hang-card"><small>Buyer signal / 03</small><strong>What would help them decide?</strong><span>Context changes everything ↗</span></article></div></div><span class="hint">A gentle idle sway</span></div>
+    </section>
+
+    <section class="study" id="07-grid">
+      <div class="study-meta reveal"><p class="index">07 / 07</p><h2>Interactive<br>box grid</h2><p>Each tile lifts toward the pointer and becomes a real choice. Click or use Tab and Enter to explore.</p><span class="meta-tag">Hover / focus / click · keyboard ready</span></div>
+      <div class="demo grid-demo reveal" data-box-grid><canvas class="ascii-background" data-ascii-background aria-hidden="true"></canvas>
+        <span class="demo-label">Choose what matters</span>
+        <div class="grid-head"><strong>Where should we focus?</strong><span id="grid-count">0 selected</span></div>
+        <div class="box-grid">
+          <button class="box-tile" type="button" aria-pressed="false"><b>01 / SIGNAL</b><span>Audience fit</span></button>
+          <button class="box-tile" type="button" aria-pressed="false"><b>02 / EFFORT</b><span>Build effort</span></button>
+          <button class="box-tile" type="button" aria-pressed="false"><b>03 / LEARNING</b><span>What we learn</span></button>
+          <button class="box-tile" type="button" aria-pressed="false"><b>04 / REACH</b><span>Market reach</span></button>
+          <button class="box-tile" type="button" aria-pressed="false"><b>05 / SPEED</b><span>Speed to launch</span></button>
+          <button class="box-tile" type="button" aria-pressed="false"><b>06 / INTENT</b><span>Buyer intent</span></button>
+        </div>
+        <p class="grid-result" aria-live="polite">Choose up to three priorities to surface a useful direction.</p>
+        <span class="hint">Select up to three tiles</span>
+      </div>
+    </section>
+  </main>
+  <footer><span>Wiskers / component studies</span><a href="/">Return to the homepage ↗</a></footer>
+  <script>
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const assetBase = location.protocol === "file:" ? "./public/assets/" : "/assets/";
+    document.querySelectorAll("[data-asset]").forEach(image => { image.src = assetBase + image.dataset.asset; });
+    const progress = document.querySelector("#page-progress");
+    const updateProgress = () => { const max = document.documentElement.scrollHeight - innerHeight; progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`; };
+    addEventListener("scroll", updateProgress, {passive:true}); addEventListener("resize", updateProgress); updateProgress();
+
+    const reveals = [...document.querySelectorAll(".reveal")];
+    if ("IntersectionObserver" in window && !reduced.matches) {
+      const revealObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("in-view"); }), {threshold:.12});
+      reveals.forEach(el => revealObserver.observe(el));
+    } else reveals.forEach(el => el.classList.add("in-view"));
+
+    const spiral = document.querySelector("[data-spiral-demo]");
+    const spiralCards = [...document.querySelectorAll(".spiral-card")];
+    let galleryAngle=0, dragAngle=0, dragTilt=0, dragging=false, lastPointer=0, pointerY=0;
+    function renderSpiral(){ if(!spiral) return; const width=spiral.clientWidth; const radius=Math.min(width*.32,245)*zoom; const heightScale=width<560?.6:1; const idle=reduced.matches?0:performance.now()*.00017; spiralCards.forEach((card,i)=>{ const angle=galleryAngle+dragAngle+idle+i*Math.PI*2/spiralCards.length; const x=Math.sin(angle)*radius; const z=Math.cos(angle)*radius; const y=((i-(spiralCards.length-1)/2)*23+Math.sin(angle*2)*18)*heightScale+dragTilt; card.style.transform=`translate3d(calc(-50% + ${x.toFixed(1)}px),calc(-50% + ${y.toFixed(1)}px),${z.toFixed(1)}px) rotateY(${angle.toFixed(4)}rad)`; }); }
+    function updateSpiralScroll(){ if(!spiral)return; const r=spiral.getBoundingClientRect(); const p=clamp((innerHeight*.82-r.top)/(innerHeight+r.height),0,1); galleryAngle=(p-.5)*Math.PI*1.55; renderSpiral(); }
+    spiral?.addEventListener("pointerdown",e=>{ if(e.target.closest("button"))return; dragging=true;lastPointer=e.clientX;pointerY=e.clientY;spiral.classList.add("is-dragging");if(e.pointerType==="mouse")spiral.setPointerCapture(e.pointerId); });
+    spiral?.addEventListener("pointermove",e=>{ if(!dragging)return; const delta=e.clientX-lastPointer;lastPointer=e.clientX;dragAngle+=delta*.009;const tiltLimit=spiral.clientWidth<560?40:50;dragTilt=clamp(dragTilt+(e.clientY-pointerY)*.24,-tiltLimit,tiltLimit);pointerY=e.clientY;renderSpiral(); });
+    const endDrag=()=>{dragging=false;spiral?.classList.remove("is-dragging");};
+    spiral?.addEventListener("pointerup",endDrag);spiral?.addEventListener("pointercancel",endDrag);spiral?.addEventListener("lostpointercapture",endDrag);
+    spiral?.addEventListener("keydown",e=>{if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();dragAngle+=(e.key==="ArrowLeft"?-1:1)*Math.PI/8;renderSpiral();}});
+    let spiralFrame=0;function animateSpiral(){if(spiral&&spiral.getBoundingClientRect().bottom>0&&spiral.getBoundingClientRect().top<innerHeight&&!reduced.matches&&!dragging){dragAngle+=.0008;renderSpiral();}spiralFrame=requestAnimationFrame(animateSpiral);} if(spiral){renderSpiral();updateSpiralScroll();requestAnimationFrame(animateSpiral);}
+
+    const asciiCanvases=[...document.querySelectorAll("[data-ascii-background]")].map(canvas=>({canvas,ctx:canvas.getContext("2d",{alpha:true}),last:-1}));
+    let asciiPointer=.5, asciiPhase=0, asciiRAF=0;
+    function drawAsciiField(item){const {canvas,ctx}=item;if(!ctx)return;const bounds=canvas.getBoundingClientRect();if(bounds.width<1||bounds.height<1||bounds.bottom<0||bounds.top>innerHeight)return;const dpr=Math.min(devicePixelRatio||1,1.25),w=Math.round(bounds.width*dpr),h=Math.round(bounds.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,bounds.width,bounds.height);const cols=Math.min(112,Math.floor(bounds.width/11)),rows=Math.min(48,Math.floor(bounds.height/13));ctx.font="9px ui-monospace, SFMono-Regular, Consolas, monospace";ctx.textAlign="center";ctx.textBaseline="middle";const glyphs=".:;+x*#%@";const scene=document.documentElement.scrollTop/(document.documentElement.scrollHeight||1);const phase=asciiPhase+scene*8+asciiPointer*1.7;for(let x=0;x<cols;x++){const nx=x/Math.max(1,cols-1);for(let y=0;y<rows;y++){const ny=y/Math.max(1,rows-1);const field=Math.sin(nx*9.3+ny*5.2+phase)+Math.cos(ny*8.1-nx*4.5-phase*.72)+Math.sin(nx*15+ny*3+phase*.38)*.45;const ridge=Math.max(0,(field-.05)/2.1);const dust=Math.max(0,.23-Math.abs(Math.sin(nx*31+ny*23+phase*1.8)))*.6;const alpha=Math.max(ridge*.46,dust);if(alpha<.045)continue;const tone=(x+y)%7===0?"239,118,122":(x*2+y)%5===0?"37,165,131":"47,151,193";ctx.fillStyle=`rgba(${tone},${alpha.toFixed(3)})`;const ch=glyphs[(x*3+y*5+Math.floor(phase*2))%glyphs.length];ctx.fillText(ch,(x+.5)*bounds.width/cols,(y+.5)*bounds.height/rows);}}item.last=phase;}
+    function drawVisibleAscii(){asciiCanvases.forEach(item=>drawAsciiField(item));}
+    addEventListener("scroll",()=>{if(!reduced.matches){asciiPhase+=.025;drawVisibleAscii();updateSpiralScroll();}},{passive:true});
+    addEventListener("resize",()=>{drawVisibleAscii();renderSpiral();});
+    document.querySelectorAll(".demo, .intro").forEach(stage=>stage.addEventListener("pointermove",e=>{const r=stage.getBoundingClientRect();asciiPointer=clamp((e.clientX-r.left)/Math.max(1,r.width),0,1);if(!reduced.matches)drawVisibleAscii();},{passive:true}));
+    drawVisibleAscii();
+
+    const trail = document.querySelector("[data-trail-demo]");
+    const cursor = trail?.querySelector(".trail-cursor");
+    const trailCards = [...(trail?.querySelectorAll(".trail-card") || [])];
+    let trailIndex=0,lastTrailPoint=null;
+    function spawnTrail(event){if(!trail||reduced.matches)return;const r=trail.getBoundingClientRect(),x=clamp(event.clientX-r.left,74,r.width-74),y=clamp(event.clientY-r.top,74,r.height-74);if(cursor){cursor.style.left=`${x}px`;cursor.style.top=`${y}px`;cursor.style.opacity="1";}const point={x,y};if(lastTrailPoint&&Math.hypot(x-lastTrailPoint.x,y-lastTrailPoint.y)<54)return;lastTrailPoint=point;const card=trailCards[trailIndex++%trailCards.length];card.getAnimations().forEach(a=>a.cancel());const rotation=(Math.random()*20-10).toFixed(1),size=clamp(94+Math.random()*50,94,144);card.style.width=`${size}px`;card.style.left=`${x}px`;card.style.top=`${y}px`;card.animate([{opacity:0,transform:`translate(-50%,-50%) rotate(${rotation}deg) scale(.78)`},{opacity:.98,transform:`translate(-50%,-50%) rotate(${rotation}deg) scale(1)`,offset:.18},{opacity:0,transform:`translate(-50%,-50%) rotate(${rotation}deg) scale(.9)`}],{duration:1050,easing:"cubic-bezier(.2,.7,.2,1)",fill:"forwards"});}
+    trail?.addEventListener("pointermove",spawnTrail,{passive:true});
+    trail?.addEventListener("pointerdown",e=>{if(e.pointerType==="touch")spawnTrail(e);},{passive:true});
+    trail?.addEventListener("pointerleave",()=>{lastTrailPoint=null;if(cursor)cursor.style.opacity="0";},{passive:true});
+
+    const grid = document.querySelector("[data-box-grid]");
+    const tiles = [...document.querySelectorAll(".box-tile")];
+    const gridCount = document.querySelector("#grid-count");
+    const gridResult = document.querySelector(".grid-result");
+    const outcomes = ["Start with the audience most likely to care.","Prototype one small tool before committing to a build.","Make learning the first measure of success.","Narrow the market around the strongest signal.","Ship a focused version and learn from real use.","Give buyers a useful reason to raise their hand."];
+    function updateGrid(){ const active=tiles.map((t,i)=>t.getAttribute("aria-pressed")==="true"?i:-1).filter(i=>i>=0); gridCount.textContent=`${active.length} selected`; gridResult.textContent=active.length?outcomes[active[active.length-1]]:"Choose up to three priorities to surface a useful direction."; }
+    tiles.forEach(tile=>tile.addEventListener("click",()=>{ const active=tiles.filter(t=>t.getAttribute("aria-pressed")==="true"); const on=tile.getAttribute("aria-pressed")==="true"; if(!on&&active.length>=3){gridResult.textContent="Choose up to three. Clear one tile to make another choice.";return;} tile.setAttribute("aria-pressed",String(!on));updateGrid();}));
+    grid?.addEventListener("pointermove",e=>{ const tile=e.target.closest(".box-tile"); if(!tile)return; const r=tile.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; tile.style.transform=`rotateX(${(-y*9).toFixed(1)}deg) rotateY(${(x*11).toFixed(1)}deg) translateZ(5px)`; },{passive:true});
+    grid?.addEventListener("pointerout",e=>{ const tile=e.target.closest(".box-tile"); if(tile && !tile.contains(e.relatedTarget))tile.style.transform=""; },{passive:true});
+  </script>
+</body>
+</html>

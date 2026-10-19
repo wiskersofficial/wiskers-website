@@ -19,8 +19,6 @@ if (main) {
   const examples = [...root.querySelectorAll(".v6-example")];
   const processStepTargets = glyphTargets.filter((target) => target.closest(".v6-process-steps article"));
   const exampleList = root.querySelector(".v6-example-list");
-  const exampleRoute = root.querySelector("[data-v6-spiral-path]");
-  const exampleWaypoints = [...root.querySelectorAll("[data-v6-route-waypoint]")];
   const stages = [...root.querySelectorAll(".v6-process-steps article")];
   const hero = root.querySelector(".v6-hero");
   const heroLines = [...root.querySelectorAll("[data-v6-hero-line]")];
@@ -69,40 +67,14 @@ if (main) {
       }
     }
     // Example rows move slightly for visual drift. Their offset geometry is
-    // stable in list space, so use it for both glyph timing and the route
-    // waypoint alignment instead of measuring the transformed screen boxes.
+    // stable in list space so glyph timing never depends on transformed boxes.
     if (exampleList && examples.length) {
       const listRect = exampleList.getBoundingClientRect();
       const listTop = listRect.top + scrollY;
-      const listHeight = Math.max(1, exampleList.offsetHeight);
-      const routeLength = exampleRoute?.getTotalLength() || 0;
-      const routeSvg = exampleRoute?.ownerSVGElement;
-      const viewBox = routeSvg?.viewBox.baseVal;
       examples.forEach((example, index) => {
         const top = listTop + example.offsetTop;
         const height = example.offsetHeight;
         rects.set(example, { top, height });
-        const waypoint = exampleWaypoints[index];
-        if (!waypoint || !routeLength || !viewBox?.height) return;
-        const targetY = ((example.offsetTop + height / 2) / listHeight) * viewBox.height;
-        let nearest = null;
-        let nearestDistance = Infinity;
-        // Select the closest point on the existing route to this row's stable
-        // center, then place the decorative node at that exact path point.
-        for (let sample = 0; sample <= 600; sample += 1) {
-          const point = exampleRoute.getPointAtLength((sample / 600) * routeLength);
-          const dx = point.x - viewBox.width / 2;
-          const dy = point.y - targetY;
-          const distance = dx * dx + dy * dy;
-          if (distance < nearestDistance) {
-            nearest = point;
-            nearestDistance = distance;
-          }
-        }
-        if (nearest) {
-          waypoint.setAttribute("cx", nearest.x.toFixed(2));
-          waypoint.setAttribute("cy", nearest.y.toFixed(2));
-        }
       });
     }
     // Hero lines lift as the page scrolls. Store the target's normal-flow
@@ -227,6 +199,7 @@ if (main) {
     progressBar?.style.setProperty("--v6-page-progress", pageProgress.toFixed(4));
 
     const heroBox = rects.get(hero);
+    let heroProgress = 0;
     if (heroBox) {
       const heroTargetBox = heroTarget && rects.get(heroTarget);
       // Complete the hero's letter wave while the full target line is still
@@ -244,7 +217,7 @@ if (main) {
         warnedAboutHeroLetterSpacing = true;
         console.warn(`[Wiskers hero glyph wave] Disabled for this layout: the available scroll runway yields ${letterSpacing.toFixed(1)}px between adjacent letter changes; at least 12px is required. Resize to a layout with more runway to restore the scroll-driven wave.`);
       }
-      const heroProgress = heroWaveDisabled ? 0 : progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
+      heroProgress = heroWaveDisabled ? 0 : progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
       hero?.style.setProperty("--v6-hero-depth", `${(depart * 22).toFixed(1)}px`);
@@ -264,10 +237,9 @@ if (main) {
       const fill = clamp((thesisProgress - 0.08) / 0.5);
       outlineWord?.style.setProperty("--v6-outline-fill", `${(fill * 100).toFixed(1)}%`);
       thesis.style.setProperty("--v6-draw", thesisProgress.toFixed(3));
-      const galleryProgress = progressWhenCrossing(examplesScene, 0.92, 0.08);
       const processProgress = progressWhenCrossing(processScene, 0.92, 0.08);
       const trailProgress = progressWhenCrossing(lineArray, 0.92, 0.42);
-      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress, trail: trailProgress, activeExample: exampleAtViewportBand(scrollY) });
+      visuals.update({ hero: heroProgress, thesis: thesisProgress, examples: 0, process: processProgress, trail: trailProgress, activeExample: exampleAtViewportBand(scrollY) });
     }
 
     for (const example of examples) {
@@ -275,9 +247,6 @@ if (main) {
       const p = target
         ? revealProgressForGlyph(target, progressForGlyph(target))
         : progressWhenCrossing(example, 0.92, 0.06);
-      const orbit = Math.sin(p * Math.PI * 2 + examples.indexOf(example) * (Math.PI * 2 / 3));
-      example.style.setProperty("--v6-spiral-x", `${(orbit * 12).toFixed(1)}px`);
-      example.style.setProperty("--v6-spiral-tilt", `${(orbit * 0.72).toFixed(2)}deg`);
       example.style.setProperty("--v6-reveal", p.toFixed(3));
     }
 

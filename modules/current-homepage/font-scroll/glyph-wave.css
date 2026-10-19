@@ -1,0 +1,54 @@
+/* Two typographic voices share each stable inline glyph cell. */
+.glyph-wave {
+  position: relative;
+  display: block;
+  --glyph-wave-sans-color: var(--v6-ink, currentColor);
+  --glyph-wave-serif-color: var(--v6-coral-ink, currentColor);
+  --glyph-wave-sans: "DM Sans", sans-serif;
+  --glyph-wave-serif: var(--v6-serif, Georgia, "Times New Roman", serif);
+  font-synthesis: none;
+  text-wrap: pretty;
+}
+
+.glyph-wave__sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.glyph-wave__visual { white-space: pre-wrap; }
+
+.glyph-wave__cell {
+  position: relative;
+  display: inline-grid;
+  grid-template-areas: "glyph";
+  vertical-align: baseline;
+  white-space: pre;
+}
+
+.glyph-wave__sans,
+.glyph-wave__serif {
+  grid-area: glyph;
+  display: block;
+  font-size: 1em;
+  line-height: inherit;
+  white-space: pre;
+}
+
+.glyph-wave__sans { font-family: var(--glyph-wave-sans, Arial, sans-serif); color: var(--glyph-wave-sans-color, inherit); font-style: normal; }
+.glyph-wave__serif { font-family: var(--glyph-wave-serif, Georgia, serif); color: var(--glyph-wave-serif-color, inherit); font-style: italic; }
+.glyph-wave__sans { opacity: calc(1 - var(--glyph-progress, 0)); }
+.glyph-wave__serif { opacity: var(--glyph-progress, 0); }
+.glyph-wave__sans { transform: translateY(calc(var(--glyph-progress, 0) * -0.012em)); }
+.glyph-wave__serif { transform: translateY(calc((1 - var(--glyph-progress, 0)) * 0.012em)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .glyph-wave__sans { opacity: 0 !important; transform: none !important; }
+  .glyph-wave__serif { opacity: 1 !important; transform: none !important; }
+}
