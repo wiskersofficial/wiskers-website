@@ -41,6 +41,7 @@ body.home-v6 :where(a,button,input,select,[tabindex]):focus-visible { outline: 3
 .wordmark-logo > path[fill], .wordmark-logo > g[mask], .wordmark-logo > g[mask] > path { fill: var(--v6-logo-mark); }
 .site-nav { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 34px); margin-left: auto; }
 .site-nav a, .site-header .header-cta { position: relative; font-size: 12px; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 36px; }
 .site-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: var(--v6-coral); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
 .site-nav a:hover::after, .site-nav a:focus-visible::after { transform: scaleX(1); }
 .header-tools { display: flex; align-items: center; gap: 12px; }
@@ -201,6 +202,7 @@ body.home-v6 :where(a,button,input,select,[tabindex]):focus-visible { outline: 3
 .v6-footer > a:first-child { color: #091540; font-size: 17px; font-weight: 600; letter-spacing: -.07em; }
 .v6-footer > a:first-child span { color: #091540; }
 .v6-footer nav { display: flex; gap: 18px; margin-left: auto; }
+.v6-footer nav a { display: inline-flex; align-items: center; min-height: 36px; }
 .v6-footer a:hover { color: #091540; }
 body.home-v6 .v6-contact :where(a,button,input,select,[tabindex]):focus-visible { outline-color: #091540; }
 html.motion-paused, body.home-v6.motion-paused, body.home-v6.motion-paused * { scroll-behavior: auto; }
@@ -229,9 +231,9 @@ body.home-v6 .v6-home.motion-reduced .v6-process-steps article > * { transform: 
 @media (max-width: 600px) {
   .site-header { padding: 13px 18px; gap: 10px; }
   .wordmark-logo { width: 114px; }
-  .site-nav { justify-content: flex-start; gap: 22px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .site-nav { justify-content: flex-start; gap: 22px; overflow-x: auto; padding: 7px; scrollbar-width: none; }
   .site-nav::-webkit-scrollbar { display: none; }
-  .site-nav a { flex: 0 0 auto; font-size: 11px; }
+  .site-nav a { flex: 0 0 auto; min-height: 40px; font-size: 11px; }
   .header-tools { flex: 1 1 100%; justify-content: space-between; order: 2; margin-left: 0; gap: 9px; }
   .motion-toggle { font-size: 9px !important; }
   #theme-select { max-width: 78px; font-size: 10px; }
@@ -278,6 +280,7 @@ body.home-v6 .v6-home.motion-reduced .v6-process-steps article > * { transform: 
   .v6-buyer-question { margin-left: 9%; }
   .v6-footer { left: 22px; right: 22px; bottom: 20px; display: grid; grid-template-columns: 1fr auto; gap: 8px 15px; }
   .v6-footer nav { grid-column: 1 / -1; margin-left: 0; }
+  .v6-footer nav a { min-height: 40px; }
 }
 @media (max-width: 360px) {
   .header-tools { gap: 5px; }
