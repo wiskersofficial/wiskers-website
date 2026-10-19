@@ -161,8 +161,21 @@ if (main) {
     if (processStage) {
       const box = rects.get(target);
       if (!box) return 0;
-      const travel = glyphs.getTravelDistance(target, 24);
       const initialTranslate = usesWideProcessTimeline() ? 14 : 22;
+      const naturalTravel = glyphs.getTravelDistance(target, 24);
+      // Keep the full letter sequence inside the time the heading is visible.
+      // On very short landscape viewports the natural cadence can outlast that
+      // window, leaving the last letters unfinished after the heading exits.
+      const visibleTravel = Math.max(0, viewportHeight - box.height - initialTranslate - 14);
+      const minimumReadableTravel = glyphs.getTravelDistance(target, 16);
+      if (visibleTravel < minimumReadableTravel) {
+        // Below this runway, compressing the wave would make each letter flash
+        // by too quickly. Keep the authored type stable, then resolve to its
+        // final style as the heading enters the viewport.
+        const visibleTop = (window.scrollY || 0) + (window.visualViewport?.offsetTop || 0);
+        return box.top - visibleTop <= viewportHeight ? 1 : 0;
+      }
+      const travel = Math.min(naturalTravel, visibleTravel);
       const startAt = 1 - (box.height + initialTranslate) / viewportHeight;
       const endAt = startAt - travel / viewportHeight;
       return progressWhenCrossing(target, startAt, endAt);
