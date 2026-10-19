@@ -301,6 +301,7 @@ if (main) {
 
   function setPaused(value) {
     paused = Boolean(value);
+    document.documentElement.classList.toggle("motion-paused", paused);
     document.body.classList.toggle("motion-paused", paused);
     glyphs.setPaused(paused);
     visuals.setPaused(paused);
