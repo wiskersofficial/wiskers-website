@@ -20,6 +20,7 @@ if (main) {
   const stages = [...root.querySelectorAll(".v6-process-steps article")];
   const hero = root.querySelector(".v6-hero");
   const heroLines = [...root.querySelectorAll("[data-v6-hero-line]")];
+  const heroTarget = glyphTargets.find((target) => target.closest(".v6-hero"));
   const thesis = root.querySelector(".v6-thesis");
   const examplesScene = root.querySelector(".v6-examples");
   const processScene = root.querySelector(".v6-process");
@@ -35,6 +36,7 @@ if (main) {
   let paused = false;
   let pageHeight = 1;
   let viewportHeight = window.visualViewport?.height || window.innerHeight || 1;
+  let warnedAboutHeroLetterSpacing = false;
 
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
 
@@ -48,6 +50,20 @@ if (main) {
     const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages], scrollY);
     rects.clear();
     for (const [element, box] of measured) rects.set(element, box);
+    // Hero lines lift as the page scrolls. Store the target's normal-flow
+    // document position so a resize at an intermediate scroll position cannot
+    // bake that temporary transform into the next wave measurement.
+    const heroBox = rects.get(hero);
+    if (hero && heroTarget && heroBox) {
+      const heroRect = hero.getBoundingClientRect();
+      const targetRect = heroTarget.getBoundingClientRect();
+      const line = heroTarget.closest("[data-v6-hero-line]");
+      const lineLift = Number.parseFloat(line && getComputedStyle(line).getPropertyValue("--v6-line-lift")) || 0;
+      rects.set(heroTarget, {
+        top: heroBox.top + targetRect.top - heroRect.top - lineLift,
+        height: targetRect.height,
+      });
+    }
     // The process heading is sticky on wide, tall screens. Keep its wave tied
     // to its normal document location, using the unshifted section box plus
     // the target's stable offset inside the sticky heading.
@@ -116,17 +132,23 @@ if (main) {
 
     const heroBox = rects.get(hero);
     if (heroBox) {
-      const heroTarget = glyphTargets.find((target) => target.closest(".v6-hero"));
       const heroTargetBox = heroTarget && rects.get(heroTarget);
       // Complete the hero's letter wave while the full target line is still
       // readable: its top edge should reach the upper viewport, not leave
       // only a few pixels of the last glyph on screen. Keep the shared per-
       // glyph cadence when the viewport offers a longer runway.
       const heroVisibleTravel = heroTargetBox
-        ? Math.max(1, heroTargetBox.top - viewportHeight * 0.04)
+        ? Math.max(1, heroTargetBox.top - (window.visualViewport?.offsetTop || 0) - viewportHeight * 0.04)
         : viewportHeight * 0.34;
       const heroTravel = Math.min(heroVisibleTravel, glyphs.getTravelDistance(heroTarget, glyphPixelsPerLetter));
-      const heroProgress = progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
+      const { step: heroStep } = glyphs.getTiming(heroTarget);
+      const letterSpacing = heroTravel * heroStep;
+      const heroWaveDisabled = Boolean(heroTarget && letterSpacing < 12);
+      if (heroWaveDisabled && !warnedAboutHeroLetterSpacing) {
+        warnedAboutHeroLetterSpacing = true;
+        console.warn(`[Wiskers hero glyph wave] Disabled for this layout: the available scroll runway yields ${letterSpacing.toFixed(1)}px between adjacent letter changes; at least 12px is required. Resize to a layout with more runway to restore the scroll-driven wave.`);
+      }
+      const heroProgress = heroWaveDisabled ? 0 : progressAcrossRange(scrollY, 0, Math.max(1, heroTravel));
       const depart = clamp((scrollY - heroBox.top) / Math.max(1, viewportHeight * 0.8));
       hero?.style.setProperty("--v6-hero-progress", heroProgress.toFixed(4));
       hero?.style.setProperty("--v6-hero-depth", `${(depart * 22).toFixed(1)}px`);
@@ -179,6 +201,8 @@ if (main) {
   function onResize() { measure(); }
   function onMotionPreference() {
     if (motionPreference.matches) {
+      if (heroTarget) glyphs.update(heroTarget, 1);
+      hero?.style.setProperty("--v6-hero-progress", "1");
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       root.style.setProperty("--v6-outline-fill", "100%");
