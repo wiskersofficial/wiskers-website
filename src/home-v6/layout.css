@@ -235,9 +235,9 @@ body.home-v6 .v6-home.motion-reduced .v6-process-steps article > * { transform: 
   .site-nav::-webkit-scrollbar { display: none; }
   .site-nav a { flex: 0 0 auto; min-height: 40px; font-size: 11px; }
   .header-tools { flex: 1 1 100%; justify-content: space-between; order: 2; margin-left: 0; gap: 9px; }
-  .motion-toggle { font-size: 9px !important; }
-  #theme-select { max-width: 78px; font-size: 10px; }
-  .site-header .header-cta { padding: 7px 8px; font-size: 11px; }
+  .motion-toggle { min-height: 40px; font-size: 9px !important; }
+  #theme-select { max-width: 78px; min-height: 40px; font-size: 10px; }
+  .site-header .header-cta { min-height: 40px; padding: 7px 8px; font-size: 11px; }
   .v6-scene { width: calc(100% - 38px); padding: 88px 0; }
   .v6-hero { min-height: clamp(430px, 50svh, 480px); padding-top: clamp(52px, 8vh, 72px); padding-bottom: 48px; }
   .v6-hero h1 { font-size: clamp(64px, 16vw, 96px); line-height: .92; letter-spacing: -.085em; }
