@@ -198,7 +198,7 @@ html[data-theme="night"] .wordmark-logo, html[data-theme="twilight"] .wordmark-l
 .v6-footer > a:first-child span { color: #091540; }
 .v6-footer nav { display: flex; gap: 18px; margin-left: auto; }
 .v6-footer a:hover { color: #091540; }
-.v6-home a:focus-visible, body.home-v6 :where(button,input,select):focus-visible { outline-color: #091540; }
+body.home-v6 .v6-contact :where(a,button,input,select,[tabindex]):focus-visible { outline-color: #091540; }
 body.home-v6.motion-paused .v6-hero-asterisk, body.home-v6.motion-paused * { scroll-behavior: auto; }
 body.home-v6.motion-paused .v6-hero-asterisk, body.home-v6.motion-paused .v6-line-array circle, body.home-v6.motion-paused .v6-flow-core { animation-play-state: paused; }
 body.home-v6.motion-paused .v6-flow, body.home-v6.motion-paused .v6-example::before, body.home-v6.motion-paused .v6-process-steps article::before { transition: none; }
