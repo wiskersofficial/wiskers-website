@@ -17,6 +17,7 @@ if (main) {
   const glyphTargets = [...root.querySelectorAll("[data-glyph-wave]")];
   const scenes = [...root.querySelectorAll(".v6-scene")];
   const examples = [...root.querySelectorAll(".v6-example")];
+  const processStepTargets = glyphTargets.filter((target) => target.closest(".v6-process-steps article"));
   const exampleList = root.querySelector(".v6-example-list");
   const exampleRoute = root.querySelector("[data-v6-spiral-path]");
   const exampleWaypoints = [...root.querySelectorAll("[data-v6-route-waypoint]")];
@@ -54,6 +55,19 @@ if (main) {
     const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages, lineArray].filter(Boolean), scrollY);
     rects.clear();
     for (const [element, box] of measured) rects.set(element, box);
+    // Process headings receive a small translateY reveal from their stage.
+    // offsetTop/offsetHeight are normal-flow measurements, so their glyph
+    // timing stays fixed while scrolling, resizing, and reversing direction.
+    for (const target of processStepTargets) {
+      const stage = target.closest(".v6-process-steps article");
+      const stageBox = rects.get(stage);
+      if (!stage || !stageBox) continue;
+      // These three headings are direct children of their positioned stage;
+      // offsetTop remains normal-flow geometry even where offsetParent is null.
+      if (target.parentElement === stage) {
+        rects.set(target, { top: stageBox.top + target.offsetTop, height: target.offsetHeight });
+      }
+    }
     // Example rows move slightly for visual drift. Their offset geometry is
     // stable in list space, so use it for both glyph timing and the route
     // waypoint alignment instead of measuring the transformed screen boxes.
@@ -143,11 +157,18 @@ if (main) {
   function progressForGlyph(target) {
     // Revealed children move visually; anchor their timing to the untransformed
     // row so resize measurements never inherit a previous animation offset.
-    const stableRow = target.closest(".v6-example, .v6-process-steps article");
-    const anchor = stableRow || target;
-    if (usesWideProcessTimeline() && target.closest(".v6-process-steps article")) {
-      return progressWhenCrossing(anchor, 0.60, 0.36);
+    const processStage = target.closest(".v6-process-steps article");
+    if (processStage) {
+      const box = rects.get(target);
+      if (!box) return 0;
+      const travel = glyphs.getTravelDistance(target, 24);
+      const initialTranslate = usesWideProcessTimeline() ? 14 : 22;
+      const startAt = 1 - (box.height + initialTranslate) / viewportHeight;
+      const endAt = startAt - travel / viewportHeight;
+      return progressWhenCrossing(target, startAt, endAt);
     }
+    const stableRow = target.closest(".v6-example");
+    const anchor = stableRow || target;
     if (target.closest(".v6-contact")) {
       const box = rects.get(anchor);
       if (!box) return 0;
