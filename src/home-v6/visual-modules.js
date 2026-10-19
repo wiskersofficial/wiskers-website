@@ -9,6 +9,7 @@ export function initScrollVisuals(root) {
   const trailMarks = [...root.querySelectorAll("[data-v6-trail]")];
   const spiralPath = root.querySelector("[data-v6-spiral-path]");
   const spiralWaypoints = [...root.querySelectorAll("[data-v6-route-waypoint]")];
+  const exampleRows = [...root.querySelectorAll(".v6-example")];
   const hangingNote = root.querySelector("[data-v6-hanging-note]");
   const context = canvas?.getContext("2d", { alpha: true });
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -94,11 +95,14 @@ export function initScrollVisuals(root) {
 
     if (spiralPath) spiralPath.style.strokeDashoffset = reducedMotion.matches ? "0" : String(1 - lastState.examples);
     if (!paused && !reducedMotion.matches && Number.isInteger(activeExample) && activeExample !== activeWaypoint) {
-      spiralWaypoints.forEach((waypoint, index) => waypoint.classList.toggle("is-active", index === activeExample));
-      activeWaypoint = activeExample;
+      const visibleExample = activeExample >= 0 && activeExample < exampleRows.length ? activeExample : -1;
+      spiralWaypoints.forEach((waypoint, index) => waypoint.classList.toggle("is-active", index === visibleExample));
+      exampleRows.forEach((example, index) => example.classList.toggle("is-active", index === visibleExample));
+      activeWaypoint = visibleExample;
     }
     if (reducedMotion.matches && activeWaypoint !== -1) {
       spiralWaypoints.forEach((waypoint) => waypoint.classList.remove("is-active"));
+      exampleRows.forEach((example) => example.classList.remove("is-active"));
       activeWaypoint = -1;
     }
     if (hangingNote) {

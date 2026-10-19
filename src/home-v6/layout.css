@@ -74,8 +74,8 @@ body.home-v6 :where(a,button,input,select,[tabindex]):focus-visible { outline: 3
 .v6-text-link, .v6-email-link, .v6-buyer-question a { display: inline-flex; align-items: center; gap: 16px; padding: 0 0 7px; border-bottom: 1px solid var(--v6-ink); font-size: 13px; transition: gap .2s ease, color .2s ease, border-color .2s ease; }
 .v6-text-link:hover, .v6-email-link:hover, .v6-buyer-question a:hover { gap: 24px; color: var(--v6-ink); border-color: var(--v6-ink); }
 .v6-text-link span, .v6-email-link span, .v6-buyer-question a span { color: var(--v6-coral); }
-.v6-hero-asterisk { position: absolute; top: 27%; right: 7%; color: var(--v6-green); font-size: clamp(24px, 3vw, 38px); line-height: 1; animation: v6-asterisk-turn 11s ease-in-out infinite; }
-@keyframes v6-asterisk-turn { 0%, 82% { transform: rotate(0); } 100% { transform: rotate(90deg); } }
+.v6-hero-asterisk { position: absolute; top: 27%; right: 7%; color: var(--v6-green); font-size: clamp(24px, 3vw, 38px); line-height: 1; animation: v6-asterisk-turn 48s linear infinite; }
+@keyframes v6-asterisk-turn { to { transform: rotate(360deg); } }
 .v6-thesis { display: grid; grid-template-columns: .9fr 1.1fr; gap: 9%; align-items: center; min-height: 100svh; }
 .v6-thesis h2 { font-size: clamp(60px, 8.5vw, 112px); }
 .v6-outline-word { --v6-outline-fill: 100%; color: transparent; -webkit-text-stroke: 1px var(--v6-ink); background: linear-gradient(var(--v6-ink), var(--v6-ink)) left/var(--v6-outline-fill) 100% no-repeat; background-clip: text; -webkit-background-clip: text; }
@@ -114,6 +114,7 @@ body.home-v6 :where(a,button,input,select,[tabindex]):focus-visible { outline: 3
 .v6-example-title { transform: translateY(calc((1 - var(--v6-reveal, 1)) * 24px)); }
 .v6-example form, .v6-example > .v6-compare { transform: translateY(calc((1 - var(--v6-reveal, 1)) * 16px)); }
 .v6-example::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--v6-rule); transform: scaleX(var(--v6-reveal, 1)); transform-origin: left; }
+.v6-example.is-active::before { background: linear-gradient(to right, var(--v6-coral-ink) 0 28px, var(--v6-rule) 28px 100%); }
 .v6-example:last-child::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--v6-rule); }
 .v6-example-title h3 { margin: 0 0 8px; font-size: clamp(29px, 3.6vw, 44px); font-weight: 500; line-height: 1.05; letter-spacing: -.06em; }
 .v6-example-title p { margin: 0; color: var(--v6-muted); font-size: 13px; line-height: 1.5; }

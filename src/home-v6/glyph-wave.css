@@ -45,8 +45,8 @@
 .glyph-wave__serif { font-family: var(--glyph-wave-serif, Georgia, serif); color: var(--glyph-wave-serif-color, inherit); font-style: italic; }
 .glyph-wave__sans { opacity: calc(1 - var(--glyph-progress, 0)); }
 .glyph-wave__serif { opacity: var(--glyph-progress, 0); }
-.glyph-wave__sans { transform: translateY(calc(var(--glyph-progress, 0) * -0.035em)); }
-.glyph-wave__serif { transform: translateY(calc((1 - var(--glyph-progress, 0)) * 0.035em)); }
+.glyph-wave__sans { transform: translateY(calc(var(--glyph-progress, 0) * -0.012em)); }
+.glyph-wave__serif { transform: translateY(calc((1 - var(--glyph-progress, 0)) * 0.012em)); }
 
 @media (prefers-reduced-motion: reduce) {
   .glyph-wave__sans { opacity: 0 !important; transform: none !important; }
