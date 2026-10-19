@@ -5,22 +5,29 @@ function buildVisual(text) {
   visual.className = "glyph-wave__visual";
   visual.setAttribute("aria-hidden", "true");
 
-  for (const character of Array.from(text)) {
-    if (/\s/u.test(character)) {
-      visual.append(document.createTextNode(character));
+  // Keep normal word boundaries while each letter retains its own progress.
+  // A long, animated phrase may wrap between words, never inside a word.
+  for (const token of text.split(/(\s+)/u)) {
+    if (!token) continue;
+    if (/^\s+$/u.test(token)) {
+      visual.append(document.createTextNode(token));
       continue;
     }
-
-    const cell = document.createElement("span");
-    cell.className = "glyph-wave__cell";
-    const sans = document.createElement("span");
-    sans.className = "glyph-wave__sans";
-    sans.textContent = character;
-    const serif = document.createElement("span");
-    serif.className = "glyph-wave__serif";
-    serif.textContent = character;
-    cell.append(sans, serif);
-    visual.append(cell);
+    const word = document.createElement("span");
+    word.className = "glyph-wave__word";
+    for (const character of Array.from(token)) {
+      const cell = document.createElement("span");
+      cell.className = "glyph-wave__cell";
+      const sans = document.createElement("span");
+      sans.className = "glyph-wave__sans";
+      sans.textContent = character;
+      const serif = document.createElement("span");
+      serif.className = "glyph-wave__serif";
+      serif.textContent = character;
+      cell.append(sans, serif);
+      word.append(cell);
+    }
+    visual.append(word);
   }
   return visual;
 }

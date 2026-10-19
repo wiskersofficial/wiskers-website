@@ -55,7 +55,7 @@ export function initScrollVisuals(root) {
     const columns = Math.min(120, Math.floor(bounds.width / 11));
     const rows = Math.min(56, Math.floor(bounds.height / 13));
     const glyphs = ".:;+x*#%@";
-    const pageProgress = window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    const pageProgress = reducedMotion.matches ? 0 : window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     const phase = pageProgress * Math.PI * 5 + progress * Math.PI * 0.6 + pointerSignal * 1.3;
     for (let col = 0; col < columns; col += 1) {
       const x = (col + 0.5) / columns;
@@ -217,6 +217,7 @@ export function initScrollVisuals(root) {
     const stage = canvas.parentElement;
     addListener(stage, "pointermove", (event) => {
       const bounds = stage.getBoundingClientRect();
+      if (paused || reducedMotion.matches) return;
       pointerSignal = clamp((event.clientX - bounds.left) / Math.max(1, bounds.width));
       drawVisibleAscii();
     }, { passive: true });

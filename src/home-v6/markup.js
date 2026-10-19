@@ -1,156 +1,96 @@
-/** Static markup for the v6 homepage. Keep this usable as an index.html fallback. */
+import { mountExperience } from './experience.js';
+
+/** Keep the same semantic markup in index.html for the no-script fallback. */
 export const homeMarkup = String.raw`<div class="v6-home">
   <section class="v6-scene v6-hero" id="v6-home" aria-labelledby="v6-hero-title">
     <div class="v6-hero-copy">
-      <h1 id="v6-hero-title"><span class="v6-hero-line" data-v6-hero-line>Find your</span><span class="v6-hero-line v6-hero-line-last" data-v6-hero-line data-glyph-wave data-glyph-stagger="0.18">next client.</span></h1>
-      <p class="v6-intro">The next evolution of hyper-targeted digital marketing. We help you hone in on your next B2B client without wasting hours working down a list.</p>
-      <a class="v6-text-link" href="#v6-examples">Explore the examples <span aria-hidden="true">↓</span></a>
+      <h1 id="v6-hero-title"><span class="v6-hero-line" data-v6-hero-line data-glyph-wave>vibe-check</span> <span class="v6-hero-line v6-hero-line-last" data-v6-hero-line>your prospects</span></h1>
+      <a class="v6-intro" href="#v6-thesis">Explore beyond the first click.<span aria-hidden="true">↘</span></a>
     </div>
-    <span class="v6-hero-asterisk" data-v6-asterisk aria-hidden="true">✳</span>
+    <span class="v6-hero-asterisk" aria-hidden="true">✳</span>
   </section>
 
   <section class="v6-scene v6-thesis" id="v6-thesis" aria-labelledby="v6-thesis-title">
     <canvas class="v6-ascii-field" data-v6-ascii aria-hidden="true"></canvas>
-    <div class="v6-section-head">
-      <p class="v6-overline">A different way in</p>
-      <h2 id="v6-thesis-title"><span class="v6-outline-word" data-v6-outline>Insight</span> takes<br><span data-glyph-wave data-glyph-stagger="0.24">input.</span></h2>
-    </div>
+    <div class="v6-section-head"><h2 id="v6-thesis-title"><span class="v6-outline-word" data-v6-outline>See more</span><br>than a <span data-glyph-wave>click.</span></h2></div>
     <div class="v6-thesis-body">
-      <p class="v6-thesis-copy">We turn your expertise into useful tools that help buyers find their own answer.</p>
-      <div class="v6-line-array" role="img" aria-label="A buyer's question and context flow through your expertise to a useful answer">
-        <div class="v6-array-ends"><span>Question<br><small>+ context</small></span><span>Useful<br><small>answer</small></span></div>
-        <svg viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><path class="v6-flow v6-flow-one" pathLength="1" d="M0 35 C150 35 150 75 300 75 S450 35 600 35"/><path class="v6-flow v6-flow-two" data-v6-trail-path pathLength="1" d="M0 75 C150 75 150 75 300 75 S450 75 600 75"/><path class="v6-flow v6-flow-three" pathLength="1" d="M0 115 C150 115 150 75 300 75 S450 115 600 115"/><circle class="v6-flow-core" cx="300" cy="75" r="7"/></svg>
-        <span class="v6-array-core">Your expertise</span>
-      </div>
+      <p class="v6-lead">Interactive experiences invite prospects to explore your business, products, services, and approach.</p>
+      <p>See what grabs prospects’ attention as they explore your business.</p>
+      <p>Get to better-fit prospects sooner, then start the conversation knowing what caught their attention and where they need help.</p>
+      <div class="v6-line-array" aria-hidden="true"><svg viewBox="0 0 600 150" preserveAspectRatio="none"><path class="v6-flow v6-flow-one" pathLength="1" d="M0 35 C150 35 150 75 300 75 S450 35 600 35"/><path class="v6-flow v6-flow-two" pathLength="1" d="M0 75 C150 75 150 75 300 75 S450 75 600 75"/><path class="v6-flow v6-flow-three" pathLength="1" d="M0 115 C150 115 150 75 300 75 S450 115 600 115"/><circle class="v6-flow-core" cx="300" cy="75" r="7"/></svg></div>
     </div>
   </section>
 
   <section class="v6-scene v6-examples" id="v6-examples" aria-labelledby="v6-examples-title">
-    <canvas class="v6-ascii-field" data-v6-ascii aria-hidden="true"></canvas>
-    <div class="v6-examples-intro"><p class="v6-overline">Useful by design</p><h2 id="v6-examples-title">Make the answer<br><em data-glyph-wave data-glyph-stagger="0.3">the experience.</em></h2></div>
-    <div class="v6-image-trail-stage" data-v6-trail-stage>
-      <span class="v6-trail-kicker">05 / IMAGE TRAIL</span>
-      <p>Make the idea <em>tangible.</em></p>
-      <span class="v6-trail-prompt">Move or drag to follow</span>
-      <div class="v6-image-trail" data-v6-image-trail aria-hidden="true"></div>
+    <div class="v6-examples-intro"><h2 id="v6-examples-title">Explore the experience,<br>see what <span data-glyph-wave>your team learns.</span></h2></div>
+    <div class="v6-experience" data-experience>
+      <div class="v6-prospect">
+        <div class="v6-pane-heading"><span class="v6-status-dot" aria-hidden="true"></span><h3>Your view</h3><img class="v6-pane-mark brand-v2-dark" src="/assets/brand-v2/wiskers-v2-mark-dark.svg" width="28" height="28" alt=""><img class="v6-pane-mark brand-v2-light" src="/assets/brand-v2/wiskers-v2-mark-light.svg" width="28" height="28" alt=""></div>
+        <nav class="v6-demo-nav" aria-label="Explore the Wiskers example"><a href="#experience-does">What it does</a><a href="#experience-how">How it works</a><a href="#experience-tailor">Ways to tailor it</a></nav>
+        <div class="v6-prospect-page" tabindex="0" role="region" aria-label="Explore Wiskers" data-prospect-page>
+          <section id="experience-does" data-experience-section="What it does" class="v6-demo-section">
+            <p class="v6-demo-label">What it does</p><h4>Let your expertise<br><em>speak before you do.</em></h4>
+            <p>Interactive experiences invite prospects to explore your business, products, services, and approach.</p>
+            <div class="v6-offer-choices" role="group" aria-label="Explore an application">
+              <button type="button" data-application="introduce" aria-pressed="true">Introduce a new offer <span aria-hidden="true">↗</span></button>
+              <button type="button" data-application="explain" aria-pressed="false">Explain a complex offer <span aria-hidden="true">↗</span></button>
+              <button type="button" data-application="compare" aria-pressed="false">Help prospects compare options <span aria-hidden="true">↗</span></button>
+            </div>
+            <div class="v6-offer-preview" data-offer-preview data-application-state="introduce" aria-live="polite" aria-atomic="true">
+              <div class="v6-offer-art" aria-hidden="true"><i></i><i></i><i></i><span>✳</span></div>
+              <h5 data-application-title>Introduce a new offer</h5><p data-application-copy>Give prospects a clear first look at what you offer, who it is for, and how it could fit their business.</p>
+            </div>
+          </section>
+          <section id="experience-how" data-experience-section="How it works" class="v6-demo-section">
+            <p class="v6-demo-label">How it works</p><h4>Explore beyond<br><em>the first click.</em></h4>
+            <details data-experience-detail="The experience"><summary>The experience<span aria-hidden="true">+</span></summary><p>Explore an offer in any order. Open the details that matter, compare approaches, and choose what to explore next. There is no required path.</p></details>
+            <details data-experience-detail="The team view"><summary>The team view<span aria-hidden="true">+</span></summary><p>See the details you opened, the approaches you compared, and the choices you made. The team can use those actions as context for a conversation, without treating a section view as a confirmed need.</p></details>
+          </section>
+          <section id="experience-tailor" data-experience-section="Ways to tailor it" class="v6-demo-section">
+            <p class="v6-demo-label">Ways to tailor it</p><h4>What could this<br><em>look like for you?</em></h4>
+            <p>Explore two illustrative ways to shape an experience around your offer.</p>
+            <button class="v6-compare-toggle" type="button" aria-expanded="false" aria-controls="experience-comparison" data-compare-toggle>Compare approaches <span aria-hidden="true">↗</span></button>
+            <div id="experience-comparison" class="v6-approach-comparison" hidden>
+              <div><h5>A focused introduction</h5><p>One offer, a clear use case, and useful details to open.</p></div><div><h5>A deeper exploration</h5><p>Connected topics, options to compare, and a question about what matters most.</p></div>
+            </div>
+            <fieldset class="v6-approach-choices"><legend>Choose an approach</legend><label><input type="radio" name="experience-approach" value="focused"><span>A focused introduction</span></label><label><input type="radio" name="experience-approach" value="deeper"><span>A deeper exploration</span></label></fieldset>
+            <div class="v6-tailored-preview" data-tailored-preview hidden aria-live="polite" aria-atomic="true"><span class="v6-tailored-icon" aria-hidden="true">↳</span><div><h5 data-tailored-title></h5><p data-tailored-copy></p></div></div>
+            <fieldset class="v6-priority-choices"><legend>What matters most?</legend><label><input type="radio" name="experience-priority" value="Clarity of the offer"><span>Clarity of the offer</span></label><label><input type="radio" name="experience-priority" value="Better-fit prospects"><span>Better-fit prospects</span></label><label><input type="radio" name="experience-priority" value="Better conversations"><span>Better conversations</span></label></fieldset>
+          </section>
+        </div>
+      </div>
+      <aside class="v6-team" aria-labelledby="experience-team-title">
+        <div class="v6-pane-heading"><span class="v6-status-dot v6-status-coral" aria-hidden="true"></span><h3 id="experience-team-title">What Wiskers learns</h3><button type="button" class="v6-reset" data-experience-reset>Reset demo</button></div>
+        <div class="v6-team-content">
+          <div class="v6-team-eye" aria-hidden="true"><svg viewBox="0 0 160 90"><path d="M8 45Q80-24 152 45Q80 114 8 45Z"/><circle cx="80" cy="45" r="24"/><circle class="v6-eye-pupil" cx="80" cy="45" r="8"/></svg></div>
+          <p class="v6-demo-label">Your activity</p>
+          <p class="v6-activity-empty" data-activity-empty>Your choices will appear here as you explore.</p>
+          <ol class="v6-activity" data-activity aria-label="Your deliberate actions"></ol>
+          <div class="v6-exposure"><p class="v6-demo-label">Sections viewed</p><ul data-exposure aria-label="Sections viewed"></ul></div>
+          <div class="v6-conversation"><h4>Possible conversation angle</h4><p data-conversation>Make a choice in the experience to see what it could add to a conversation.</p></div>
+          <p class="v6-activity-announcement glyph-wave__sr-only" role="status" aria-live="polite" aria-atomic="true" data-activity-announcement></p>
+        </div>
+      </aside>
     </div>
-    <div class="v6-example-list">
-      <article class="v6-example" aria-labelledby="v6-calculate-title">
-        <div class="v6-example-title"><div><h3 id="v6-calculate-title" data-glyph-wave data-glyph-stagger="0.3">Calculate.</h3><p>See the time in an untargeted list.</p></div></div>
-        <form class="v6-calc" data-v6-calc>
-          <label>Accounts <span><input name="accounts" type="number" inputmode="numeric" min="0" step="10" value="120" aria-label="Number of accounts to research"></span></label>
-          <span class="v6-times" aria-hidden="true">×</span>
-          <label>Minutes each <span><input name="minutes" type="number" inputmode="numeric" min="0" max="120" step="1" value="6" aria-label="Minutes spent researching each account"></span></label>
-          <output data-v6-calc-output aria-live="polite" aria-label="Estimated hours to research">12 h</output>
-        </form>
-      </article>
-      <article class="v6-example" aria-labelledby="v6-diagnose-title">
-        <div class="v6-example-title"><div><h3 id="v6-diagnose-title" data-glyph-wave data-glyph-stagger="0.3">Diagnose.</h3><p>Find the next step that fits.</p></div></div>
-        <form class="v6-diagnose" data-v6-diagnose>
-          <fieldset data-v6-diagnose-step="1"><legend><span>01</span> What needs attention?</legend><div class="v6-choice-row"><label><input type="radio" name="focus" value="reach" checked><span>Reach</span></label><label><input type="radio" name="focus" value="conversion"><span>Conversion</span></label><label><input type="radio" name="focus" value="clarity"><span>Clarity</span></label></div></fieldset>
-          <fieldset data-v6-diagnose-step="2"><legend><span>02</span> What feels hardest?</legend><div class="v6-choice-row"><label><input type="radio" name="friction" value="time" checked><span>Finding time</span></label><label><input type="radio" name="friction" value="signal"><span>Finding signal</span></label></div></fieldset>
-          <p class="v6-diagnose-result" data-v6-diagnose-result aria-live="polite">Start by testing one focused tool with a small, well-matched audience.</p>
-        </form>
-      </article>
-      <article class="v6-example" aria-labelledby="v6-compare-title">
-        <div class="v6-example-title"><div><h3 id="v6-compare-title" data-glyph-wave data-glyph-stagger="0.3">Compare.</h3><p>Choose what matters to your decision.</p></div></div>
-        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label><label><input type="checkbox" value="intent"><span>Buyer intent</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p><div class="v6-compare-summary"><p class="v6-compare-summary-label" id="v6-compare-summary-title">Questions to weigh</p><ul data-v6-compare-summary aria-labelledby="v6-compare-summary-title"><li>Will this reach the right audience?</li><li>What will it take to build?</li><li>What can we learn from it?</li></ul><p data-v6-compare-empty hidden>Choose a criterion to surface the questions worth weighing.</p></div></fieldset>
-      </article>
-    </div>
+    <div class="v6-demo-takeaway"><p>Explore an offer in more depth.<br>Start conversations knowing what prospects chose to explore.</p><a class="v6-text-link" href="mailto:hello@wiskers.click">See how this could work for your business.<span aria-hidden="true">↗</span></a></div>
   </section>
 
   <section class="v6-scene v6-process" id="v6-process" aria-labelledby="v6-process-title">
     <canvas class="v6-ascii-field" data-v6-ascii aria-hidden="true"></canvas>
-    <div class="v6-process-head"><p class="v6-overline">From question to conversation</p><h2 id="v6-process-title">A better conversation<br><span data-v6-process-heading-wave data-glyph-wave data-glyph-stagger="0.24">starts here.</span></h2><div class="v6-hanging-note" data-v6-hanging-note aria-hidden="true"><span class="v6-hanging-thread"></span><span class="v6-hanging-card"><i></i><b>Buyer signal</b></span></div></div>
+    <div class="v6-process-head"><div><p class="v6-overline">Illustrative applications</p><h2 id="v6-process-title">Where it <span data-glyph-wave>fits.</span></h2><p class="v6-process-intro">Interactive experiences can help prospects understand an offer before they meet your team. The experience can take different forms depending on what they need to explore.</p></div><div class="v6-hanging-note" data-v6-hanging-note aria-hidden="true"><span class="v6-hanging-thread"></span><span class="v6-hanging-card">✳</span></div></div>
     <div class="v6-process-steps">
-      <article data-v6-process-stage><h3 data-glyph-wave data-glyph-stagger="0.18">QUESTION</h3><p>Start with the decision your buyer needs to make.</p></article>
-      <article data-v6-process-stage><h3 data-glyph-wave data-glyph-stagger="0.18">TOOL</h3><p>Shape your expertise into a useful self-serve answer.</p></article>
-      <article data-v6-process-stage><h3 data-glyph-wave data-glyph-stagger="0.18">CONVERSATION</h3><p>Meet buyers with context when they are ready.</p></article>
+      <article data-v6-process-stage><h3 data-glyph-wave>Introduce a new offer</h3><p>Give prospects a clear first look at what you offer, who it is for, and how it could fit their business.</p></article>
+      <article data-v6-process-stage><h3 data-glyph-wave>Explain a complex offer</h3><p>Make a layered product, service, or approach easier to explore, so prospects can focus on what matters to their situation.</p></article>
+      <article data-v6-process-stage><h3 data-glyph-wave>Help prospects compare options</h3><p>Show how different products, service levels, or approaches differ, and let prospects explore what each means for them.</p></article>
     </div>
   </section>
 
   <section class="v6-scene v6-contact" id="v6-contact" aria-labelledby="v6-contact-title">
-    <div class="v6-contact-main"><p class="v6-overline">For ambitious B2B teams</p><h2 id="v6-contact-title">Let’s make<br><span data-glyph-wave data-glyph-stagger="0.24">something useful.</span></h2><a class="v6-email-link" href="mailto:hello@wiskers.click">hello@wiskers.click <span aria-hidden="true">↗</span></a></div>
-    <div class="v6-buyer-question"><span class="v6-overline">Start with a question</span><p>What are your buyers trying to figure out?</p><a href="mailto:hello@wiskers.click?subject=What%20my%20buyers%20need%20to%20figure%20out">Tell us about it <span aria-hidden="true">↗</span></a></div>
-    <footer class="v6-footer"><a href="#v6-home" aria-label="Wiskers, back to top">wiskers<span aria-hidden="true">.</span></a><span>© 2026 Wiskers</span><nav aria-label="Legal"><a href="/privacy/index.html">Privacy</a><a href="/terms/index.html">Website terms</a></nav></footer>
+    <div class="v6-contact-main" data-v6-trail-stage><div class="v6-image-trail" data-v6-image-trail aria-hidden="true"></div><h2 id="v6-contact-title">Let your expertise<br><span data-glyph-wave>speak before you do.</span></h2><p>Wiskers is the next evolution of B2B marketing, making your expertise part of the experience. Let prospects get to know your business before they meet your team.</p><a class="v6-text-link" href="mailto:hello@wiskers.click">See how this could work for your business.<span aria-hidden="true">↗</span></a></div>
+    <footer class="v6-footer"><a href="#v6-home" aria-label="Wiskers, back to top"><img class="wordmark-logo" src="/assets/brand-v2/wiskers-v2-wordmark-dark.svg" alt="" width="760" height="184"></a><span>© 2026 Wiskers</span><a href="mailto:hello@wiskers.click">hello@wiskers.click</a><nav aria-label="Legal"><a href="/privacy/index.html">Privacy</a><a href="/terms/index.html">Website terms</a></nav></footer>
   </section>
 </div>`;
 
-/** Attach small, local interactions to an already-rendered v6 main element. */
 export function mountHomeInteractions(root) {
-  if (!root) return () => {};
-  const cleanups = [];
-  const listen = (node, event, handler) => {
-    node.addEventListener(event, handler);
-    cleanups.push(() => node.removeEventListener(event, handler));
-  };
-
-  root.querySelectorAll('[data-v6-calc]').forEach((form) => {
-    const accounts = form.elements.accounts;
-    const minutes = form.elements.minutes;
-    const output = form.querySelector('[data-v6-calc-output]');
-    const update = () => {
-      const totalHours = (Math.max(0, Number(accounts.value) || 0) * Math.max(0, Number(minutes.value) || 0)) / 60;
-      output.value = `${new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 }).format(totalHours)} h`;
-      output.textContent = output.value;
-    };
-    listen(form, 'input', update);
-    update();
-  });
-
-  root.querySelectorAll('[data-v6-diagnose]').forEach((form) => {
-    const result = form.querySelector('[data-v6-diagnose-result]');
-    const responses = {
-      reach: { time: 'Start by testing one focused tool with a small, well-matched audience.', signal: 'Give a specific audience one useful question to answer, then learn from the choices they make.' },
-      conversion: { time: 'Make one high-intent page more useful with a tool that helps buyers weigh their options.', signal: 'Compare the questions visitors ask with the decision your tool could help them make.' },
-      clarity: { time: 'Turn one recurring buyer question into a simple, guided answer.', signal: 'Map the questions buyers ask to the information they need for a confident next step.' },
-    };
-    const update = () => {
-      const focus = form.elements.focus.value;
-      const friction = form.elements.friction.value;
-      result.textContent = responses[focus][friction];
-    };
-    listen(form, 'change', update);
-  });
-
-  root.querySelectorAll('[data-v6-compare]').forEach((group) => {
-    const boxes = [...group.querySelectorAll('input[type="checkbox"]')];
-    const count = group.querySelector('[data-v6-compare-count]');
-    const summaryLabel = group.querySelector('.v6-compare-summary-label');
-    const summary = group.querySelector('[data-v6-compare-summary]');
-    const emptyPrompt = group.querySelector('[data-v6-compare-empty]');
-    const questions = new Map([
-      ['fit', 'Will this reach the right audience?'],
-      ['effort', 'What will it take to build?'],
-      ['learning', 'What can we learn from it?'],
-      ['reach', 'How many buyers could it reach?'],
-      ['speed', 'How soon can we launch?'],
-      ['intent', 'Are buyers ready to act?'],
-    ]);
-    const update = (changed) => {
-      let selected = boxes.filter((box) => box.checked);
-      if (selected.length > 3) {
-        if (changed?.checked) changed.checked = false;
-        else selected.slice(3).forEach((box) => { box.checked = false; });
-        selected = boxes.filter((box) => box.checked);
-      }
-      const total = selected.length;
-      if (count) count.textContent = `${total} of 3 selected`;
-      boxes.forEach((box) => { box.disabled = total >= 3 && !box.checked; });
-      if (summary) {
-        summary.replaceChildren(...selected.map((box) => {
-          const item = document.createElement('li');
-          item.textContent = questions.get(box.value) || 'What should this option help you decide?';
-          return item;
-        }));
-        summary.hidden = total === 0;
-      }
-      if (summaryLabel) summaryLabel.hidden = total === 0;
-      if (emptyPrompt) emptyPrompt.hidden = total > 0;
-    };
-    listen(group, 'change', (event) => update(boxes.includes(event.target) ? event.target : null));
-    update();
-  });
-
-  return () => cleanups.forEach((cleanup) => cleanup());
+  return mountExperience(root);
 }

@@ -23,6 +23,7 @@
 }
 
 .glyph-wave__visual { white-space: pre-wrap; }
+.glyph-wave__word { display: inline-block; white-space: nowrap; }
 
 .glyph-wave__cell {
   position: relative;
