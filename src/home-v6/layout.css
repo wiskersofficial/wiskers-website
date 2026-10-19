@@ -86,7 +86,7 @@ html[data-theme="night"] .wordmark-logo, html[data-theme="twilight"] .wordmark-l
 .v6-flow { fill: none; stroke: var(--v6-blue); stroke-width: 1.3; opacity: .48; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--v6-draw, .2)); filter: url(#v6-water-ripple); }
 .v6-flow-two { stroke: var(--v6-green); opacity: .72; }
 .v6-flow-core { fill: var(--v6-paper); stroke: var(--v6-coral-ink); stroke-width: 2; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: v6-point-pulse 3.8s ease-in-out infinite; }
-.v6-flow-trail { fill: none; stroke: var(--v6-coral-ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; pointer-events: none; }
+.v6-flow-trail { fill: none; stroke: var(--v6-coral-ink); stroke-width: 1.8; vector-effect: non-scaling-stroke; pointer-events: none; }
 .v6-line-array circle { fill: var(--v6-paper); stroke: var(--v6-coral-ink); stroke-width: 2; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: v6-point-pulse 3.8s ease-in-out infinite; }
 @keyframes v6-point-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.55); } }
 .v6-array-ends { position: absolute; inset: -22px 0 auto; display: flex; justify-content: space-between; font-size: 12px; line-height: 1.3; }

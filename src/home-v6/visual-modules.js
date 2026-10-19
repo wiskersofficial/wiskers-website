@@ -12,7 +12,7 @@ export function initScrollVisuals(root) {
   const hangingNote = root.querySelector("[data-v6-hanging-note]");
   const context = canvas?.getContext("2d", { alpha: true });
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  let lastState = { thesis: 0, examples: 0, process: 0 };
+  let lastState = { thesis: 0, examples: 0, process: 0, trail: 0 };
   let lastDrawnThesis = -1;
   let pointerForce = 0;
   let paused = false;
@@ -61,8 +61,8 @@ export function initScrollVisuals(root) {
     }
   }
 
-  function update({ thesis = lastState.thesis, examples = lastState.examples, process = lastState.process, activeExample } = {}) {
-    lastState = { thesis: clamp(thesis), examples: clamp(examples), process: clamp(process) };
+  function update({ thesis = lastState.thesis, examples = lastState.examples, process = lastState.process, trail = lastState.trail, activeExample } = {}) {
+    lastState = { thesis: clamp(thesis), examples: clamp(examples), process: clamp(process), trail: clamp(trail) };
     if (canvas && Math.abs(lastState.thesis - lastDrawnThesis) >= 0.012) {
       const rect = canvas.getBoundingClientRect();
       if (rect.bottom >= 0 && rect.top <= (window.innerHeight || 0)) {
@@ -80,11 +80,14 @@ export function initScrollVisuals(root) {
 
     if (trailPath && trailMarks.length) {
       const length = trailPath.getTotalLength();
+      const leadProgress = lastState.trail;
+      const spacing = 0.16;
       trailMarks.forEach((mark, index) => {
-        const distance = clamp(lastState.thesis * 1.16 - index * 0.13) * length;
+        const markProgress = Math.max(0, leadProgress - index * spacing);
+        const distance = markProgress * length;
         const point = trailPath.getPointAtLength(distance);
-        const visible = clamp((lastState.thesis * 1.16 - index * 0.13) * 2.1);
-        mark.setAttribute("transform", `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)}) rotate(${(lastState.thesis * 92 - index * 12).toFixed(1)})`);
+        const visible = index === 0 ? clamp(leadProgress * 2.1) : clamp(markProgress / 0.09);
+        mark.setAttribute("transform", `translate(${point.x.toFixed(2)} ${point.y.toFixed(2)}) rotate(${(leadProgress * 92 - index * 12).toFixed(1)})`);
         mark.style.opacity = visible.toFixed(3);
       });
     }
@@ -129,7 +132,7 @@ export function initScrollVisuals(root) {
     });
     resizeObserver.observe(canvas);
   }
-  update({ thesis: reducedMotion.matches ? 1 : 0 });
+  update({ thesis: reducedMotion.matches ? 1 : 0, trail: reducedMotion.matches ? 1 : 0 });
 
   return {
     update,

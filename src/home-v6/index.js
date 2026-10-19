@@ -25,6 +25,7 @@ if (main) {
   const heroLines = [...root.querySelectorAll("[data-v6-hero-line]")];
   const heroTarget = glyphTargets.find((target) => target.closest(".v6-hero"));
   const thesis = root.querySelector(".v6-thesis");
+  const lineArray = root.querySelector(".v6-line-array");
   const examplesScene = root.querySelector(".v6-examples");
   const processScene = root.querySelector(".v6-process");
   const processHead = root.querySelector(".v6-process-head");
@@ -50,7 +51,7 @@ if (main) {
   function measure() {
     viewportHeight = window.visualViewport?.height || window.innerHeight || 1;
     const scrollY = window.scrollY || 0;
-    const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages], scrollY);
+    const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages, lineArray].filter(Boolean), scrollY);
     rects.clear();
     for (const [element, box] of measured) rects.set(element, box);
     // Example rows move slightly for visual drift. Their offset geometry is
@@ -229,7 +230,8 @@ if (main) {
       thesis.style.setProperty("--v6-draw", thesisProgress.toFixed(3));
       const galleryProgress = progressWhenCrossing(examplesScene, 0.92, 0.08);
       const processProgress = progressWhenCrossing(processScene, 0.92, 0.08);
-      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress, activeExample: exampleAtViewportBand(scrollY) });
+      const trailProgress = progressWhenCrossing(lineArray, 0.92, 0.42);
+      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress, trail: trailProgress, activeExample: exampleAtViewportBand(scrollY) });
     }
 
     for (const example of examples) {
@@ -269,7 +271,7 @@ if (main) {
       examples.forEach((example) => example.style.setProperty("--v6-reveal", "1"));
       stages.forEach((stage) => stage.style.setProperty("--v6-stage-progress", "1"));
       root.classList.add("motion-reduced");
-      visuals.update({ thesis: 1, examples: 1, process: 1 });
+      visuals.update({ thesis: 1, examples: 1, process: 1, trail: 1 });
     } else {
       root.classList.remove("motion-reduced");
       measure();
@@ -299,7 +301,7 @@ if (main) {
   window.visualViewport?.addEventListener("resize", onResize, { passive: true });
   motionPreference.addEventListener?.("change", onMotionPreference);
   onMotionPreference();
-  const disconnectLayoutObserver = observeLayoutChanges([...scenes, ...glyphTargets, ...examples, ...stages, main], onResize);
+  const disconnectLayoutObserver = observeLayoutChanges([...scenes, ...glyphTargets, ...examples, ...stages, lineArray, main].filter(Boolean), onResize);
   document.fonts?.ready.then(measure);
   measure();
 
