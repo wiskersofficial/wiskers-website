@@ -48,7 +48,7 @@ export const homeMarkup = String.raw`<div class="v6-home">
       </article>
       <article class="v6-example" aria-labelledby="v6-compare-title">
         <div class="v6-example-title"><div><h3 id="v6-compare-title" data-glyph-wave data-glyph-stagger="0.3">Compare.</h3><p>Choose what matters to your decision.</p></div></div>
-        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label><label><input type="checkbox" value="intent"><span>Buyer intent</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p></fieldset>
+        <fieldset class="v6-compare" data-v6-compare><legend>Choose up to three criteria</legend><div class="v6-choice-row v6-compare-grid"><label><input type="checkbox" value="fit" checked><span>Audience fit</span></label><label><input type="checkbox" value="effort" checked><span>Build effort</span></label><label><input type="checkbox" value="learning" checked><span>What you learn</span></label><label><input type="checkbox" value="reach"><span>Reach</span></label><label><input type="checkbox" value="speed"><span>Speed to launch</span></label><label><input type="checkbox" value="intent"><span>Buyer intent</span></label></div><p data-v6-compare-count aria-live="polite">3 of 3 selected</p><div class="v6-compare-summary"><p class="v6-compare-summary-label" id="v6-compare-summary-title">Questions to weigh</p><ul data-v6-compare-summary aria-labelledby="v6-compare-summary-title"><li>Will this reach the right audience?</li><li>What will it take to build?</li><li>What can we learn from it?</li></ul><p data-v6-compare-empty hidden>Choose a criterion to surface the questions worth weighing.</p></div></fieldset>
       </article>
     </div>
   </section>
@@ -109,14 +109,39 @@ export function mountHomeInteractions(root) {
   root.querySelectorAll('[data-v6-compare]').forEach((group) => {
     const boxes = [...group.querySelectorAll('input[type="checkbox"]')];
     const count = group.querySelector('[data-v6-compare-count]');
+    const summaryLabel = group.querySelector('.v6-compare-summary-label');
+    const summary = group.querySelector('[data-v6-compare-summary]');
+    const emptyPrompt = group.querySelector('[data-v6-compare-empty]');
+    const questions = new Map([
+      ['fit', 'Will this reach the right audience?'],
+      ['effort', 'What will it take to build?'],
+      ['learning', 'What can we learn from it?'],
+      ['reach', 'How many buyers could it reach?'],
+      ['speed', 'How soon can we launch?'],
+      ['intent', 'Are buyers ready to act?'],
+    ]);
     const update = (changed) => {
-      const selected = boxes.filter((box) => box.checked);
-      if (selected.length > 3 && changed) changed.checked = false;
-      const total = boxes.filter((box) => box.checked).length;
-      count.textContent = `${total} of 3 selected`;
+      let selected = boxes.filter((box) => box.checked);
+      if (selected.length > 3) {
+        if (changed?.checked) changed.checked = false;
+        else selected.slice(3).forEach((box) => { box.checked = false; });
+        selected = boxes.filter((box) => box.checked);
+      }
+      const total = selected.length;
+      if (count) count.textContent = `${total} of 3 selected`;
       boxes.forEach((box) => { box.disabled = total >= 3 && !box.checked; });
+      if (summary) {
+        summary.replaceChildren(...selected.map((box) => {
+          const item = document.createElement('li');
+          item.textContent = questions.get(box.value) || 'What should this option help you decide?';
+          return item;
+        }));
+        summary.hidden = total === 0;
+      }
+      if (summaryLabel) summaryLabel.hidden = total === 0;
+      if (emptyPrompt) emptyPrompt.hidden = total > 0;
     };
-    listen(group, 'change', (event) => update(event.target.matches('input[type="checkbox"]') ? event.target : null));
+    listen(group, 'change', (event) => update(boxes.includes(event.target) ? event.target : null));
     update();
   });
 

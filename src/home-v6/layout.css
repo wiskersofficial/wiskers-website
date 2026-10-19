@@ -132,6 +132,12 @@ html[data-theme="night"] .wordmark-logo, html[data-theme="twilight"] .wordmark-l
 .v6-choice-row input:disabled + span { opacity: .48; cursor: not-allowed; }
 .v6-diagnose-result { grid-column: 1 / -1; max-width: 560px; min-height: 40px; margin: 0; padding-left: 12px; border-left: 2px solid var(--v6-coral); color: var(--v6-muted); font-size: 12px; line-height: 1.55; }
 .v6-compare > p { margin: 14px 0 0; color: var(--v6-muted); font: 10px var(--v6-mono); }
+.v6-compare-summary { margin-top: 12px; }
+.v6-compare-summary-label { margin: 0 0 7px !important; color: var(--v6-muted); font: 10px var(--v6-mono) !important; }
+.v6-compare-summary ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr)); gap: 7px 12px; margin: 0; padding: 0; list-style: none; }
+.v6-compare-summary [hidden] { display: none !important; }
+.v6-compare-summary li { min-width: 0; padding-left: 8px; border-left: 1px solid var(--v6-blue); color: var(--v6-muted); font-size: 11px; line-height: 1.4; }
+.v6-compare-summary [data-v6-compare-empty] { margin: 0 !important; font: 11px/1.45 "DM Sans", sans-serif !important; }
 .v6-compare-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .v6-compare-grid label { min-width: 0; }
 .v6-compare-grid label span { min-height: 47px; display: flex; align-items: center; padding: 9px 10px; }
