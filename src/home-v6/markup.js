@@ -4,7 +4,7 @@ export const homeMarkup = String.raw`<div class="v6-home">
     <div class="v6-hero-copy">
       <h1 id="v6-hero-title"><span class="v6-hero-line" data-v6-hero-line>Find your</span><span class="v6-hero-line v6-hero-line-last" data-v6-hero-line data-glyph-wave data-glyph-stagger="0.18">next client.</span></h1>
       <p class="v6-intro">The next evolution of hyper-targeted digital marketing. We help you hone in on your next B2B client without wasting hours working down a list.</p>
-      <a class="v6-text-link" href="#v6-examples">See how it works <span aria-hidden="true">↓</span></a>
+      <a class="v6-text-link" href="#v6-examples">Explore the examples <span aria-hidden="true">↓</span></a>
     </div>
     <span class="v6-hero-asterisk" data-v6-asterisk aria-hidden="true">✳</span>
   </section>
