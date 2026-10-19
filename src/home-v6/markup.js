@@ -28,7 +28,7 @@ export const homeMarkup = String.raw`<div class="v6-home">
   <section class="v6-scene v6-examples" id="v6-examples" aria-labelledby="v6-examples-title">
     <div class="v6-examples-intro"><p class="v6-overline">Useful by design</p><h2 id="v6-examples-title">Make the answer<br><em data-glyph-wave data-glyph-stagger="0.3">the experience.</em></h2></div>
     <div class="v6-example-list" data-v6-spiral-gallery>
-      <svg class="v6-spiral-route" viewBox="0 0 52 900" preserveAspectRatio="none" aria-hidden="true"><path data-v6-spiral-path pathLength="1" d="M26 0 C26 80 4 78 4 150 C4 220 48 220 48 300 C48 375 4 382 4 455 C4 530 48 540 48 615 C48 690 4 700 4 775 C4 850 26 840 26 900"/></svg>
+      <svg class="v6-spiral-route" viewBox="0 0 52 900" preserveAspectRatio="none" aria-hidden="true"><path data-v6-spiral-path pathLength="1" d="M26 0 C26 80 4 78 4 150 C4 220 48 220 48 300 C48 375 4 382 4 455 C4 530 48 540 48 615 C48 690 4 700 4 775 C4 850 26 840 26 900"/><circle data-v6-route-waypoint="0" cx="26" cy="150" r="4"/><circle data-v6-route-waypoint="1" cx="26" cy="450" r="4"/><circle data-v6-route-waypoint="2" cx="26" cy="750" r="4"/></svg>
       <article class="v6-example" aria-labelledby="v6-calculate-title">
         <div class="v6-example-title"><div><h3 id="v6-calculate-title" data-glyph-wave data-glyph-stagger="0.3">Calculate.</h3><p>See the time in an untargeted list.</p></div></div>
         <form class="v6-calc" data-v6-calc>

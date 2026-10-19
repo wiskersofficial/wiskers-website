@@ -17,6 +17,9 @@ if (main) {
   const glyphTargets = [...root.querySelectorAll("[data-glyph-wave]")];
   const scenes = [...root.querySelectorAll(".v6-scene")];
   const examples = [...root.querySelectorAll(".v6-example")];
+  const exampleList = root.querySelector(".v6-example-list");
+  const exampleRoute = root.querySelector("[data-v6-spiral-path]");
+  const exampleWaypoints = [...root.querySelectorAll("[data-v6-route-waypoint]")];
   const stages = [...root.querySelectorAll(".v6-process-steps article")];
   const hero = root.querySelector(".v6-hero");
   const heroLines = [...root.querySelectorAll("[data-v6-hero-line]")];
@@ -50,6 +53,43 @@ if (main) {
     const measured = measureDocumentBoxes([...scenes, ...glyphTargets, ...examples, ...stages], scrollY);
     rects.clear();
     for (const [element, box] of measured) rects.set(element, box);
+    // Example rows move slightly for visual drift. Their offset geometry is
+    // stable in list space, so use it for both glyph timing and the route
+    // waypoint alignment instead of measuring the transformed screen boxes.
+    if (exampleList && examples.length) {
+      const listRect = exampleList.getBoundingClientRect();
+      const listTop = listRect.top + scrollY;
+      const listHeight = Math.max(1, exampleList.offsetHeight);
+      const routeLength = exampleRoute?.getTotalLength() || 0;
+      const routeSvg = exampleRoute?.ownerSVGElement;
+      const viewBox = routeSvg?.viewBox.baseVal;
+      examples.forEach((example, index) => {
+        const top = listTop + example.offsetTop;
+        const height = example.offsetHeight;
+        rects.set(example, { top, height });
+        const waypoint = exampleWaypoints[index];
+        if (!waypoint || !routeLength || !viewBox?.height) return;
+        const targetY = ((example.offsetTop + height / 2) / listHeight) * viewBox.height;
+        let nearest = null;
+        let nearestDistance = Infinity;
+        // Select the closest point on the existing route to this row's stable
+        // center, then place the decorative node at that exact path point.
+        for (let sample = 0; sample <= 600; sample += 1) {
+          const point = exampleRoute.getPointAtLength((sample / 600) * routeLength);
+          const dx = point.x - viewBox.width / 2;
+          const dy = point.y - targetY;
+          const distance = dx * dx + dy * dy;
+          if (distance < nearestDistance) {
+            nearest = point;
+            nearestDistance = distance;
+          }
+        }
+        if (nearest) {
+          waypoint.setAttribute("cx", nearest.x.toFixed(2));
+          waypoint.setAttribute("cy", nearest.y.toFixed(2));
+        }
+      });
+    }
     // Hero lines lift as the page scrolls. Store the target's normal-flow
     // document position so a resize at an intermediate scroll position cannot
     // bake that temporary transform into the next wave measurement.
@@ -118,6 +158,25 @@ if (main) {
     return progressWhenCrossing(anchor, 0.92, endAt);
   }
 
+  function exampleAtViewportBand(scrollY) {
+    if (!examples.length) return -1;
+    const viewportOffsetTop = window.visualViewport?.offsetTop || 0;
+    let chosen = -1;
+    let nearestOffset = Infinity;
+    examples.forEach((example, index) => {
+      const box = rects.get(example);
+      if (!box) return;
+      const center = (box.top + box.height / 2 - scrollY - viewportOffsetTop) / viewportHeight;
+      if (center < 0.38 || center > 0.74) return;
+      const offset = Math.abs(center - 0.56);
+      if (offset < nearestOffset) {
+        chosen = index;
+        nearestOffset = offset;
+      }
+    });
+    return chosen;
+  }
+
   function revealProgressForGlyph(target, progress) {
     const { transition } = glyphs.getTiming(target);
     return clamp((progress - transition / 2) / Math.max(0.05, 1 - transition));
@@ -170,7 +229,7 @@ if (main) {
       thesis.style.setProperty("--v6-draw", thesisProgress.toFixed(3));
       const galleryProgress = progressWhenCrossing(examplesScene, 0.92, 0.08);
       const processProgress = progressWhenCrossing(processScene, 0.92, 0.08);
-      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress });
+      visuals.update({ thesis: thesisProgress, examples: galleryProgress, process: processProgress, activeExample: exampleAtViewportBand(scrollY) });
     }
 
     for (const example of examples) {

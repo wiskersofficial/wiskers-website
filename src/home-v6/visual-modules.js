@@ -8,6 +8,7 @@ export function initScrollVisuals(root) {
   const trailPath = root.querySelector("[data-v6-trail-path]");
   const trailMarks = [...root.querySelectorAll("[data-v6-trail]")];
   const spiralPath = root.querySelector("[data-v6-spiral-path]");
+  const spiralWaypoints = [...root.querySelectorAll("[data-v6-route-waypoint]")];
   const hangingNote = root.querySelector("[data-v6-hanging-note]");
   const context = canvas?.getContext("2d", { alpha: true });
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -15,6 +16,7 @@ export function initScrollVisuals(root) {
   let lastDrawnThesis = -1;
   let pointerForce = 0;
   let paused = false;
+  let activeWaypoint = -1;
   let resizeObserver;
 
   function resizeCanvas() {
@@ -59,7 +61,7 @@ export function initScrollVisuals(root) {
     }
   }
 
-  function update({ thesis = lastState.thesis, examples = lastState.examples, process = lastState.process } = {}) {
+  function update({ thesis = lastState.thesis, examples = lastState.examples, process = lastState.process, activeExample } = {}) {
     lastState = { thesis: clamp(thesis), examples: clamp(examples), process: clamp(process) };
     if (canvas && Math.abs(lastState.thesis - lastDrawnThesis) >= 0.012) {
       const rect = canvas.getBoundingClientRect();
@@ -87,7 +89,15 @@ export function initScrollVisuals(root) {
       });
     }
 
-    if (spiralPath) spiralPath.style.strokeDashoffset = String(1 - lastState.examples);
+    if (spiralPath) spiralPath.style.strokeDashoffset = reducedMotion.matches ? "0" : String(1 - lastState.examples);
+    if (!paused && !reducedMotion.matches && Number.isInteger(activeExample) && activeExample !== activeWaypoint) {
+      spiralWaypoints.forEach((waypoint, index) => waypoint.classList.toggle("is-active", index === activeExample));
+      activeWaypoint = activeExample;
+    }
+    if (reducedMotion.matches && activeWaypoint !== -1) {
+      spiralWaypoints.forEach((waypoint) => waypoint.classList.remove("is-active"));
+      activeWaypoint = -1;
+    }
     if (hangingNote) {
       const angle = reducedMotion.matches ? 0 : Math.sin(lastState.process * Math.PI * 2) * 3.2;
       hangingNote.style.setProperty("--v6-hang-angle", `${angle.toFixed(2)}deg`);

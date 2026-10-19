@@ -101,6 +101,10 @@ html[data-theme="night"] .wordmark-logo, html[data-theme="twilight"] .wordmark-l
 .v6-example-list { position: relative; }
 .v6-spiral-route { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 38px; height: 100%; overflow: visible; pointer-events: none; }
 .v6-spiral-route path { fill: none; stroke: var(--v6-blue); stroke-width: 1.2; opacity: .62; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.v6-spiral-route [data-v6-route-waypoint] { fill: var(--v6-blue); stroke: var(--v6-paper); stroke-width: 1.5; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; transition: fill .22s ease, transform .22s ease; }
+.v6-spiral-route [data-v6-route-waypoint].is-active { fill: var(--v6-coral-ink); transform: scale(1.28); }
+.v6-home.motion-reduced .v6-spiral-route path { stroke-dashoffset: 0 !important; }
+.v6-home.motion-reduced .v6-spiral-route [data-v6-route-waypoint] { fill: var(--v6-blue); transform: none; transition: none; }
 .v6-example { margin-left: 46px; width: calc(100% - 46px); transform: translateX(var(--v6-spiral-x, 0px)) rotate(var(--v6-spiral-tilt, 0deg)); transform-origin: 50% 15%; will-change: transform; }
 .v6-example-title { transform: translateY(calc((1 - var(--v6-reveal, 1)) * 24px)); }
 .v6-example form, .v6-example > .v6-compare { transform: translateY(calc((1 - var(--v6-reveal, 1)) * 16px)); }
