@@ -11,7 +11,8 @@ function applyTheme(theme, persist = false) {
  root.dataset.theme = theme;
  buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.themeChoice === theme)));
  if (themeSelect) themeSelect.value = theme;
- document.querySelector('meta[name="theme-color"]').content = theme === 'day' ? '#f3f0e9' : theme === 'night' ? '#000000' : '#160f24';
+ const pageColour = getComputedStyle(root).getPropertyValue('--v6-paper').trim();
+ document.querySelector('meta[name="theme-color"]').content = pageColour || (theme === 'day' ? '#f3f0e9' : theme === 'night' ? '#000000' : '#160f24');
  if (persist) { manualChoice = true; try { localStorage.setItem('wiskers-theme', theme); } catch {} }
  window.dispatchEvent(new CustomEvent('wiskers:themechange', {detail: {theme}}));
 }

@@ -9,7 +9,7 @@
   --v6-green: #25a583;
   --v6-logo-mark: #2f97c1;
 }
-:root[data-theme="night"] {
+:root[data-theme="twilight"] {
   --v6-paper: #091540;
   --v6-ink: #f3f0e9;
   --v6-muted: #c0c8d6;
@@ -17,7 +17,7 @@
   --v6-coral-ink: #ef767a;
   --v6-logo-mark: #2f97c1;
 }
-:root[data-theme="twilight"] {
+:root[data-theme="night"] {
   --v6-paper: #15060d;
   --v6-ink: #f3f0e9;
   --v6-muted: #d0c0c5;
