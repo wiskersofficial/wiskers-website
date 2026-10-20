@@ -15,6 +15,7 @@ This folder is the handoff for the current homepage implementation. It is an imp
 | Applications timeline | Per-letter heading transitions and ruled-line reveals respond to native scroll. | `current-homepage/site-integration/` |
 | Prospect and team demo | Explore Wiskers, open details, compare approaches, select an approach and answer an optional question. Meaningful choices update a factual activity timeline and possible conversation angle. Section exposure stays separate. State stays in memory and can be reset. | `current-homepage/site-integration/experience.js` |
 | Word cuboid | Four horizontal long faces rotate around the X axis through two complete cycles during their visible viewport travel. Shared pause and readable reduced-motion fallback. | `current-homepage/word-cuboid/` and integration reference |
+| Elastic text hover | Pointer-following letter lens with smooth return, a local coral highlight, fixed paragraph layout, and shared pause/reduced-motion support. | `current-homepage/hover-warp/` and integration reference |
 | Motion controls | Pause/resume control and reduced-motion handling for the shared animation system. | `current-homepage/site-integration/index.js` |
 
 ## Not part of the active homepage
@@ -36,7 +37,7 @@ The 3D spiral/gallery experiment is still present as dormant code in the visual-
 
 ## Verification and source of truth
 
-These files were copied from the active local homepage source on 19 October 2026. The source of truth remains `src/home-v6/` and `public/assets/component-studies/` in this repository. After a component change, refresh this handoff and its Drive ZIP so they do not drift.
+These files were copied from the active local homepage source on 20 October 2026. The source of truth remains `src/home-v6/` and `public/assets/component-studies/` in this repository. After a component change, refresh this handoff and its Drive ZIP so they do not drift.
 
 ## Current integration, 19 October 2026
 
@@ -47,3 +48,7 @@ The sample is Wiskers itself: visitors are the prospect and the adjacent view sh
 The image trail now belongs to the coral closing section; the hanging symbol belongs to “Where it fits”. The shared controller uses normal-flow sections without the previous sticky process layout. No page scroll interception. Preserve CSS theme tokens, keyboard controls, reset, pause/resume, reduced motion, native inner-pane scrolling, and the light/dark V2 SVG exports.
 
 Asset integration: copy `assets/brand-v2/` to `public/assets/brand-v2/` and the trail SVGs to `public/assets/component-studies/`. V2 master source and license are recorded in the brand-v2 README and OFL.txt.
+
+## Thesis interaction update, 20 October 2026
+
+The offer cuboid now sits in a dedicated “your [word]” line with italic words and subtle theme-derived faces. The following sentence uses the elastic hover module. `site-integration/index.js` imports both helpers beside the existing homepage modules. Hover requests share the scheduler without recomputing scroll scenes, and stop once settled. The offer copy and two-cycle cuboid mapping remain unchanged.

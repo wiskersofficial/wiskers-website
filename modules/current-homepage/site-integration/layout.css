@@ -320,17 +320,21 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-footer .wordmark-logo { width: 124px; }
 /* Balance a wrapped closing line without leaving its last word on its own. */
 .v6-contact h2 [data-glyph-wave] { display: inline-block; max-width: 100%; text-wrap: balance; }
-/* Four long faces rotate around the horizontal axis of this short cuboid. */
+/* A typographic offer line with a quiet, illuminated rotating word. */
+.v6-thesis-body > .v6-offer-line { max-width: none; margin-bottom: 30px; }
+.v6-lead-context { display: block; text-wrap: balance; max-width: 35ch; font-size: clamp(21px, 1.8vw, 27px); line-height: 1.5; }
+.v6-lead-subject { display: flex; align-items: center; gap: .3em; margin-top: 8px; font-size: clamp(32px, 3.6vw, 48px); font-weight: 400; line-height: 1; letter-spacing: -.06em; }
 .v6-cuboid-stage { display: none; }
-.v6-word-cuboid.is-enhanced { --v6-cuboid-height: 1.9em; --v6-cuboid-radius: .95em; position: relative; display: inline-block; vertical-align: middle; width: 10.7ch; height: 2.65em; margin: .12em .08em .16em 0; }
+.v6-word-cuboid.is-enhanced { --v6-cuboid-height: 1.5em; --v6-cuboid-radius: .75em; position: relative; display: inline-block; flex: 0 0 auto; vertical-align: middle; width: 7.8ch; height: 2.3em; margin: 0; }
+.v6-word-cuboid.is-enhanced::after { content: ''; position: absolute; left: 6%; right: 6%; bottom: .13em; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--v6-ink) 18%, transparent), transparent); }
 .v6-word-cuboid.is-enhanced .v6-cuboid-readable { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-.v6-word-cuboid.is-enhanced .v6-cuboid-stage { position: absolute; display: block; top: .375em; left: 0; width: 100%; height: var(--v6-cuboid-height); perspective: 650px; perspective-origin: 50% 50%; }
+.v6-word-cuboid.is-enhanced .v6-cuboid-stage { position: absolute; display: block; top: .4em; left: 0; width: 100%; height: var(--v6-cuboid-height); perspective: 800px; perspective-origin: 50% 50%; }
 .v6-cuboid-rotor { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transform: translateZ(calc(-1 * var(--v6-cuboid-radius))) rotateX(var(--v6-cuboid-angle, 0deg)); will-change: transform; }
-.v6-cuboid-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border: 1px solid #09154038; backface-visibility: hidden; -webkit-backface-visibility: hidden; color: #091540; font: inherit; font-weight: 500; line-height: 1; letter-spacing: -.035em; }
-.v6-cuboid-business { background: #2f97c1; transform: rotateX(0deg) translateZ(var(--v6-cuboid-radius)); }
-.v6-cuboid-products { background: #ef767a; transform: rotateX(90deg) translateZ(var(--v6-cuboid-radius)); }
-.v6-cuboid-services { background: #25a583; transform: rotateX(180deg) translateZ(var(--v6-cuboid-radius)); }
-.v6-cuboid-approach { background: #f3f0e9; transform: rotateX(270deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--v6-ink) 15%, transparent); backface-visibility: hidden; -webkit-backface-visibility: hidden; background: linear-gradient(155deg, color-mix(in srgb, var(--v6-face-accent) 12%, var(--v6-paper)), color-mix(in srgb, var(--v6-face-accent) 3%, var(--v6-paper)) 64%, color-mix(in srgb, var(--v6-ink) 5%, var(--v6-paper))); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--v6-ink) 8%, transparent); color: color-mix(in srgb, var(--v6-face-accent) 55%, var(--v6-ink)); font: italic 400 1.04em/1 var(--v6-serif); letter-spacing: -.055em; }
+.v6-cuboid-business { --v6-face-accent: var(--v6-blue); transform: rotateX(0deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-products { --v6-face-accent: var(--v6-coral-ink); transform: rotateX(90deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-services { --v6-face-accent: var(--v6-green); transform: rotateX(180deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-approach { --v6-face-accent: var(--v6-ink); transform: rotateX(270deg) translateZ(var(--v6-cuboid-radius)); }
 @media (prefers-reduced-motion: reduce), print {
   .v6-word-cuboid.is-enhanced { display: inline; width: auto; height: auto; margin: 0; }
   .v6-word-cuboid.is-enhanced .v6-cuboid-readable { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
@@ -338,3 +342,14 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 }
 .v6-cuboid-face > span { visibility: hidden; }
 .v6-cuboid-face.is-current > span { visibility: visible; }
+
+/* An elastic lens follows the pointer; words keep their normal wrapping. */
+.v6-warp-text { position: relative; }
+.v6-warp-word { display: inline-block; white-space: nowrap; }
+.v6-warp-cell { display: inline-block; transform-origin: 50% 75%; color: color-mix(in srgb, var(--v6-coral-ink) calc(var(--v6-warp-influence, 0) * 100%), var(--v6-muted)); }
+.v6-warp-text.is-warping .v6-warp-cell { will-change: transform; }
+@media (prefers-reduced-motion: reduce), print {
+  .v6-lead-subject { display: inline; margin: 0; font-size: inherit; line-height: inherit; letter-spacing: inherit; }
+  .v6-word-cuboid.is-enhanced::after { display: none; }
+  .v6-warp-cell { transform: none !important; color: inherit; }
+}

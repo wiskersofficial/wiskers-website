@@ -4,6 +4,7 @@ import { homeMarkup, mountHomeInteractions } from './markup.js';
 import { initGlyphWaves } from './glyph-wave.js';
 import { initScrollVisuals } from './visual-modules.js';
 import { cuboidRotation, cuboidViewportProgress } from './word-cuboid.js';
+import { initHoverWarp } from './hover-warp.js';
 import { measureDocumentBoxes, observeLayoutChanges, progressAcrossRange, progressAcrossViewport } from './scroll-timing.js';
 
 const main = document.querySelector('#main-content');
@@ -14,6 +15,7 @@ if (main) {
   const disposeInteractions = mountHomeInteractions(root);
   const glyphs = initGlyphWaves(root);
   const visuals = initScrollVisuals(root);
+  const warp = initHoverWarp(root, () => schedule(false));
   const targets = [...root.querySelectorAll('[data-glyph-wave]')];
   const scenes = [...root.querySelectorAll('.v6-scene')];
   const stages = [...root.querySelectorAll('[data-v6-process-stage]')];
@@ -30,6 +32,7 @@ if (main) {
   const clamp = value => Math.min(1, Math.max(0, value));
   let boxes = new Map();
   let frame = 0;
+  let needsSceneUpdate = true;
   let paused = false;
   let height = window.innerHeight;
   let pageHeight = 1;
@@ -44,6 +47,7 @@ if (main) {
       const lift = parseFloat(getComputedStyle(heroTarget).getPropertyValue('--v6-line-lift')) || 0;
       if (box) boxes.set(heroTarget, { ...box, top: box.top - lift });
     }
+    warp.measure();
     pageHeight = Math.max(1, document.documentElement.scrollHeight - height);
     schedule();
   }
@@ -62,9 +66,12 @@ if (main) {
     const box = boxes.get(scene);
     return box ? progressAcrossViewport(box, window.scrollY, height, .9, .1, window.visualViewport?.offsetTop || 0) : 0;
   }
-  function update() {
+  function update(now) {
     frame = 0;
     if (paused) return;
+    const warpMoving = warp.update(now);
+    if (!needsSceneUpdate) { if (warpMoving) schedule(false); return; }
+    needsSceneUpdate = false;
     const reduced = motionPreference.matches;
     progressBar?.style.setProperty('--v6-page-progress', clamp(window.scrollY / pageHeight).toFixed(4));
     const heroBox = boxes.get(heroTarget);
@@ -91,8 +98,12 @@ if (main) {
       const p = reduced ? 1 : progressFor(target);
       stage.style.setProperty('--v6-stage-progress-percent', `${(p * 100).toFixed(1)}%`);
     });
+    if (warpMoving) schedule(false);
   }
-  function schedule() { if (!frame && !paused) frame = requestAnimationFrame(update); }
+  function schedule(sceneChanged = true) {
+    if (sceneChanged !== false) needsSceneUpdate = true;
+    if (!frame && !paused) frame = requestAnimationFrame(update);
+  }
   function onMotionPreference() {
     cuboids.forEach(cuboid => cuboid.classList.toggle('is-enhanced', !motionPreference.matches));
     measure();
@@ -102,6 +113,7 @@ if (main) {
     document.documentElement.classList.toggle('motion-paused', paused);
     glyphs.setPaused(paused);
     visuals.setPaused(paused);
+    warp.setPaused(paused);
     pauseButton.setAttribute('aria-pressed', String(paused));
     pauseButton.textContent = paused ? 'Resume motion' : 'Pause motion';
     if (paused && frame) cancelAnimationFrame(frame);
@@ -119,7 +131,7 @@ if (main) {
   onMotionPreference();
   window.addEventListener('pagehide', event => {
     if (event.persisted) return;
-    disposeInteractions(); glyphs.destroy(); visuals.destroy(); disconnect();
+    disposeInteractions(); glyphs.destroy(); visuals.destroy(); warp.destroy(); disconnect();
     if (frame) cancelAnimationFrame(frame);
     window.removeEventListener('scroll', schedule);
     window.removeEventListener('resize', measure);
