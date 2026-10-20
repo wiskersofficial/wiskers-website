@@ -16,78 +16,105 @@ export function warpAtPoint(dx, dy, fontSize, strength) {
   };
 }
 
-/** Request frames from the homepage's existing scheduler only while settling. */
+/** Enhance marked prose; the caller owns the shared animation frame. */
 export function initHoverWarp(root, requestFrame) {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const records = [];
-  const cleanups = [];
+  const records = new Map();
   let paused = false;
   let lastTime = 0;
-  const listen = (node, event, handler) => {
-    node.addEventListener(event, handler, { passive: true });
-    cleanups.push(() => node.removeEventListener(event, handler));
-  };
-  for (const element of root.querySelectorAll('[data-v6-warp]')) {
-    const original = element.textContent;
+  function measureRecord(r) {
+    r.fontSize = parseFloat(getComputedStyle(r.element).fontSize) || 18;
+    // Offsets ignore the lens transforms. The host is the positioned ancestor.
+    r.boxes = r.cells.map(cell => ({ x: cell.offsetLeft + cell.offsetWidth / 2, y: cell.offsetTop + cell.offsetHeight / 2 }));
+  }
+  function reset(r) {
+    r.active = false; r.strength = 0; r.positioned = false;
+    r.element.classList.remove('is-warping');
+    r.cells.forEach(cell => { cell.style.removeProperty('transform'); cell.style.removeProperty('--v6-warp-influence'); });
+  }
+  function mount(element) {
+    // Targets contain prose and optional line breaks, never interactive children.
+    if (element.querySelector(':not(br)')) return;
+    const original = [...element.childNodes].map(node => node.cloneNode(true));
     const readable = document.createElement('span');
-    readable.className = 'glyph-wave__sr-only';
-    readable.textContent = original;
+    readable.className = 'v6-warp-readable';
+    readable.append(...original.map(node => node.cloneNode(true)));
     const visual = document.createElement('span');
     visual.className = 'v6-warp-visual';
     visual.setAttribute('aria-hidden', 'true');
-    for (const token of original.split(/(\s+)/u)) {
-      if (/^\s*$/u.test(token)) { visual.append(document.createTextNode(token)); continue; }
-      const word = document.createElement('span');
-      word.className = 'v6-warp-word';
-      for (const letter of Array.from(token)) {
-        const cell = document.createElement('span');
-        cell.className = 'v6-warp-cell';
-        cell.textContent = letter;
-        word.append(cell);
+    for (const node of original) {
+      if (node.nodeType !== Node.TEXT_NODE) { visual.append(node.cloneNode(true)); continue; }
+      for (const token of node.textContent.split(/(\s+)/u)) {
+        if (/^\s*$/u.test(token)) { visual.append(document.createTextNode(token)); continue; }
+        const word = document.createElement('span');
+        word.className = 'v6-warp-word';
+        for (const letter of Array.from(token)) {
+          const cell = document.createElement('span');
+          cell.className = 'v6-warp-cell';
+          cell.textContent = letter;
+          word.append(cell);
+        }
+        visual.append(word);
       }
-      visual.append(word);
     }
     element.replaceChildren(readable, visual);
     element.classList.add('v6-warp-text');
-    const record = { element, original, cells: [...visual.querySelectorAll('.v6-warp-cell')], boxes: [], fontSize: 18, active: false, strength: 0, x: 0, y: 0, targetX: 0, targetY: 0, positioned: false };
-    records.push(record);
+    const r = { element, original, readable, visual, cells: [...visual.querySelectorAll('.v6-warp-cell')], boxes: [], fontSize: 18, active: false, strength: 0, x: 0, y: 0, targetX: 0, targetY: 0, positioned: false, cleanups: [] };
+    records.set(element, r);
+    const listen = (event, handler) => {
+      element.addEventListener(event, handler, { passive: true });
+      r.cleanups.push(() => element.removeEventListener(event, handler));
+    };
     const point = event => {
       if (reduced.matches || paused || (event.type === 'pointermove' && event.pointerType === 'touch')) return;
-      record.targetX = event.clientX;
-      record.targetY = event.clientY;
-      if (!record.positioned) { record.x = record.targetX; record.y = record.targetY; record.positioned = true; }
-      record.active = true;
+      if (!r.active) measureRecord(r); // Includes newly opened or updated demo copy.
+      r.targetX = event.clientX;
+      r.targetY = event.clientY;
+      if (!r.positioned) { r.x = r.targetX; r.y = r.targetY; r.positioned = true; }
+      r.active = true;
       requestFrame();
     };
-    const leave = () => { record.active = false; requestFrame(); };
-    listen(element, 'pointerenter', event => { if (event.pointerType !== 'touch') point(event); });
-    listen(element, 'pointermove', point);
-    listen(element, 'pointerdown', point);
-    listen(element, 'pointerleave', leave);
-    listen(element, 'pointerup', event => { if (event.pointerType === 'touch') leave(); });
-    listen(element, 'pointercancel', leave);
+    const leave = () => { r.active = false; requestFrame(); };
+    listen('pointerenter', event => { if (event.pointerType !== 'touch') point(event); });
+    listen('pointermove', point);
+    listen('pointerdown', point);
+    listen('pointerleave', leave);
+    listen('pointerup', event => { if (event.pointerType === 'touch') leave(); });
+    listen('pointercancel', leave);
   }
-  function measure() {
-    for (const r of records) {
-      const rect = r.element.getBoundingClientRect();
-      r.fontSize = parseFloat(getComputedStyle(r.element).fontSize) || 18;
-      // The paragraph is the positioned offsetParent; these offsets ignore the
-      // transforms already applied to the individual letters during a resize.
-      r.boxes = r.cells.map(cell => ({ x: rect.left + cell.offsetLeft + cell.offsetWidth / 2, y: rect.top + window.scrollY + cell.offsetTop + cell.offsetHeight / 2 }));
+  function remove(r, restore = false) {
+    r.cleanups.forEach(cleanup => cleanup());
+    reset(r);
+    r.element.classList.remove('v6-warp-text');
+    if (restore) r.element.replaceChildren(...r.original);
+    records.delete(r.element);
+  }
+  function sync() {
+    for (const r of records.values()) {
+      if (!root.contains(r.element) || r.visual.parentNode !== r.element || r.readable.parentNode !== r.element) remove(r);
+    }
+    for (const element of root.querySelectorAll('[data-v6-warp]')) {
+      if (!records.has(element)) mount(element);
     }
   }
-  function reset(record) {
-    record.active = false; record.strength = 0; record.positioned = false;
-    record.element.classList.remove('is-warping');
-    record.cells.forEach(cell => { cell.style.removeProperty('transform'); cell.style.removeProperty('--v6-warp-influence'); });
-  }
+  sync();
+  // Watch content replacement, never animation attributes. Enhancement writes are
+  // disconnected so they cannot create observer loops or duplicate announcements.
+  const observer = new MutationObserver(() => {
+    observer.disconnect();
+    sync();
+    observer.observe(root, { childList: true, subtree: true, characterData: true });
+  });
+  observer.observe(root, { childList: true, subtree: true, characterData: true });
+  function measure() { records.forEach(measureRecord); }
   function update(now = performance.now()) {
     if (paused) return false;
     const dt = lastTime ? Math.min(48, Math.max(1, now - lastTime)) : 16;
     lastTime = now;
     const ease = 1 - Math.exp(-dt / 70);
     let moving = false;
-    for (const r of records) {
+    for (const r of records.values()) {
+      if (!r.active && r.strength === 0) continue;
       if (reduced.matches) { reset(r); continue; }
       const targetStrength = r.active ? 1 : 0;
       r.strength += (targetStrength - r.strength) * ease;
@@ -96,11 +123,13 @@ export function initHoverWarp(root, requestFrame) {
       const unsettled = Math.abs(targetStrength - r.strength) > .002 || Math.abs(r.targetX - r.x) > .1 || Math.abs(r.targetY - r.y) > .1;
       if (!unsettled) r.strength = targetStrength;
       if (r.strength === 0) { reset(r); continue; }
+      // One host read keeps the lens aligned inside native nested scroll panes.
+      const rect = r.element.getBoundingClientRect();
       r.element.classList.add('is-warping');
       r.cells.forEach((cell, i) => {
         const box = r.boxes[i];
         if (!box) return;
-        const warp = warpAtPoint(box.x - r.x, box.y - window.scrollY - r.y, r.fontSize, r.strength);
+        const warp = warpAtPoint(rect.left + box.x - r.x, rect.top + box.y - r.y, r.fontSize, r.strength);
         cell.style.setProperty('--v6-warp-influence', warp.influence.toFixed(3));
         cell.style.transform = `translate3d(${warp.x.toFixed(2)}px,${warp.y.toFixed(2)}px,0) skewX(${warp.skew.toFixed(2)}deg) rotate(${warp.rotation.toFixed(2)}deg) scale(${warp.scaleX.toFixed(3)},${warp.scaleY.toFixed(3)})`;
       });
@@ -114,9 +143,9 @@ export function initHoverWarp(root, requestFrame) {
     measure, update,
     setPaused(value) { paused = Boolean(value); lastTime = 0; },
     destroy() {
-      cleanups.forEach(cleanup => cleanup());
+      observer.disconnect();
       reduced.removeEventListener('change', preferenceChange);
-      records.forEach(r => { r.element.textContent = r.original; r.element.classList.remove('v6-warp-text', 'is-warping'); });
+      for (const r of records.values()) remove(r, true);
     },
   };
 }

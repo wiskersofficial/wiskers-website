@@ -1,0 +1,9 @@
+/* Elastic text lens. Inherit the host's typography and resting colour. */
+.v6-warp-text { position: relative; }
+.v6-warp-word { display: inline-block; white-space: nowrap; }
+.v6-warp-cell { display: inline-block; transform-origin: 50% 75%; color: color-mix(in srgb, var(--v6-warp-accent, var(--v6-coral-ink, #ef767a)) calc(var(--v6-warp-influence, 0) * 100%), currentColor); }
+.v6-warp-text.is-warping .v6-warp-cell { will-change: transform; }
+.v6-warp-readable { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (prefers-reduced-motion: reduce), print {
+  .v6-warp-cell { transform: none !important; color: inherit; }
+}

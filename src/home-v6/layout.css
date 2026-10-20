@@ -81,16 +81,10 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-thesis > :not(.v6-ascii-field), .v6-process > :not(.v6-ascii-field) { position: relative; z-index: 1; }
 .v6-thesis h2 { font-size: clamp(58px, 7.4vw, 108px); }
 .v6-outline-word { --v6-outline-fill: 0%; color: transparent; -webkit-text-stroke: 1px var(--v6-ink); background: linear-gradient(var(--v6-ink), var(--v6-ink)) left/var(--v6-outline-fill) 100% no-repeat; background-clip: text; -webkit-background-clip: text; }
-.v6-thesis-body > p { max-width: 40ch; margin-bottom: 24px; color: var(--v6-muted); font-size: clamp(17px, 1.45vw, 21px); line-height: 1.55; letter-spacing: -.025em; }
+.v6-thesis-attention, .v6-thesis-body > p { max-width: 40ch; margin-bottom: 24px; color: var(--v6-muted); font-size: clamp(17px, 1.45vw, 21px); line-height: 1.55; letter-spacing: -.025em; }
+.v6-section-head > .v6-thesis-attention { margin: 34px 0 0; max-width: 32ch; }
 .v6-thesis-body > .v6-lead { color: var(--v6-ink); font-size: clamp(23px, 2.05vw, 30px); line-height: 1.35; }
 .v6-ascii-field { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; opacity: .34; pointer-events: none; }
-.v6-line-array { position: relative; height: 100px; margin-top: 34px; }
-.v6-line-array svg { width: 100%; height: 100%; overflow: visible; }
-.v6-flow { fill: none; stroke: var(--v6-blue); stroke-width: 1.4; opacity: .7; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--v6-draw, 1)); }
-.v6-flow-two { stroke: var(--v6-green); }
-.v6-flow-three { stroke: var(--v6-coral); }
-.v6-flow-core { fill: var(--v6-paper); stroke: var(--v6-coral-ink); stroke-width: 2; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; animation: v6-point-pulse 3.8s ease-in-out infinite; }
-@keyframes v6-point-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
 .v6-examples { padding-top: clamp(84px, 10vw, 140px); }
 .v6-examples-intro { margin: 0 0 64px; }
 .v6-examples-intro h2 { font-size: clamp(40px, 5.6vw, 82px); line-height: 1.05; }
@@ -322,7 +316,7 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-contact h2 [data-glyph-wave] { display: inline-block; max-width: 100%; text-wrap: balance; }
 /* A typographic offer line with a quiet, illuminated rotating word. */
 .v6-thesis-body > .v6-offer-line { max-width: none; margin-bottom: 30px; }
-.v6-lead-context { display: block; text-wrap: balance; max-width: 35ch; font-size: clamp(21px, 1.8vw, 27px); line-height: 1.5; }
+.v6-lead-context { display: block; text-wrap: balance; max-width: 35ch; font-size: clamp(28px, 3.1vw, 42px); line-height: 1.25; letter-spacing: -.04em; }
 .v6-lead-subject { display: flex; align-items: center; gap: .3em; margin-top: 8px; font-size: clamp(32px, 3.6vw, 48px); font-weight: 400; line-height: 1; letter-spacing: -.06em; }
 .v6-cuboid-stage { display: none; }
 .v6-word-cuboid.is-enhanced { --v6-cuboid-height: 1.5em; --v6-cuboid-radius: .75em; position: relative; display: inline-block; flex: 0 0 auto; vertical-align: middle; width: 7.8ch; height: 2.3em; margin: 0; }
@@ -343,13 +337,8 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-cuboid-face > span { visibility: hidden; }
 .v6-cuboid-face.is-current > span { visibility: visible; }
 
-/* An elastic lens follows the pointer; words keep their normal wrapping. */
-.v6-warp-text { position: relative; }
-.v6-warp-word { display: inline-block; white-space: nowrap; }
-.v6-warp-cell { display: inline-block; transform-origin: 50% 75%; color: color-mix(in srgb, var(--v6-coral-ink) calc(var(--v6-warp-influence, 0) * 100%), var(--v6-muted)); }
-.v6-warp-text.is-warping .v6-warp-cell { will-change: transform; }
 @media (prefers-reduced-motion: reduce), print {
   .v6-lead-subject { display: inline; margin: 0; font-size: inherit; line-height: inherit; letter-spacing: inherit; }
   .v6-word-cuboid.is-enhanced::after { display: none; }
-  .v6-warp-cell { transform: none !important; color: inherit; }
 }
+.v6-lead-subject:not(:has(.is-enhanced)) { display: block; font-size: inherit; line-height: inherit; letter-spacing: inherit; }

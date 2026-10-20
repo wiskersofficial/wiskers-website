@@ -36,6 +36,7 @@ export function mountExperience(root) {
       label.textContent = verb;
       const content = document.createElement('p');
       content.textContent = text;
+      content.setAttribute('data-v6-warp', '');
       item.append(label, content);
       activity.append(item);
     }

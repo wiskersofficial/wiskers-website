@@ -9,13 +9,12 @@ This folder is the handoff for the current homepage implementation. It is an imp
 | Scroll-driven typography | Morphs each glyph between sans and italic serif while changing its color on the same progress value. Includes readable screen-reader text. Used in the hero and selected section headings. | `current-homepage/font-scroll/` |
 | Viewport timing | Measures stable document positions and maps viewport crossings or explicit scroll ranges to 0–1 progress. Re-measures on resize, visual viewport changes, font readiness, and observed layout changes. | `current-homepage/scroll-timing/` and integration reference |
 | ASCII signal field | Sparse, lightweight canvas field responds to scroll progress and pointer position. | `current-homepage/visual-modules/visual-modules.js` |
-| Scroll flow / trail line | SVG expertise-flow paths draw with scroll progress. | `current-homepage/site-integration/markup.js`, `layout.css`, `index.js` |
 | Image trail | Reuses local Wiskers SVG cards as a transient trail when pointer or touch moves across the closing section. | `current-homepage/visual-modules/visual-modules.js` and `assets/` |
 | Hanging note | A small symbol card sways gently with the applications-section scroll progress. | `current-homepage/visual-modules/visual-modules.js` and integration reference |
 | Applications timeline | Per-letter heading transitions and ruled-line reveals respond to native scroll. | `current-homepage/site-integration/` |
 | Prospect and team demo | Explore Wiskers, open details, compare approaches, select an approach and answer an optional question. Meaningful choices update a factual activity timeline and possible conversation angle. Section exposure stays separate. State stays in memory and can be reset. | `current-homepage/site-integration/experience.js` |
 | Word cuboid | Four horizontal long faces rotate around the X axis through two complete cycles during their visible viewport travel. Shared pause and readable reduced-motion fallback. | `current-homepage/word-cuboid/` and integration reference |
-| Elastic text hover | Pointer-following letter lens with smooth return, a local coral highlight, fixed paragraph layout, and shared pause/reduced-motion support. | `current-homepage/hover-warp/` and integration reference |
+| Elastic text hover | Reusable JavaScript and CSS for pointer-following body prose, including dynamically updated demo text. Smooth return, inherited colour, stable wrapping and shared pause/reduced-motion support. | `current-homepage/hover-warp/` and integration reference |
 | Motion controls | Pause/resume control and reduced-motion handling for the shared animation system. | `current-homepage/site-integration/index.js` |
 
 ## Not part of the active homepage
@@ -52,3 +51,9 @@ Asset integration: copy `assets/brand-v2/` to `public/assets/brand-v2/` and the 
 ## Thesis interaction update, 20 October 2026
 
 The offer cuboid now sits in a dedicated “your [word]” line with italic words and subtle theme-derived faces. The following sentence uses the elastic hover module. `site-integration/index.js` imports both helpers beside the existing homepage modules. Hover requests share the scheduler without recomputing scroll scenes, and stop once settled. The offer copy and two-cycle cuboid mapping remain unchanged.
+
+## Body-copy warp update, 20 October 2026
+
+All marked body prose now shares the elastic lens, including current application copy, comparison descriptions, activity entries and the conversation angle. The module preserves explicit line breaks, inherited theme colours and accessible text. Its own stylesheet travels with its JavaScript. The thesis attention sentence moved below the left heading; the lead-in is larger and the flow-line diagram was removed at Josh's request. The word cuboid still makes two full cycles through its visible scroll travel.
+
+Standalone Drive package: [elastic-text-hover-module.zip](https://drive.google.com/file/d/142flu3l7FfhJ9k_1N3wtFTI-_bYgm4iF/view?usp=drivesdk).

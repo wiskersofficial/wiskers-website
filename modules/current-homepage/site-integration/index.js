@@ -1,5 +1,6 @@
 import './layout.css';
 import './glyph-wave.css';
+import './hover-warp.css';
 import { homeMarkup, mountHomeInteractions } from './markup.js';
 import { initGlyphWaves } from './glyph-wave.js';
 import { initScrollVisuals } from './visual-modules.js';
@@ -90,7 +91,6 @@ if (main) {
     }
     const thesisProgress = reduced ? 1 : sceneProgress(thesis);
     outline?.style.setProperty('--v6-outline-fill', `${(clamp(thesisProgress * 2.2) * 100).toFixed(1)}%`);
-    thesis.style.setProperty('--v6-draw', thesisProgress.toFixed(3));
     const processProgress = reduced ? 1 : sceneProgress(process);
     visuals.update({ hero: heroProgress, thesis: thesisProgress, process: processProgress });
     stages.forEach(stage => {
