@@ -320,3 +320,21 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-footer .wordmark-logo { width: 124px; }
 /* Balance a wrapped closing line without leaving its last word on its own. */
 .v6-contact h2 [data-glyph-wave] { display: inline-block; max-width: 100%; text-wrap: balance; }
+/* Four long faces rotate around the horizontal axis of this short cuboid. */
+.v6-cuboid-stage { display: none; }
+.v6-word-cuboid.is-enhanced { --v6-cuboid-height: 1.9em; --v6-cuboid-radius: .95em; position: relative; display: inline-block; vertical-align: middle; width: 10.7ch; height: 2.65em; margin: .12em .08em .16em 0; }
+.v6-word-cuboid.is-enhanced .v6-cuboid-readable { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.v6-word-cuboid.is-enhanced .v6-cuboid-stage { position: absolute; display: block; top: .375em; left: 0; width: 100%; height: var(--v6-cuboid-height); perspective: 650px; perspective-origin: 50% 50%; }
+.v6-cuboid-rotor { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transform: translateZ(calc(-1 * var(--v6-cuboid-radius))) rotateX(var(--v6-cuboid-angle, 0deg)); will-change: transform; }
+.v6-cuboid-face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border: 1px solid #09154038; backface-visibility: hidden; -webkit-backface-visibility: hidden; color: #091540; font: inherit; font-weight: 500; line-height: 1; letter-spacing: -.035em; }
+.v6-cuboid-business { background: #2f97c1; transform: rotateX(0deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-products { background: #ef767a; transform: rotateX(90deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-services { background: #25a583; transform: rotateX(180deg) translateZ(var(--v6-cuboid-radius)); }
+.v6-cuboid-approach { background: #f3f0e9; transform: rotateX(270deg) translateZ(var(--v6-cuboid-radius)); }
+@media (prefers-reduced-motion: reduce), print {
+  .v6-word-cuboid.is-enhanced { display: inline; width: auto; height: auto; margin: 0; }
+  .v6-word-cuboid.is-enhanced .v6-cuboid-readable { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto; white-space: normal; }
+  .v6-word-cuboid.is-enhanced .v6-cuboid-stage { display: none; }
+}
+.v6-cuboid-face > span { visibility: hidden; }
+.v6-cuboid-face.is-current > span { visibility: visible; }

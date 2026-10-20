@@ -14,6 +14,7 @@ This folder is the handoff for the current homepage implementation. It is an imp
 | Hanging note | A small symbol card sways gently with the applications-section scroll progress. | `current-homepage/visual-modules/visual-modules.js` and integration reference |
 | Applications timeline | Per-letter heading transitions and ruled-line reveals respond to native scroll. | `current-homepage/site-integration/` |
 | Prospect and team demo | Explore Wiskers, open details, compare approaches, select an approach and answer an optional question. Meaningful choices update a factual activity timeline and possible conversation angle. Section exposure stays separate. State stays in memory and can be reset. | `current-homepage/site-integration/experience.js` |
+| Word cuboid | Four horizontal long faces rotate around the X axis through two complete cycles during their visible viewport travel. Shared pause and readable reduced-motion fallback. | `current-homepage/word-cuboid/` and integration reference |
 | Motion controls | Pause/resume control and reduced-motion handling for the shared animation system. | `current-homepage/site-integration/index.js` |
 
 ## Not part of the active homepage

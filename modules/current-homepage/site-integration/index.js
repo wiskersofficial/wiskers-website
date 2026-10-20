@@ -3,6 +3,7 @@ import './glyph-wave.css';
 import { homeMarkup, mountHomeInteractions } from './markup.js';
 import { initGlyphWaves } from './glyph-wave.js';
 import { initScrollVisuals } from './visual-modules.js';
+import { cuboidRotation, cuboidViewportProgress } from './word-cuboid.js';
 import { measureDocumentBoxes, observeLayoutChanges, progressAcrossRange, progressAcrossViewport } from './scroll-timing.js';
 
 const main = document.querySelector('#main-content');
@@ -16,6 +17,7 @@ if (main) {
   const targets = [...root.querySelectorAll('[data-glyph-wave]')];
   const scenes = [...root.querySelectorAll('.v6-scene')];
   const stages = [...root.querySelectorAll('[data-v6-process-stage]')];
+  const cuboids = [...root.querySelectorAll('[data-v6-word-cuboid]')];
   const hero = root.querySelector('.v6-hero');
   const heroTarget = hero.querySelector('[data-glyph-wave]');
   const heroLines = [...hero.querySelectorAll('[data-v6-hero-line]')];
@@ -35,7 +37,7 @@ if (main) {
   function measure() {
     height = window.visualViewport?.height || window.innerHeight;
     const scrollY = window.scrollY;
-    boxes = measureDocumentBoxes([...scenes, ...targets, ...stages], scrollY);
+    boxes = measureDocumentBoxes([...scenes, ...targets, ...stages, ...cuboids], scrollY);
     // Hero lines drift. Remove the applied transform from measured geometry.
     if (heroTarget) {
       const box = boxes.get(heroTarget);
@@ -72,6 +74,13 @@ if (main) {
     for (const target of targets) glyphs.update(target, reduced ? 1 : target === heroTarget ? heroProgress : progressFor(target));
     const depart = reduced ? 0 : clamp(window.scrollY / (height * .8));
     heroLines.forEach((line, index) => line.style.setProperty('--v6-line-lift', `${(-depart * (26 + index * 10)).toFixed(1)}px`));
+    for (const cuboid of cuboids) {
+      const progress = cuboidViewportProgress(boxes.get(cuboid), window.scrollY, height, window.visualViewport?.offsetTop || 0);
+      const angle = reduced ? 0 : cuboidRotation(progress);
+      cuboid.style.setProperty('--v6-cuboid-angle', `${angle.toFixed(3)}deg`);
+      const frontFace = Math.round(-angle / 90) % 4;
+      cuboid.querySelectorAll('.v6-cuboid-face').forEach((face, index) => face.classList.toggle('is-current', index === frontFace));
+    }
     const thesisProgress = reduced ? 1 : sceneProgress(thesis);
     outline?.style.setProperty('--v6-outline-fill', `${(clamp(thesisProgress * 2.2) * 100).toFixed(1)}%`);
     thesis.style.setProperty('--v6-draw', thesisProgress.toFixed(3));
@@ -84,7 +93,10 @@ if (main) {
     });
   }
   function schedule() { if (!frame && !paused) frame = requestAnimationFrame(update); }
-  function onMotionPreference() { measure(); }
+  function onMotionPreference() {
+    cuboids.forEach(cuboid => cuboid.classList.toggle('is-enhanced', !motionPreference.matches));
+    measure();
+  }
   function togglePause() {
     paused = !paused;
     document.documentElement.classList.toggle('motion-paused', paused);
@@ -102,9 +114,9 @@ if (main) {
   window.addEventListener('resize', measure, { passive: true });
   window.visualViewport?.addEventListener('resize', measure, { passive: true });
   motionPreference.addEventListener('change', onMotionPreference);
-  const disconnect = observeLayoutChanges([...scenes, ...targets, ...stages, main], measure);
+  const disconnect = observeLayoutChanges([...scenes, ...targets, ...stages, ...cuboids, main], measure);
   document.fonts?.ready.then(measure);
-  measure();
+  onMotionPreference();
   window.addEventListener('pagehide', event => {
     if (event.persisted) return;
     disposeInteractions(); glyphs.destroy(); visuals.destroy(); disconnect();
