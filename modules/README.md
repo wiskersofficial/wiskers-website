@@ -57,3 +57,7 @@ The offer cuboid now sits in a dedicated “your [word]” line with italic word
 All marked body prose now shares the elastic lens, including current application copy, comparison descriptions, activity entries and the conversation angle. The module preserves explicit line breaks, inherited theme colours and accessible text. Its own stylesheet travels with its JavaScript. The thesis attention sentence moved below the left heading; the lead-in is larger and the flow-line diagram was removed at Josh's request. The word cuboid still makes two full cycles through its visible scroll travel.
 
 Standalone Drive package: [elastic-text-hover-module.zip](https://drive.google.com/file/d/142flu3l7FfhJ9k_1N3wtFTI-_bYgm4iF/view?usp=drivesdk).
+
+## Prospect panel palette, 21 October 2026
+
+The “Your view” panel uses the existing coral pink #ef767a background with navy #091540 type in every page theme. Its body text and rules are derived from those two colours for contrast. The dark V2 mark stays visible on this fixed coral surface; the adjacent team view follows the selected page theme. Local tokens also cover focus, selected controls, the scrollbar and the hover lens. Preserve this scope when reusing the demo.

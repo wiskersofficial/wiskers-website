@@ -91,7 +91,8 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 .v6-experience { display: grid; grid-template-columns: 1.18fr 1fr; border: 1px solid var(--v6-rule); background: var(--v6-paper); box-shadow: 0 18px 64px color-mix(in srgb, var(--v6-ink) 5%, transparent); }
 .v6-experience button, .v6-experience summary, .v6-experience input { cursor: pointer; }
 .v6-experience [hidden] { display: none !important; }
-.v6-prospect { min-width: 0; }
+/* The visitor's example is a coral canvas within every page theme. */
+.v6-prospect { min-width: 0; --v6-paper: #ef767a; --v6-ink: #091540; --v6-muted: color-mix(in srgb, var(--v6-ink) 90%, var(--v6-paper)); --v6-coral-ink: #091540; --v6-rule: color-mix(in srgb, var(--v6-ink) 65%, var(--v6-paper)); background: var(--v6-paper); color: var(--v6-ink); }
 .v6-pane-heading { display: flex; gap: 10px; align-items: center; min-height: 62px; padding: 14px 24px; border-bottom: 1px solid var(--v6-rule); }
 .v6-pane-heading h3 { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: -.01em; }
 .v6-status-dot { width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--v6-green); }
@@ -311,6 +312,8 @@ body.home-v6 :where(a,button,input,select,summary,[tabindex]):focus-visible { ou
 :root[data-theme="night"] .brand-v2-dark, :root[data-theme="twilight"] .brand-v2-dark { display: none; }
 :root[data-theme="night"] .brand-v2-light, :root[data-theme="twilight"] .brand-v2-light { display: block; }
 .v6-pane-mark { width: 26px; height: 26px; object-fit: contain; }
+.v6-prospect .v6-pane-mark.brand-v2-dark { display: block; }
+.v6-prospect .v6-pane-mark.brand-v2-light { display: none; }
 .v6-footer .wordmark-logo { width: 124px; }
 /* Balance a wrapped closing line without leaving its last word on its own. */
 .v6-contact h2 [data-glyph-wave] { display: inline-block; max-width: 100%; text-wrap: balance; }
