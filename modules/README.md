@@ -60,4 +60,4 @@ Standalone Drive package: [elastic-text-hover-module.zip](https://drive.google.c
 
 ## Prospect panel palette, 21 October 2026
 
-The “Your view” panel uses the existing coral pink #ef767a background with navy #091540 type in every page theme. Its body text and rules are derived from those two colours for contrast. The dark V2 mark stays visible on this fixed coral surface; the adjacent team view follows the selected page theme. Local tokens also cover focus, selected controls, the scrollbar and the hover lens. Preserve this scope when reusing the demo.
+The “Your view” panel uses the existing coral pink #ef767a background with navy #091540 type in Day and Night. Twilight uses dark olive #343b28 with cream #f3f0e9 type. Body text and rules derive from each local ink/surface pair for contrast. The dark V2 mark appears on coral; the light variant appears on olive. The adjacent team view follows the selected page theme. Local tokens also cover focus, selected controls, the scrollbar and the hover lens. Preserve this scope when reusing the demo.
