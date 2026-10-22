@@ -1,6 +1,7 @@
 import './layout.css';
 import './glyph-wave.css';
 import './hover-warp.css';
+import './lead-moment.css';
 import { homeMarkup, mountHomeInteractions } from './markup.js';
 import { initGlyphWaves } from './glyph-wave.js';
 import { initScrollVisuals } from './visual-modules.js';
@@ -13,7 +14,7 @@ if (main) {
   if (!main.querySelector('.v6-home')) main.innerHTML = homeMarkup;
   document.body.className = 'home-v6';
   const root = main.querySelector('.v6-home');
-  const disposeInteractions = mountHomeInteractions(root);
+  const interactions = mountHomeInteractions(root);
   const glyphs = initGlyphWaves(root);
   const visuals = initScrollVisuals(root);
   const warp = initHoverWarp(root, () => schedule(false));
@@ -114,6 +115,7 @@ if (main) {
     glyphs.setPaused(paused);
     visuals.setPaused(paused);
     warp.setPaused(paused);
+    interactions.setPaused(paused);
     pauseButton.setAttribute('aria-pressed', String(paused));
     pauseButton.textContent = paused ? 'Resume motion' : 'Pause motion';
     if (paused && frame) cancelAnimationFrame(frame);
@@ -131,7 +133,7 @@ if (main) {
   onMotionPreference();
   window.addEventListener('pagehide', event => {
     if (event.persisted) return;
-    disposeInteractions(); glyphs.destroy(); visuals.destroy(); warp.destroy(); disconnect();
+    interactions.destroy(); glyphs.destroy(); visuals.destroy(); warp.destroy(); disconnect();
     if (frame) cancelAnimationFrame(frame);
     window.removeEventListener('scroll', schedule);
     window.removeEventListener('resize', measure);

@@ -1,3 +1,3 @@
 # Current homepage module kit
 
-See `../../README.md` for the full component inventory, reuse guidance, and scope notes. `site-integration/` includes current homepage markup, styling, and controller wiring for reference. `assets/` holds the local image-trail SVGs.
+See `../../README.md` for the active inventory and scope notes. `site-integration/` contains homepage wiring, `lead-moment/` the active Square Lead Vibe game, and `assets/` its renderer, brand files and image-trail SVGs. Integration imports expect the original Vite folder layout.
