@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-clarity-project="yts5ev38yv">
 <head>
   <script src="/legal.js"></script>
   <meta charset="UTF-8">
@@ -7,8 +7,10 @@
   <meta name="theme-color" content="#f3f0e9">
   <meta name="description" content="How the Wiskers website handles your information and browser preferences.">
   <link rel="canonical" href="https://wiskers.click/privacy/">
-  <title>Privacy | Wiskers</title>
+  <title>Privacy &amp; cookies | Wiskers</title>
   <link rel="stylesheet" href="/legal.css">
+  <link rel="stylesheet" href="/consent.css">
+  <script defer src="/consent.js"></script>
 </head>
 <body>
   <header class="legal-header"><a class="brand" href="/">wiskers</a><a class="back-link" href="/">Back to the website ↗</a></header>
@@ -23,12 +25,16 @@
       <p>If you choose Day, Night or Twilight, the site stores that preference in your browser’s local storage under <code>wiskers-theme</code> so it can remember your choice on a later visit. You can remove the saved choice here or through your browser’s site-data settings.</p>
       <p><button class="forget-button" type="button" data-forget-theme>Forget my saved theme</button></p>
       <p id="preference-status" class="status" role="status" aria-live="polite"></p>
-      <p>The current website source has no account sign-in, contact form, analytics tag or advertising pixel.</p>
+      <p>Some pages use Microsoft Clarity to understand how visitors use the site. Clarity is optional: it loads only after you choose “Accept analytics”. If you reject, Clarity is not loaded. If you accept, Clarity may collect interaction data and session recordings and use first- and third-party analytics cookies, including <code>_clck</code> and <code>_clsk</code>. See <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies" rel="noopener noreferrer">Microsoft’s Clarity cookie list</a>.</p>
+      <p>Your choice is stored in this browser for six months under <code>wiskers-analytics-consent</code>. You can change it here or clear it through your browser’s site-data settings.</p>
+      <p><button class="forget-button" type="button" data-open-analytics-consent>Change analytics choice</button></p>
+      <p id="analytics-preference-status" class="status" role="status" aria-live="polite"></p>
+      <p>The site has no account sign-in, contact form or advertising pixel.</p>
     </section>
 
     <section>
       <h2>Fonts and external services</h2>
-      <p>The site requests Montserrat Alternates from Google Fonts. That request goes to Google and may include your IP address and standard browser request information. See <a href="https://policies.google.com/privacy" rel="noopener noreferrer">Google’s privacy information</a>.</p>
+      <p>Some pages request fonts from Google Fonts, including DM Sans. Those requests go to Google and may include your IP address and standard browser request information. See <a href="https://policies.google.com/privacy" rel="noopener noreferrer">Google’s privacy information</a>.</p>
       <p>The interactive cat model is served as part of this website. The footer links to the model’s creator and its Creative Commons licence.</p>
     </section>
 

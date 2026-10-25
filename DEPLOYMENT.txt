@@ -1,33 +1,42 @@
-WISKERS PUBLISHING HANDOFF
+WISKERS WEBSITE — CONTRIBUTING AND RELEASE
 
-Canonical website source:
-The Website folder in the local Tabby companion files, mirrored to the GitHub repository below.
+Josh and his agent use the same source, commands, and release gate.
 
-Repository target:
-wiskersofficial/wiskers-website
+1. Start from the shared development branch:
+   git switch dev
+   git pull --ff-only origin dev
 
-The repository contains the website source and preserved design artifacts. The surrounding company vault must not be uploaded. The GitHub organization name is unchanged.
+2. Make the change and validate it locally:
+   npm ci
+   npm run build
+   git diff --check
 
-Local preview: npm ci, then npm run dev.
-Production build: npm run build.
-Cloudflare build command: npm run build.
-Cloudflare deploy command: npx wrangler deploy.
-Static asset directory: dist.
+3. Commit and push the change to dev:
+   git add <changed-files>
+   git commit -m "Describe the change"
+   git push origin dev
 
-The site is already served at wiskers.click through Cloudflare. A push to this repository triggers its Git-connected Cloudflare build. The wrangler.jsonc file targets the existing wiskers-website Worker and publishes dist/ as static assets. Keep this Worker name in sync with the Cloudflare project. Do not create a second project or change the domain's DNS to release this version.
+4. Open a pull request from dev to main. GitHub Actions runs the Website build
+   check. Review the diff and wait for the check to pass before merging. The repository currently has no main-branch protection or ruleset, so this gate is procedural rather than enforced.
 
-Website domain: wiskers.click. The similarly spelled whiskers.click is not our domain. Preserve the existing DNS and mail records for hello@wiskers.click.
+5. Merge the pull request to main. Cloudflare Workers Builds watches main and
+   deploys the existing wiskers-website Worker from the repository. Confirm the
+   new commit appears in Cloudflare Deployments and check https://wiskers.click.
 
-Customer contact: hello@wiskers.click.
+Never run wrangler deploy for a normal release; the Git-connected build is the
+single production path. Do not push directly to main, force-push, or merge with
+a failed build. If the Cloudflare deployment does not appear, inspect the
+Worker's Git build connection and build logs before retrying.
 
-The active development checkout is the wiskers-redesign folder identified in AGENTS.md and README.md. The user has reintroduced the approved Style C mascot; current cat atlases live under public/art/. The older sprite archive remains under artifacts/cat-animation-v1/.
+Local commands:
+   npm ci
+   npm run dev
+   npm run build
+   npm run preview
 
-Development workflow authorized on 15 October 2026: commit each completed website change, push to dev promptly, validate it, then merge and push main for the Cloudflare release. Preserve other contributors' commits and never force-push. If branch protection requires a pull request, follow that repository workflow instead of bypassing it.
-
-The temporary cat frame counter appears in the local dev server. To inspect frames on a deployed page, add ?cat-debug=1 to its URL. Normal deployed visits hide the development counter.
-
-There are no API keys or backend services required.
-
-References:
-https://developers.cloudflare.com/workers/static-assets/binding/
-https://developers.cloudflare.com/workers/wrangler/configuration/
+Runtime and hosting:
+- Source is this repository; public/ is copied into dist/ by Vite.
+- Cloudflare Worker: wiskers-website; production branch: main.
+- Build: npm run build; deploy: npx wrangler deploy (manual recovery only).
+- Production domain: wiskers.click.
+- No runtime API keys are needed by this static site.

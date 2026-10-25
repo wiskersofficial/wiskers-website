@@ -1,4 +1,9 @@
-# Wiskers layout redesign preview
+# Wiskers website
+
+## Contribute and release
+
+Josh and his agent follow the same tested workflow in [DEPLOYMENT.txt](DEPLOYMENT.txt): work on dev, run the build, open a PR to main, wait for GitHub Actions, then merge to trigger the Cloudflare release.
+
 
 Prepared 15 October 2026 from the existing Wiskers website checkout. This is a local review version; the production site has not been published or changed.
 
@@ -8,7 +13,7 @@ Earlier sections retain history from the pixel-art and initial scroll prototypes
 
 Preserves the Wiskers wordmark, palette, Day / Night / Twilight themes, business copy, openable problem statement, interactive question example, contact and legal pages. Staggered statement blocks, comparison tiles, answer card and approach cards provide varied surfaces. The opening cat scene begins seated on “content” with a short forward-looking idle, then looks up and reacts near the top edge before falling back-first, righting itself and landing inside the blue “Insight takes input” tile.
 
-Three custom pixel-art yarn balls start on a small shelf beside Follow your curiosity. Each rolls a short distance left, tips forward over the front lip, then drops vertically and hangs at its option. Options remain staggered left to right. There are no lower landing platforms. Labels are Option 1, Option 2, and Option 3. There is no selection, analytics or backend behavior yet. The sprite atlas was generated with the built-in image generation tool; see public/art/yarn-art-notes.txt.
+Three custom pixel-art yarn balls start on a small shelf beside Follow your curiosity. Each rolls a short distance left, tips forward over the front lip, then drops vertically and hangs at its option. Options remain staggered left to right. There are no lower landing platforms. Labels are Option 1, Option 2, and Option 3. There is no selection or backend behavior yet. Microsoft Clarity is optional and loads only after a visitor accepts analytics; see DEPLOYMENT.txt for the shared release workflow. The sprite atlas was generated with the built-in image generation tool; see public/art/yarn-art-notes.txt.
 
 Scrolling is native. Artwork moves continuously with small scroll-linked offsets. Yarn motion combines a short horizontal roll, a forward tip, and a vertical drop, and rewinds with upward scrolling; there is no scroll interception, pinning or snap. Reduced-motion preference presents the completed yarn scene statically and disables offsets and smooth anchor scrolling.
 
