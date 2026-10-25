@@ -40,7 +40,9 @@ Local commands:
 Runtime and hosting:
 - Source is this repository; public/ is copied into dist/ by Vite.
 - Cloudflare Worker: wiskers-website; production branch: main.
-- Preview branches use npx wrangler preview; production uses npx wrangler deploy.
+- Cloudflare Workers Builds runs `npx wrangler preview` for branch previews and
+  `npx wrangler deploy` for production after a PR is merged. Do not run either
+  command manually for a normal release; Git is the deployment trigger.
 - Wrangler is pinned in package.json and package-lock.json.
 - Production domain: wiskers.click.
 - No runtime API keys are needed by this static site.
