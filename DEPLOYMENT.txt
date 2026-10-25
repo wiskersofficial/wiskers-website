@@ -16,12 +16,15 @@ Josh and his agent use the same source, commands, and release gate.
    git commit -m "Describe the change"
    git push origin dev
 
-4. Open a pull request from dev to main. GitHub Actions runs the Website build
-   check. Review the diff and wait for the check to pass before merging. The repository currently has no main-branch protection or ruleset, so this gate is procedural rather than enforced.
+4. Open a pull request from dev to main. GitHub Actions runs the audit/build
+   check (audit, build, Wrangler dry-run); Cloudflare Workers Builds creates or updates the dev Preview. Review
+   the diff, wait for both checks, and inspect the Preview before merging. The
+   repository currently has no main-branch protection or ruleset, so this gate
+   is procedural rather than enforced.
 
-5. Merge the pull request to main. Cloudflare Workers Builds watches main and
-   deploys the existing wiskers-website Worker from the repository. Confirm the
-   new commit appears in Cloudflare Deployments and check https://wiskers.click.
+5. Merge the pull request to main. Cloudflare Workers Builds deploys the
+   existing wiskers-website Worker to production. Confirm the new commit appears
+   in Cloudflare Deployments and check https://wiskers.click.
 
 Never run wrangler deploy for a normal release; the Git-connected build is the
 single production path. Do not push directly to main, force-push, or merge with
@@ -37,6 +40,7 @@ Local commands:
 Runtime and hosting:
 - Source is this repository; public/ is copied into dist/ by Vite.
 - Cloudflare Worker: wiskers-website; production branch: main.
-- Build: npm run build; deploy: npx wrangler deploy (manual recovery only).
+- Preview branches use npx wrangler preview; production uses npx wrangler deploy.
+- Wrangler is pinned in package.json and package-lock.json.
 - Production domain: wiskers.click.
 - No runtime API keys are needed by this static site.
