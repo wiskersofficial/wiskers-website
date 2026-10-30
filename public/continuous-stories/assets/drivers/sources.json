@@ -1,0 +1,30 @@
+[
+  {
+    "file": "antonelli.webp",
+    "source": "https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000001/common/f1/2026/mercedes/andant01/2026mercedesandant01right.webp",
+    "profile": "https://www.formula1.com/en/drivers/kimi-antonelli",
+    "sha256": "e0cb6bebb2833fd6bf53383db32d94e7861a32137c9280e4a0b0634884f5b227",
+    "bytes": 124780
+  },
+  {
+    "file": "norris.webp",
+    "source": "https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000001/common/f1/2026/mclaren/lannor01/2026mclarenlannor01right.webp",
+    "profile": "https://www.formula1.com/en/drivers/lando-norris",
+    "sha256": "32f14cc822f72b64c342d105befba05e69a77186dc5b52915b6f53d3facaa4c6",
+    "bytes": 139550
+  },
+  {
+    "file": "verstappen.webp",
+    "source": "https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000001/common/f1/2026/redbullracing/maxver01/2026redbullracingmaxver01right.webp",
+    "profile": "https://www.formula1.com/en/drivers/max-verstappen",
+    "sha256": "7fd63d6d691c1f8a841a72fa0bd18d30ed96c5c30ff36e6d719d33fd43eb93fe",
+    "bytes": 136144
+  },
+  {
+    "file": "leclerc.webp",
+    "source": "https://media.formula1.com/image/upload/c_fill,w_720/q_auto/v1740000001/common/f1/2026/ferrari/chalec01/2026ferrarichalec01right.webp",
+    "profile": "https://www.formula1.com/en/drivers/charles-leclerc",
+    "sha256": "6281f6b24f3b080e2058162ef621929de5fe147f501b629ee1369516d7cd811f",
+    "bytes": 214454
+  }
+]
