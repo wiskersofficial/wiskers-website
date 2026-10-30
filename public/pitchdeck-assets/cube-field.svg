@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="64" viewBox="0 0 96 64"><defs><pattern id="cubes" width="48" height="32" patternUnits="userSpaceOnUse"><path d="m24 1 21 10-21 10L3 11Z" fill="#3c5f82"/><path d="m3 11 21 10v9L3 20Z" fill="#182c50"/><path d="m24 21 21-10v9L24 30Z" fill="#274869"/></pattern></defs><path fill="url(#cubes)" d="M0 0H96V64H0Z"/></svg>

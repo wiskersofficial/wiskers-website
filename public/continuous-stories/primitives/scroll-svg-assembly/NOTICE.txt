@@ -1,0 +1,1 @@
+Original source authored for this Wiskers project. No third-party code, fonts, imagery or runtime dependencies are included. No public open-source licence has been assigned by this package. Confirm redistribution terms with the project owner before publishing outside Wiskers. Internal technical reuse was requested by the owner.

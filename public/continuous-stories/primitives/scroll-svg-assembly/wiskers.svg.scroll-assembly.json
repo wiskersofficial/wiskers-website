@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "primitiveId": "wiskers.svg.scroll-assembly",
+  "title": "Scroll SVG Assembly",
+  "classTags": [
+    "2d-rendering",
+    "motion",
+    "typography",
+    "scroll-interaction"
+  ],
+  "source": {
+    "repository": "https://git.chatgpt-team.site/d83912bf-a752-4621-9a62-8fce11a4e039/appgprj_6add3799dcd48191a758b8f30ca9de59.git",
+    "reference": "https://git.chatgpt-team.site/d83912bf-a752-4621-9a62-8fce11a4e039/appgprj_6add3799dcd48191a758b8f30ca9de59.git",
+    "commit": "fdca95d8a79a50a4c6dec4ec2556fb33d0a86c3c",
+    "files": [
+      "dist/scrapbook-scene.js"
+    ],
+    "modified": true,
+    "measurementNote": "Source-derived normalized progress and local coordinates. Extraction 1.0.0; generic module SHA256 df79e4505b232825366c6f982da04f3cd24b42ad04a8cd2213d3326674a8ea69. No FPS or physical-device measurements."
+  },
+  "implementation": {
+    "languages": [
+      "JavaScript",
+      "SVG",
+      "HTML",
+      "CSS"
+    ],
+    "frameworks": [],
+    "runtime": "browser ES modules",
+    "renderer": "inline SVG",
+    "dependency": "none"
+  },
+  "license": {
+    "spdx": "LicenseRef-Wiskers-Internal",
+    "licenseUrl": "https://github.com/wiskersofficial/wiskers-console/tree/codex/scroll-assembled-svg-primitive/console/primitive-sources/scroll-svg-assembly",
+    "licenseFile": "NOTICE.txt",
+    "verifiedCommit": "fdca95d8a79a50a4c6dec4ec2556fb33d0a86c3c",
+    "verifiedAt": "2026-10-26",
+    "status": "pending",
+    "attributionRequired": false,
+    "noticeRequired": true,
+    "obligations": [
+      "Internal reuse requested by owner; public redistribution licence not selected."
+    ],
+    "assetLicenses": []
+  },
+  "parameters": [
+    {
+      "key": "progress",
+      "label": "Assembly progress",
+      "type": "number",
+      "unit": "normalized-progress",
+      "value": 0,
+      "minimum": 0,
+      "maximum": 1,
+      "step": 0.001,
+      "configurable": true,
+      "measurementStatus": "measured",
+      "description": "Clamped input in source, from unassembled to complete.",
+      "constraints": [
+        "No elapsed-time animation."
+      ]
+    },
+    {
+      "key": "groups",
+      "label": "Letter group size",
+      "type": "integer",
+      "unit": "letters",
+      "value": 3,
+      "minimum": 3,
+      "maximum": 3,
+      "step": 1,
+      "configurable": false,
+      "measurementStatus": "measured",
+      "description": "floor(index / 3) in word helper."
+    },
+    {
+      "key": "fps",
+      "label": "Physical device frame rate",
+      "type": "number",
+      "unit": "frames-per-second",
+      "value": null,
+      "minimum": null,
+      "maximum": null,
+      "configurable": false,
+      "measurementStatus": "pending",
+      "description": "Not measured on physical mobile hardware."
+    }
+  ]
+}
