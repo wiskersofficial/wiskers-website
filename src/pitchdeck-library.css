@@ -106,3 +106,12 @@
 @media(min-width:721px){.client-journey .opening-engine-core>p{top:35vh;bottom:auto}.client-journey .engine-distribution{top:82%}.client-journey .destination-card img{height:clamp(85px,12vh,140px)}}
 @media print{.client-journey .opening-engine-core>p{top:2.45in!important;bottom:auto!important}.client-journey .engine-distribution{top:82%!important}.client-journey .destination-card img{height:85px!important}}
 @media print{.client-journey .engine-inputs{width:16%!important}.client-journey .opening-engine-core{left:19%!important;width:27%!important}.client-journey .opening-engine-outputs{left:48%!important;width:21%!important;height:auto!important}.client-journey .engine-distribution{left:48%!important;width:21%!important}.client-journey .engine-signals{right:0!important;width:27%!important}}
+/* Align the creation label with the other stages and retain every stage number. */
+@media(min-width:721px){.client-journey .opening-engine-core h3{position:static!important;top:auto!important}.client-journey .engine-studio-stage{top:40%}.client-journey .engine-distribution{top:78%}}
+.client-journey .engine-distribution h3 span{display:block;font-size:9px;color:#6f8da0;margin:0 0 7px}
+@media(max-width:720px){.client-journey .engine-distribution h3 span{font-size:8px}}
+@media print{.client-journey .engine-studio-stage{top:40%!important}.client-journey .engine-distribution{top:78%!important}}
+@media(min-width:721px){.client-journey .opening-engine-core>p{top:39vh}}
+@media print{.client-journey .opening-engine-core>p{top:2.75in!important}}
+@media(min-width:721px){.client-journey .engine-distribution{top:76%}}
+@media print{.client-journey .engine-distribution{top:76%!important}}
