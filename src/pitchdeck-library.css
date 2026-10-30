@@ -61,3 +61,57 @@
 @media(min-width:721px){.library-links{bottom:4.5%}}
 @media print{.library-links{bottom:4%!important}}
 @media(max-width:720px){.pitch-library .library-field{bottom:145px}}
+
+/* Slide 4: the client journey from brief to meaningful engagement. */
+.client-journey .opening-heading{top:10%;left:5.5%;right:5.5%}
+.client-journey .opening-heading h2{font-size:clamp(35px,3.9vw,59px)!important;line-height:1.03;white-space:normal;letter-spacing:-.045em}
+.client-journey .reveal-skip{top:22%;right:5.5%}
+.client-journey .engine-studio-stage{left:15%;right:45%;top:35%;bottom:20%}
+.client-journey .engine-pipeline{top:35%;bottom:18%;left:5.5%;right:5.5%}
+.client-journey .pipeline-step h3{font-size:clamp(13px,1.1vw,17px);font-weight:600;margin:0 0 15px;line-height:1.2}
+.client-journey .pipeline-step h3>span{font-size:9px;display:block;margin-bottom:7px}
+.client-journey .engine-inputs{left:0;width:16%}
+.client-journey .input-brief{padding:14px 12px}.client-journey .input-brief strong{font-size:clamp(15px,1.5vw,21px);margin:14px 0}.client-journey .input-brief>small{font-size:7px}.client-journey .input-brief>span{font-size:10px}
+.client-journey .input-assets{height:85px;margin-top:12px}.client-journey .input-assets>span{font-size:8px}
+.client-journey .opening-engine-core{left:19%;width:27%}.client-journey .opening-engine-core h3{text-align:center}.client-journey .opening-engine-core>p{position:absolute;top:auto;bottom:-31vh;width:100%;font-size:11px;color:#b6d5d1;text-align:center}
+.client-journey .opening-engine-outputs{left:48%;width:21%;height:auto}.client-journey .opening-engine-outputs h3{text-align:left}
+.destination-card{overflow:hidden;position:relative;border:1px solid #8dc4bd75;border-radius:14px;background:#e9eee7;color:#10283b;box-shadow:0 14px 35px #020a1d66}
+.destination-top{display:flex;justify-content:space-between;align-items:center;padding:10px 11px 6px;font-size:7px;font-weight:700;letter-spacing:.11em;color:#547574}.destination-top i{font-style:normal;color:#d96773;font-size:14px}
+.destination-address{margin:0 10px 8px;padding:7px 8px;border-radius:5px;background:#d4e4de;font-size:9px;color:#325c60}.destination-address b{float:right}
+.client-journey .destination-card img{display:block;width:100%;height:clamp(100px,14vh,170px);object-fit:cover;background:#173044}
+.destination-card>strong,.destination-card>small{display:block;margin:8px 11px;font-size:10px}.destination-card>small{margin-top:0;color:#496967;font-size:9px}
+.client-journey .engine-distribution{left:48%;top:73%;width:21%}.client-journey .engine-distribution h3{display:block;font-size:13px;margin:0 0 6px}.client-journey .engine-distribution h3 span{display:none}
+.audience-handoff{border-left:2px solid #68c9b2;padding:3px 0 3px 10px}.audience-handoff span{font-size:8px;letter-spacing:.12em;color:#80d0bd}.audience-handoff strong{display:block;font-size:13px;line-height:1.2;margin:5px 0}.audience-handoff small{font-size:9px;color:#a8c8cd}
+.client-journey .engine-signals{right:0;width:27%}.client-journey .engine-signal-panel{padding:16px 17px;border-radius:14px;background:linear-gradient(145deg,#234658,#112b40);border-color:#a0d1ca66}
+.client-journey .engine-signal-panel>small{font-size:9px;color:#8bdfca}.client-journey .engine-signal-panel>strong{font-size:clamp(18px,1.9vw,27px);line-height:1.1;margin:13px 0}
+.client-journey .engine-signal-panel li{padding:9px 0;opacity:1}.client-journey .engine-signal-panel li>span{font-size:10px}.client-journey .engine-signal-panel li b{font-size:clamp(13px,1.2vw,17px);margin-top:3px}
+.contact-step{margin-top:10px;padding:11px;border:1px solid #9ed7c246;border-radius:9px;background:#e4f1e90e}.contact-step span,.contact-step b,.contact-step small{display:block}.contact-step span{font-size:8px;letter-spacing:.1em;color:#89d5c3}.contact-step b{font-size:13px;margin-top:5px;color:#f3f0e9}.contact-step small{font-size:10px;margin-top:4px;color:#adc9ca}
+.client-journey .engine-signal-panel>span{font-size:10px;line-height:1.35;color:#aac7cb;margin-top:11px}
+.client-journey .engine-journey-line{font-size:clamp(12px,1.1vw,16px);bottom:7%;padding-top:17px}.client-journey .engine-disclaimer{font-size:9px;bottom:20px;max-width:70%;text-align:right}
+.client-journey .studio-print-labels{display:none!important}
+@media(max-width:720px){
+ .client-journey{height:1400px!important;min-height:1400px!important}.client-journey .opening-heading{top:80px;left:6%;right:6%}.client-journey .opening-heading h2{font-size:34px!important;line-height:1.06}.client-journey .reveal-skip{top:190px;right:6%;font-size:9px}
+ .client-journey .engine-studio-stage{left:0;right:0;top:200px;bottom:auto;height:350px}
+ .client-journey .engine-pipeline{top:220px;bottom:105px;left:6%;right:6%}.client-journey .pipeline-step h3{font-size:13px;margin-bottom:8px}.client-journey .pipeline-step h3>span{font-size:8px}
+ .client-journey .engine-inputs{left:0;top:330px;width:42%}.client-journey .input-brief{padding:11px}.client-journey .input-brief strong{font-size:16px}.client-journey .input-brief>small{font-size:6px}.client-journey .input-brief>span{font-size:9px}.client-journey .input-assets{display:none}
+ .client-journey .opening-engine-core{left:10%;top:0;width:80%}.client-journey .opening-engine-core>p{bottom:auto;top:300px;font-size:10px}
+ .client-journey .opening-engine-outputs{left:49%;top:330px;width:51%}.destination-top{font-size:6px}.destination-address{font-size:8px}.client-journey .destination-card img{height:110px}.destination-card>strong{font-size:9px}
+ .client-journey .engine-distribution{left:0;top:570px;width:42%}.client-journey .engine-distribution h3{font-size:12px}.audience-handoff strong{font-size:13px}.audience-handoff small{font-size:9px}
+ .client-journey .engine-signals{left:0;right:0;top:720px;width:100%}.client-journey .engine-signal-panel{padding:16px}.client-journey .engine-signal-panel>strong{font-size:22px}.client-journey .engine-signal-panel li b{font-size:15px}.client-journey .engine-signal-panel>span{display:block;font-size:10px}.client-journey .engine-journey-line{bottom:55px;font-size:10px;line-height:1.5}.client-journey .engine-disclaimer{bottom:18px;font-size:7px;max-width:75%}
+}
+@media print{
+ .client-journey{height:7.5in!important;min-height:0!important}.client-journey .opening-heading{top:9%!important;left:5.5%!important}.client-journey .opening-heading h2{font-size:42px!important;line-height:1.03!important}.client-journey .engine-studio-stage{left:15%!important;right:45%!important;top:35%!important;bottom:20%!important}.client-journey .engine-pipeline{top:35%!important;bottom:18%!important}.client-journey .pipeline-step h3{font-size:14px!important}.client-journey .input-brief strong{font-size:16px!important}.client-journey .opening-engine-core>p{bottom:-2.3in!important;top:auto!important;font-size:10px!important}.client-journey .destination-card img{height:100px!important}.client-journey .engine-signals{width:27%!important}.client-journey .engine-signal-panel>strong{font-size:20px!important}.client-journey .engine-signal-panel li b{font-size:13px!important}.client-journey .engine-signal-panel>span{font-size:9px!important}.client-journey .engine-journey-line{font-size:13px!important;bottom:7%!important}.client-journey .engine-disclaimer{font-size:8px!important;bottom:16px!important}
+}
+.client-journey .opening-engine-outputs h3{position:static!important;transform:none!important}
+@media(min-width:721px){.client-journey .opening-engine-core>p{top:35vh;bottom:auto}.client-journey .engine-distribution{top:82%}.client-journey .destination-card img{height:clamp(85px,12vh,140px)}}
+@media print{.client-journey .opening-engine-core>p{top:2.45in!important;bottom:auto!important}.client-journey .engine-distribution{top:82%!important}.client-journey .destination-card img{height:85px!important}}
+@media print{.client-journey .engine-inputs{width:16%!important}.client-journey .opening-engine-core{left:19%!important;width:27%!important}.client-journey .opening-engine-outputs{left:48%!important;width:21%!important;height:auto!important}.client-journey .engine-distribution{left:48%!important;width:21%!important}.client-journey .engine-signals{right:0!important;width:27%!important}}
+/* Align the creation label with the other stages and retain every stage number. */
+@media(min-width:721px){.client-journey .opening-engine-core h3{position:static!important;top:auto!important}.client-journey .engine-studio-stage{top:40%}.client-journey .engine-distribution{top:78%}}
+.client-journey .engine-distribution h3 span{display:block;font-size:9px;color:#6f8da0;margin:0 0 7px}
+@media(max-width:720px){.client-journey .engine-distribution h3 span{font-size:8px}}
+@media print{.client-journey .engine-studio-stage{top:40%!important}.client-journey .engine-distribution{top:78%!important}}
+@media(min-width:721px){.client-journey .opening-engine-core>p{top:39vh}}
+@media print{.client-journey .opening-engine-core>p{top:2.75in!important}}
+@media(min-width:721px){.client-journey .engine-distribution{top:76%}}
+@media print{.client-journey .engine-distribution{top:76%!important}}

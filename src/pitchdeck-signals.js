@@ -9,8 +9,8 @@ export function mountSignalLinks(solution, engine) {
   carriers.className = 'studio-signal-carriers';
   carriers.setAttribute('aria-hidden', 'true');
   document.body.append(carriers);
-  const colours = ['#73ccb9', '#ef767a', '#7fb7ce'];
-  const keys = ['small', 'large', 'sensors'];
+  const colours = ['#ef767a', '#7fb7ce'];
+  const keys = ['large', 'sensors'];
   const rows = keys.map((key, i) => {
     const source = solution.querySelector(`[data-activity="${key}"]`);
     const target = engine.querySelectorAll('.engine-signal-panel li')[i];
