@@ -8,3 +8,5 @@ dist/
 /preview-*.jpg
 /cat-landing-preview.jpg
 /cat-style-comparison.jpg
+/test-results/
+/playwright-report/
