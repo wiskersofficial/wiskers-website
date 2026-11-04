@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dream raises $17M seed for AI building design</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="scroller"><div id="stage"></div></div>
+<script src="core.js"></script>
+<script src="pieces/blueprint-bg.js"></script>
+<script src="pieces/hero-17m.js"></script>
+<script src="pieces/walls.js"></script>
+<script src="pieces/states.js"></script>
+<script src="pieces/backers.js"></script>
+<script src="pieces/reveal.js"></script>
+<script src="pieces/cash-accent.js"></script>
+<script src="pieces/captions.js"></script>
+<script src="dream.js"></script>
+<script>
+  var host = Bagel.createScrollHost(document.getElementById('scroller'));
+  window.__slice = Dream.mount(document.getElementById('stage'), host);
+  window.__host = host;
+</script>
+</body>
+</html>
