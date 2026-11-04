@@ -1,74 +1,65 @@
 :root {
-  --space: #05070F;
-  --ember: #FF7A3D;
-  --ice: #EAF2FF;
-  --ice-dim: rgba(234, 242, 255, .55);
-  --blue: #7FB4FF;
+  --bg: #05070F; --text: #EAF2FF; --accent: #FF7A3D; --accent2: #7FB4FF; --muted: rgba(234, 242, 255, .55);
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --sans: -apple-system, "Helvetica Neue", Arial, sans-serif;
   --display: "Arial Narrow", "Helvetica Neue Condensed", "Roboto Condensed", Impact, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--space); color: var(--ice); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
 #scroller { height: 900svh; position: relative; }
-#stage { position: fixed; inset: 0; overflow: hidden; background: var(--space); contain: strict; }
+#stage { position: fixed; inset: 0; overflow: hidden; background: var(--bg); contain: strict; }
 .layer { position: absolute; inset: 0; pointer-events: none; }
 .layer svg { display: block; }
-canvas.sf { position: absolute; inset: 0; width: 100%; height: 100%; }
+canvas.sf, canvas.c3d { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-/* earth */
-.earth .ball { position: absolute; left: -70vw; width: 240vw; height: 240vw; top: 80svh; border-radius: 50%; will-change: transform;
+/* earth: the limb sits low at the start so the craft has the middle of the screen */
+.earth .ball { position: absolute; left: -70vw; width: 240vw; height: 240vw; top: 88svh; border-radius: 50%; will-change: transform;
   background: radial-gradient(circle at 50% 8%, #2f6fd0 0%, #17469a 14%, #0a2556 34%, #050f2c 62%, #02050f 100%);
   box-shadow: 0 -2px 18px 2px rgba(150, 205, 255, .75), 0 -14px 60px 10px rgba(80, 140, 240, .35); }
-.earth .heat { position: absolute; left: -70vw; width: 240vw; height: 240vw; top: 80svh; border-radius: 50%; will-change: transform, opacity; opacity: 0;
+.earth .heat { position: absolute; left: -70vw; width: 240vw; height: 240vw; top: 88svh; border-radius: 50%; will-change: transform, opacity; opacity: 0;
   box-shadow: 0 -2px 22px 4px rgba(255, 140, 70, .9), 0 -20px 90px 24px rgba(255, 100, 40, .5); }
-.earth .night { position: absolute; left: 0; right: 0; bottom: 0; height: 24svh; background: linear-gradient(to top, rgba(5,7,15,0) 0, rgba(5,7,15,0) 100%); }
 
 /* years */
 .years .mk { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid rgba(234, 242, 255, .18); will-change: transform; }
-.years .mk span { position: absolute; left: 18px; top: -15px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--ice-dim); }
+.years .mk span { position: absolute; left: 8px; top: -15px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; color: var(--muted); }
+.years .pe { position: absolute; right: 16px; top: 0; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--accent); white-space: nowrap; will-change: transform, opacity; }
 .years .mk.big { border-top-color: rgba(255, 122, 61, .75); border-top-style: dashed; }
-.years .mk.big span { color: var(--ember); }
-.years .mk i { position: absolute; right: 18px; top: -15px; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--ember); }
-.years .counter { position: absolute; right: 18px; top: 54svh; text-align: right; will-change: opacity; }
-.years .counter b { display: block; font-family: var(--display); font-weight: 800; font-size: min(26vw, 17svh); line-height: .85; color: var(--ice); font-variant-numeric: tabular-nums; }
-.years .counter small { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--blue); }
-.years .weight { position: absolute; left: 18px; top: 60svh; background: var(--space); padding: 3px 6px 3px 0; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ice-dim); will-change: opacity; }
+.years .mk.big span { color: var(--accent); }
+.years .counter { position: absolute; right: 16px; top: 74svh; text-align: right; will-change: opacity; }
+.years .counter b { display: block; font-family: var(--display); font-weight: 800; font-size: min(20vw, 11.5svh); line-height: .85; color: var(--text); font-variant-numeric: tabular-nums; }
+.years .counter small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent2); margin-bottom: 4px; }
 
-/* bursts */
-.bursts .ev { position: absolute; width: 0; height: 0; will-change: transform, opacity; }
-.bursts .ring { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 2px solid rgba(200,225,255,.8); will-change: transform, opacity; }
-.bursts .flash { position: absolute; width: 420px; height: 420px; margin: -210px 0 0 -210px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.95) 0, rgba(190,220,255,.55) 14%, rgba(110,160,255,.18) 40%, rgba(110,160,255,0) 70%); will-change: transform, opacity; }
-.bursts .lab { position: absolute; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--space); background: var(--ice); padding: 3px 6px; white-space: nowrap; will-change: transform, opacity; }
+/* events */
+.bursts .ev { position: absolute; top: 73svh; width: 0; height: 0; will-change: transform; }
+.bursts .art { position: absolute; left: 0; top: 0; width: 132px; height: 132px; margin: -66px 0 0 -66px; overflow: visible; will-change: transform, opacity; }
+.bursts .flash { position: absolute; width: 330px; height: 330px; margin: -165px 0 0 -165px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.85) 0, rgba(170,205,255,.4) 16%, rgba(110,160,255,.14) 42%, rgba(110,160,255,0) 70%); will-change: transform, opacity; }
+.bursts .ring { position: absolute; width: 90px; height: 90px; margin: -45px 0 0 -45px; border-radius: 50%; border: 1.5px solid rgba(200, 225, 255, .6); will-change: transform, opacity; }
+.bursts .lab { position: absolute; left: 0; top: 72px; transform: translateX(-50%); font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--bg); background: var(--text); padding: 3px 7px; white-space: nowrap; will-change: opacity; }
 
-/* captions */
-.cap { position: absolute; left: 22px; right: 22px; opacity: 0; will-change: transform, opacity; text-shadow: 0 1px 14px var(--space), 0 0 3px var(--space); }
-.cap.top { top: calc(env(safe-area-inset-top, 0px) + 8svh); }
-.cap.bottom { bottom: calc(env(safe-area-inset-bottom, 0px) + 10svh); }
-.cap h1 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 10.4vw, 54px); line-height: .98; text-transform: uppercase; letter-spacing: -.01em; }
-.cap h2 { font-family: var(--display); font-weight: 700; font-size: clamp(25px, 7.6vw, 38px); line-height: 1.02; text-transform: uppercase; }
-.cap p { font-size: clamp(15px, 4.3vw, 19px); line-height: 1.35; margin-top: 8px; max-width: 30em; }
-.cap .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--blue); display: block; margin-bottom: 9px; }
-.cap em { font-style: normal; color: var(--ember); }
-.labels { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
-.labels .src { position: absolute; left: 22px; right: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); opacity: .9; }
-.labels .ill { position: absolute; left: 22px; right: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 34px); color: var(--ice); text-transform: none; letter-spacing: .02em; font-size: 11.5px; line-height: 1.35; opacity: 0; }
-.labels .ill b { font-weight: 600; color: var(--blue); text-transform: uppercase; letter-spacing: .1em; margin-right: 6px; }
-.clock { position: absolute; left: 22px; right: 22px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; line-height: 1.45; color: var(--ice-dim); opacity: 0; will-change: opacity; }
-.clock b { color: var(--ember); font-weight: 600; }
+/* LINK */
+.link .tag { position: absolute; left: 0; top: 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text); white-space: nowrap; opacity: 0; will-change: transform, opacity; text-shadow: 0 0 8px var(--bg); }
 
-/* craft */
-.craft .wrap { position: absolute; left: 50%; top: 45%; width: min(66vw, 300px); margin-left: calc(min(66vw, 300px) / -2); aspect-ratio: 240 / 200; margin-top: calc(min(66vw, 300px) * -0.4167); will-change: transform, opacity; }
-.craft svg { width: 100%; height: 100%; overflow: visible; }
-.craft .flare { position: absolute; left: 50%; top: 50%; width: 120%; aspect-ratio: 1; margin: -60% 0 0 -60%; border-radius: 50%; background: radial-gradient(circle, rgba(255,150,70,.95) 0, rgba(255,110,40,.55) 22%, rgba(255,80,20,.18) 48%, rgba(255,80,20,0) 70%); opacity: 0; will-change: opacity, transform; }
-.craft .glint { position: absolute; left: 50%; top: 50%; width: 110%; aspect-ratio: 1; margin: -55% 0 0 -55%; border-radius: 50%; background: radial-gradient(circle, rgba(220,235,255,.8) 0, rgba(150,190,255,.35) 30%, rgba(150,190,255,0) 68%); opacity: 0; will-change: opacity; }
+/* craft overlay */
 .craft .whiteout { position: absolute; inset: 0; background: #fff; opacity: 0; will-change: opacity; }
 
-/* ground track and 1 in 2100 */
-.groundtrack .band { position: absolute; left: 0; right: 0; will-change: transform, opacity; }
-.groundtrack .band svg { width: 100%; height: auto; }
-.groundtrack .field { position: absolute; left: 22px; right: 22px; will-change: opacity, transform; }
-.groundtrack canvas { width: 100%; display: block; }
-.groundtrack .odds { font-family: var(--display); font-weight: 800; font-size: min(18vw, 11svh); line-height: .9; color: var(--ice); margin-bottom: 8px; }
-.groundtrack .odds em { font-style: normal; color: var(--ember); }
+/* labels, clock */
+.labels { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent2); }
+.labels .src { position: absolute; left: 22px; right: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); opacity: .9; }
+.labels .ill { position: absolute; left: 22px; right: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 32px); color: var(--text); text-transform: none; letter-spacing: .02em; font-size: 11px; line-height: 1.35; opacity: 0; }
+.labels .ill b { font-weight: 600; color: var(--accent2); text-transform: uppercase; letter-spacing: .1em; margin-right: 6px; }
+.clock { position: absolute; left: 22px; right: 22px; bottom: calc(env(safe-area-inset-bottom, 0px) + 62px); font-family: var(--mono); font-size: 11px; letter-spacing: .05em; line-height: 1.45; color: var(--muted); opacity: 0; will-change: opacity; }
+.clock b { color: var(--accent); font-weight: 600; }
+
+/* where it could fall, and the odds */
+.zone .blk { position: absolute; left: 0; right: 0; top: 50svh; will-change: transform, opacity; }
+.zone .blk .t { margin: 0 22px 8px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
+.zone svg { width: 100%; height: auto; }
+.odds .big { position: absolute; left: 22px; right: 22px; top: 38svh; font-family: var(--display); font-weight: 800; line-height: .9; font-size: min(22vw, 12svh); color: var(--text); will-change: transform, opacity; }
+.odds .big em { font-style: normal; color: var(--accent); }
+.odds .viz { position: absolute; left: 22px; right: 22px; top: 54svh; will-change: transform, opacity; }
+.odds .viz svg { width: 100%; height: auto; overflow: visible; }
+.odds .viz .t { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent2); margin-top: 6px; }
+
+/* trail */
+.trail .tag { position: absolute; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text); white-space: nowrap; opacity: 0; will-change: opacity; text-shadow: 0 0 8px var(--bg); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

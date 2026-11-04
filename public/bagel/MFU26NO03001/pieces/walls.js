@@ -2,7 +2,7 @@
  * Role: middle of the scroll, explains "it knows what is inside walls". Group: drawn in code (SVG). */
 Bagel.register('walls', function (layer, ctx, B) {
   var U = Bagel.util, el = U.el;
-  var wrap = el('div', { 'class': 'wrap', 'aria-hidden': 'true' }, layer);
+  var wrap = el('div', { 'class': 'wrap', 'aria-hidden': 'true', 'data-gate': 'art', 'data-gate-id': 'wall' }, layer);
   var svg = el('svg', { viewBox: '0 0 300 440' }, wrap);
   var defs = el('defs', {}, svg);
   var hatch = el('pattern', { id: 'hatch', width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
@@ -83,7 +83,7 @@ Bagel.register('walls', function (layer, ctx, B) {
     var exit = U.ease.inout(U.seg(q, 0.9, 1));
     var op = enter * (1 - exit);
     wrap.style.opacity = op;
-    wrap.style.transform = 'translate3d(0,' + ((1 - enter) * 24 - exit * 30) + 'svh,0) rotateY(' + ((1 - enter) * -28 + exit * 20) + 'deg) rotateX(' + ((1 - enter) * 10) + 'deg)';
+    wrap.style.transform = 'translate3d(0,' + ((1 - enter) * 6 - exit * 30) + 'svh,0) rotateY(' + ((1 - enter) * -28 + exit * 20) + 'deg) rotateX(' + ((1 - enter) * 10) + 'deg)';
 
     /* peel */
     var peelQ = U.seg(q, 0.18, 0.55);

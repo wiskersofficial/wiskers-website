@@ -5,13 +5,13 @@
 
   /* where each beat sits on the shared 0..1 timeline */
   var BEATS = {
-    title:   [0.00, 0.13],
-    hero:    [0.13, 0.30],
-    walls:   [0.30, 0.47],
-    states:  [0.47, 0.61],
-    backers: [0.61, 0.73],
-    reveal:  [0.73, 0.93],
-    close:   [0.93, 1.00]
+    title:   [0.00, 0.20],
+    hero:    [0.03, 0.20],     /* the tile arrives with the title, not after it */
+    walls:   [0.20, 0.38],
+    states:  [0.38, 0.50],
+    backers: [0.50, 0.62],
+    reveal:  [0.62, 0.90],
+    close:   [0.90, 1.00]
   };
 
   window.Dream = {

@@ -1,0 +1,18 @@
+/* Shared text layer for Bagel slices. A slice sets the variables, never restyles the pieces.
+ *   --bg  --text  --accent  --accent2  --muted  --display  --sans  --mono
+ */
+.cap { position: absolute; left: 22px; right: 22px; opacity: 0; will-change: transform, opacity; text-shadow: 0 1px 14px var(--bg), 0 0 3px var(--bg); pointer-events: none; }
+.cap.top { top: calc(env(safe-area-inset-top, 0px) + 8svh); }
+.cap.bottom { bottom: calc(env(safe-area-inset-bottom, 0px) + 11svh); }
+.cap .kicker { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 9px; }
+.cap h1 { font-family: var(--display); font-weight: 800; font-size: clamp(32px, 10.2vw, 52px); line-height: .98; text-transform: uppercase; letter-spacing: -.01em; color: var(--text); }
+.cap h2 { font-family: var(--display); font-weight: 700; font-size: clamp(25px, 7.4vw, 36px); line-height: 1.02; text-transform: uppercase; color: var(--text); }
+.cap h1 .w, .cap h2 .w { display: inline-block; margin-right: .22em; will-change: transform, opacity; }
+.cap h1 em, .cap h2 em { font-style: normal; color: var(--accent); }
+.cap .body { margin-top: 10px; font-size: clamp(15px, 4.3vw, 18px); line-height: 1.38; max-width: 30em; color: var(--text); }
+.cap .body .s { will-change: opacity, transform; display: inline; }
+.cap .body .s + .s { margin-left: .3em; }
+
+/* tile title: the words sit on a panel that drops in */
+.cap.ttl-tile { perspective: 800px; }
+.cap.ttl-tile .panel { background: color-mix(in srgb, var(--text) 8%, transparent); border-left: 4px solid var(--accent); padding: 16px 16px 14px; transform-origin: 50% 0; will-change: transform, opacity; backdrop-filter: none; }
