@@ -5,13 +5,15 @@
 
   /* stretches of the shared 0..1 timeline */
   var BEATS = {
-    orbit:  [0.00, 0.14],
-    years:  [0.14, 0.30],
-    sees:   [0.30, 0.46],
-    rescue: [0.46, 0.60],
-    sink:   [0.60, 0.73],
-    burn:   [0.73, 0.90],
-    trail:  [0.90, 1.00]
+    orbit:  [0.00, 0.12],
+    years:  [0.12, 0.27],
+    sees:   [0.27, 0.43],
+    rescue: [0.43, 0.55],
+    sink:   [0.55, 0.67],
+    burn:   [0.67, 0.80],
+    zone:   [0.79, 0.85],
+    odds:   [0.85, 0.93],
+    trail:  [0.93, 1.00]
   };
 
   window.Swift = {
@@ -20,7 +22,7 @@
     weight: { codeKB: null, mediaKB: 0 },
     mount: function (container, ctx) {
       container.innerHTML = '';
-      var order = ['starfield', 'earth', 'years', 'bursts', 'link', 'craft', 'groundtrack', 'trail', 'captions'];
+      var order = ['starfield', 'earth', 'years', 'bursts', 'link', 'craft', 'zone', 'odds', 'trail', 'captions'];
       var mounted = [];
       order.forEach(function (name) {
         var layer = U.el('div', { 'class': 'layer ' + name }, container);

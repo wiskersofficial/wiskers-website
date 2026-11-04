@@ -1,163 +1,133 @@
-/* craft: Swift, a layered 2.5D vector illustration (not to scale). Role: hero and connective tissue; fixed on screen all the way.
- * Parts: bus, BAT (coded-mask box), telescope barrel, two solar wings, dish. A yaw wobble is faked by squeezing the wings and sliding the layers.
- * Burn: an ember copy of the whole craft fades in over it, parts break away along their own paths, debris sprays, the first break-up has a flash twin for the thud. */
+/* craft: Swift as a real lit 3D model on a canvas (Bagel.Mesh), not a flat drawing. Role: hero and connective tissue; fixed on screen all the way.
+ * Parts: bus with gold foil band and star trackers, BAT (coded-mask box) with antenna, gold-foil telescope barrel with a second tube, two cell-gridded solar wings.
+ * The craft really turns (yaw and pitch). Burn: faces blend toward ember, parts break away along their own 3D paths with ember trails, debris sprays,
+ * the first break-up has a white flash as the visual twin of the thud. Group: vector model drawn in code, no media. Illustration, not to scale.
+ * Layout: the craft sits below the copy zone (centre 57.5% of the screen height) so no title or caption ever covers it. */
 Bagel.register('craft', function (layer, ctx, B) {
-  var U = Bagel.util, el = U.el;
-  var ICE = '#EAF2FF', MID = '#AEBFE0', SHADE = '#5C6F9A', INK = '#0B1226', PANEL = '#1C3166', CELL = '#4F77C8';
-
-  var wrap = el('div', { 'class': 'wrap', 'aria-hidden': 'true' }, layer);
-  var flare = el('div', { 'class': 'flare' }, wrap);
-  var glint = el('div', { 'class': 'glint' }, wrap);
-  var svg = el('svg', { viewBox: '0 0 240 200' }, wrap);
-  var defs = el('defs', {}, svg);
-  var gp = el('linearGradient', { id: 'cg-sheen', x1: 0, y1: 0, x2: 1, y2: 1 }, defs);
-  el('stop', { offset: 0, 'stop-color': '#2C4C98' }, gp); el('stop', { offset: 0.5, 'stop-color': '#1C3166' }, gp); el('stop', { offset: 1, 'stop-color': '#12234F' }, gp);
-
-  var main = el('g', {}, svg);
-  var parts = {};          /* id -> { nodes: [mainNode, heatNode], base: [dx,dy] } */
-
-  function part(id, parent) { var g = el('g', { 'data-part': id }, parent); return g; }
-  function panelGroup(g, x, y, w, h) {
-    el('rect', { x: x, y: y, width: w, height: h, fill: 'url(#cg-sheen)', stroke: ICE, 'stroke-width': 1.1 }, g);
-    var d = '';
-    for (var i = 1; i < 6; i++) d += 'M' + (x + i * w / 6) + ' ' + y + 'v' + h;
-    for (i = 1; i < 3; i++) d += 'M' + x + ' ' + (y + i * h / 3) + 'h' + w;
-    el('path', { d: d, stroke: CELL, 'stroke-width': 0.7, fill: 'none', 'stroke-opacity': 0.8 }, g);
-    el('path', { d: 'M' + (x + 4) + ' ' + (y + h - 3) + 'L' + (x + w * 0.45) + ' ' + (y + 3), stroke: '#fff', 'stroke-opacity': 0.28, 'stroke-width': 3, fill: 'none' }, g);
-  }
-
-  /* wings and booms */
-  var wingL = part('wingL', main); el('path', { d: 'M92 100h-6', stroke: MID, 'stroke-width': 2 }, wingL); panelGroup(wingL, 8, 78, 78, 44);
-  var wingR = part('wingR', main); el('path', { d: 'M148 100h6', stroke: MID, 'stroke-width': 2 }, wingR); panelGroup(wingR, 154, 78, 78, 44);
-  /* telescope barrel */
-  var tube = part('tube', main);
-  el('rect', { x: 106, y: 134, width: 28, height: 48, fill: MID, stroke: ICE, 'stroke-width': 1 }, tube);
-  el('rect', { x: 106, y: 134, width: 10, height: 48, fill: ICE, 'fill-opacity': 0.75 }, tube);
-  el('rect', { x: 124, y: 134, width: 10, height: 48, fill: SHADE, 'fill-opacity': 0.8 }, tube);
-  el('path', { d: 'M106 146h28M106 158h28M106 170h28', stroke: INK, 'stroke-opacity': 0.5, 'stroke-width': 1.2 }, tube);
-  el('ellipse', { cx: 120, cy: 182, rx: 14, ry: 4.5, fill: INK, stroke: ICE, 'stroke-width': 1 }, tube);
-  el('ellipse', { cx: 120, cy: 182, rx: 8, ry: 2.5, fill: '#2A3A66' }, tube);
-  /* bus: front, side and top faces for a little depth */
-  var bus = part('bus', main);
-  el('rect', { x: 92, y: 64, width: 56, height: 72, fill: ICE, stroke: '#fff', 'stroke-width': 0.8 }, bus);
-  el('path', { d: 'M148 64l12 -8v72l-12 8z', fill: SHADE, stroke: ICE, 'stroke-width': 0.8 }, bus);
-  el('path', { d: 'M92 64l12 -8h56l-12 8z', fill: '#fff', 'fill-opacity': 0.9, stroke: ICE, 'stroke-width': 0.8 }, bus);
-  el('path', { d: 'M92 88h56M92 112h56M120 64v72', stroke: SHADE, 'stroke-opacity': 0.45, 'stroke-width': 0.9, fill: 'none' }, bus);
-  el('rect', { x: 100, y: 118, width: 14, height: 12, fill: INK, 'fill-opacity': 0.55 }, bus);
-  el('circle', { cx: 134, cy: 76, r: 3, fill: INK, 'fill-opacity': 0.6 }, bus);
-  /* BAT: the coded-mask box on top */
-  var bat = part('bat', main);
-  el('rect', { x: 96, y: 38, width: 48, height: 18, fill: MID, stroke: ICE, 'stroke-width': 1 }, bat);
-  el('path', { d: 'M96 38l8 -6h48l-8 6z', fill: '#fff', 'fill-opacity': 0.85, stroke: ICE, 'stroke-width': 0.8 }, bat);
-  var mask = ''; for (var i = 0; i < 8; i++) for (var j = 0; j < 3; j++) if ((i * 3 + j * 5) % 3) mask += 'M' + (99 + i * 5.6) + ' ' + (41 + j * 4.6) + 'h3v3h-3z';
-  el('path', { d: mask, fill: INK, 'fill-opacity': 0.7 }, bat);
-  /* dish */
-  var dish = part('dish', main);
-  el('path', { d: 'M160 96l12 -14', stroke: MID, 'stroke-width': 2 }, dish);
-  el('path', { d: 'M165 76a10 10 0 0 1 14 14z', fill: ICE, stroke: '#fff', 'stroke-width': 0.8 }, dish);
-
-  /* ember copy: same geometry, every fill and stroke ember */
-  var heatG = main.cloneNode(true);
-  heatG.setAttribute('class', 'heatclone');
-  heatG.setAttribute('opacity', 0);
-  svg.appendChild(heatG);
-  var st = el('style', { text: '.heatclone *{fill:#FF7A3D !important;stroke:#FFC08A !important;fill-opacity:.9 !important}' }, svg);
-  ['wingL', 'wingR', 'tube', 'bus', 'bat', 'dish'].forEach(function (id) {
-    parts[id] = { nodes: [main.querySelector('[data-part=' + id + ']'), heatG.querySelector('[data-part=' + id + ']')] };
-  });
-
-  /* break-up schedule: when each part lets go (0..1 through the burn), and where to */
-  var BREAK = {
-    wingL: { at: 0.28, dx: -150, dy: 40, rot: -140 },
-    wingR: { at: 0.36, dx: 160, dy: 20, rot: 120 },
-    bat:   { at: 0.50, dx: -40, dy: -140, rot: -200 },
-    dish:  { at: 0.56, dx: 150, dy: -90, rot: 260 },
-    tube:  { at: 0.62, dx: 20, dy: 180, rot: 80 },
-    bus:   { at: 0.72, dx: 0, dy: 20, rot: 24 }
-  };
-  var trails = el('g', { stroke: '#FF9A5C', 'stroke-linecap': 'round', fill: 'none' }, svg);
-  var trailEl = {};
-  Object.keys(BREAK).forEach(function (id) { trailEl[id] = el('line', { x1: 120, y1: 100, x2: 120, y2: 100, 'stroke-width': 3, opacity: 0 }, trails); });
-  /* debris spray (scrubbed, not simulated) */
-  var R = U.rng(3200), debris = [];
-  var dg = el('g', {}, svg);
-  for (i = 0; i < 26; i++) {
-    var a = R() * 6.283, v = 40 + R() * 150;
-    debris.push({ n: el('circle', { r: 1 + R() * 2.2, fill: i % 3 ? '#FFB27A' : '#FF7A3D', opacity: 0 }, dg), a: a, v: v, at: 0.26 + R() * 0.5, life: 0.18 + R() * 0.2, gy: 40 + R() * 80 });
-  }
-
+  var U = Bagel.util, el = U.el, M = Bagel.Mesh;
+  var cv = el('canvas', { 'class': 'c3d', 'aria-hidden': 'true' }, layer);
+  var g = cv.getContext('2d');
+  var gateBox = el('div', { 'data-gate': 'art', 'data-gate-id': 'craft', style: 'position:absolute;pointer-events:none;opacity:0' }, layer);
   var whiteout = el('div', { 'class': 'whiteout' }, layer);
-  whiteout.style.zIndex = 5;
-  var thudded = false, rumbled = false;
+  var W = 0, H = 0, dpr = 1;
+  function resize() { dpr = Math.min(2, window.devicePixelRatio || 1); W = layer.clientWidth; H = layer.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  resize(); window.addEventListener('resize', resize);
+  var rend = M.renderer(g);
 
-  function applyPart(id, tf, op) {
-    var p = parts[id]; for (var k = 0; k < 2; k++) { p.nodes[k].setAttribute('transform', tf); p.nodes[k].setAttribute('opacity', op); }
+  /* ---- the model ---- */
+  var WHITE = '#dfe6f3', GOLD = '#cfa24a', BLUE = '#1f3a80', SILVER = '#a9b6cd', DARK = '#2a3350';
+  var cells = { grid: { u: 9, v: 4, c: '130,170,240' } };
+  var model = { groups: {} };
+  model.groups.bus = { faces: [].concat(
+    M.box(-0.5, -0.45, -0.5, 0.5, 0.45, 0.5, WHITE, 'matte', { perFace: { 0: { grid: { u: 1, v: 6, c: '90,104,140' } }, 2: { grid: { u: 1, v: 6, c: '90,104,140' } }, 3: { grid: { u: 1, v: 6, c: '90,104,140' } } } }),
+    M.box(-0.53, -0.45, -0.53, 0.53, 0.08, 0.53, GOLD, 'foil', { perFace: { 0: { grid: { u: 7, v: 3, c: '110,74,18' } }, 2: { grid: { u: 5, v: 3, c: '110,74,18' } }, 3: { grid: { u: 5, v: 3, c: '110,74,18' } } } }),
+    M.box(0.5, 0.2, -0.3, 0.57, 0.3, -0.18, DARK, 'dark'), M.box(-0.57, 0.2, -0.3, -0.5, 0.3, -0.18, DARK, 'dark')
+  ) };
+  model.groups.bat = { faces: [].concat(
+    M.box(-0.58, 0.45, -0.58, 0.58, 0.6, 0.58, SILVER, 'matte', { perFace: { 4: { mask: { u: 15, v: 15 } }, 0: { grid: { u: 10, v: 1, c: '70,84,120' } } } }),
+    M.box(-0.03, 0.6, -0.03, 0.03, 0.84, 0.03, SILVER, 'gloss'),
+    M.dish(0, 0.86, 0.0, 0.2, 0.1, 14, '#f2f6ff', 'gloss')
+  ) };
+  model.groups.tube = { faces: [].concat(
+    M.cylinder(0, 0, 0.3, -1.45, -0.45, 18, GOLD, 'foil', { bottom: '#0a0f20' }),
+    M.cylinder(0.4, 0.12, 0.15, -1.1, -0.45, 12, SILVER, 'gloss', { bottom: '#0a0f20' }),
+    M.box(-0.34, -0.8, -0.34, 0.34, -0.74, 0.34, DARK, 'dark')
+  ) };
+  model.groups.wingL = { faces: [].concat(
+    M.box(-0.62, -0.03, -0.03, -0.5, 0.03, 0.03, SILVER, 'gloss'),
+    M.box(-1.85, -0.46, -0.025, -0.62, 0.46, 0.025, BLUE, 'gloss', { perFace: { 0: cells, 1: cells } })
+  ) };
+  model.groups.wingR = { faces: [].concat(
+    M.box(0.5, -0.03, -0.03, 0.62, 0.03, 0.03, SILVER, 'gloss'),
+    M.box(0.62, -0.46, -0.025, 1.85, 0.46, 0.025, BLUE, 'gloss', { perFace: { 0: cells, 1: cells } })
+  ) };
+  var IDS = ['wingL', 'wingR', 'bat', 'dish', 'tube', 'bus'];
+  /* the dish rides with the BAT group; keep a separate break key for it so it can leave on its own */
+  var BREAK = {
+    wingL: { at: 0.16, v: [-3.4, 0.4, 1.0], spin: [2.2, 1.6, 3.0] },
+    wingR: { at: 0.26, v: [3.8, 0.2, -0.8], spin: [-1.8, 2.4, -2.6] },
+    bat:   { at: 0.40, v: [-1.4, 1.0, 2.2], spin: [2.4, -1.2, 1.9] },
+    tube:  { at: 0.52, v: [0.8, -2.0, 1.2], spin: [1.4, 0.8, 2.8] },
+    bus:   { at: 0.62, v: [0.0, -0.6, 0.0], spin: [0.6, 0.4, 1.1] }
+  };
+  var R = U.rng(3200), debris = [];
+  for (var i = 0; i < 34; i++) debris.push({ a: R() * 6.283, v: 40 + R() * 190, at: 0.14 + R() * 0.62, life: 0.16 + R() * 0.22, gy: 40 + R() * 120, r: 1 + R() * 2.3, w: R() });
+
+  var thudded = false, rumbled = false;
+  function proj(pt, v, f) {                                          /* same transform the renderer uses, for trails */
+    var q = pt, c, s, t, x = q[0], y = q[1], z = q[2];
+    if (v.roll) { c = Math.cos(v.roll); s = Math.sin(v.roll); t = x * c - y * s; y = x * s + y * c; x = t; }
+    if (v.pitch) { c = Math.cos(v.pitch); s = Math.sin(v.pitch); t = y * c - z * s; z = y * s + z * c; y = t; }
+    if (v.yaw) { c = Math.cos(v.yaw); s = Math.sin(v.yaw); t = x * c + z * s; z = -x * s + z * c; x = t; }
+    var k = f / (f - z); return [v.cx + x * k * v.scale, v.cy - y * k * v.scale];
   }
 
   var unsub = ctx.timeline.subscribe(function (p, t) {
     var calm = ctx.reducedMotion();
     var burn = U.seg(p, B.burn[0], B.burn[1]);
-    var gone = U.seg(p, B.burn[1] - 0.02, B.burn[1] + 0.005);
-    layer.style.visibility = (gone < 1) ? 'visible' : 'hidden';
-    if (gone >= 1) { thudded = false; return; }
-
-    /* settle in at the start */
+    var gone = U.seg(burn, 0.78, 0.98);
+    layer.style.visibility = gone < 1 ? 'visible' : 'hidden';
+    if (gone >= 1) { thudded = false; rumbled = false; return; }
     var enter = U.ease.out(U.seg(p, 0, 0.05));
     var sink = U.ease.inout(U.seg(p, B.sink[0], B.sink[1]));
-    var heat = U.ease.inout(U.seg(burn, 0, 0.35));
-    var yaw = calm ? 0.25 : 0.62 * Math.sin(t * 0.55 + p * 5) * (1 - 0.8 * sink);
-    var cy = Math.cos(yaw), sy = Math.sin(yaw);
-    var shake = calm ? 0 : (heat * (1 + burn * 3)) * 2.2;
-    var rot = (calm ? -6 : -7 + 3 * Math.sin(t * 0.4)) * (1 - sink) + sink * 4 + (calm ? 0 : Math.sin(t * 38) * heat * 1.6);
-    var sx = calm ? 0 : Math.sin(t * 53) * shake, sy2 = calm ? 0 : Math.cos(t * 47) * shake;
-    var sc = enter * (1 - 0.1 * sink);
-    wrap.style.opacity = enter;
-    wrap.style.transform = 'translate3d(' + sx.toFixed(2) + 'px,' + (sy2 + (1 - enter) * 10).toFixed(2) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + sc.toFixed(3) + ')';
+    var heat = U.ease.inout(U.seg(burn, 0, 0.35)) * (1 - U.seg(burn, 0.8, 1));
+    var yaw = calm ? 0.5 : 0.75 * Math.sin(t * 0.45 + p * 5) * (1 - 0.7 * sink);
+    var pitch = 0.3 - 0.12 * sink + (calm ? 0 : Math.sin(t * 0.3) * 0.04);
+    var shake = calm ? 0 : heat * (1 + burn * 3) * 2.4;
+    var cx = W / 2 + (calm ? 0 : Math.sin(t * 53) * shake), cy = H * 0.575 + (1 - enter) * 14 + (calm ? 0 : Math.cos(t * 47) * shake);
+    var span = Math.min(W * 0.7, 270), scale = span / 3.7 * (1 - 0.08 * sink);
+    var view = { cx: cx, cy: cy, scale: scale, yaw: yaw, pitch: pitch, roll: -0.08 + (calm ? 0 : Math.sin(t * 38) * heat * 0.03), heat: heat, t: t, persp: 7 };
 
-    /* yaw wobble: squeeze the wings, slide the layers */
-    var wl = 'translate(92 0) scale(' + cy.toFixed(3) + ' 1) translate(-92 0)';
-    var wr = 'translate(148 0) scale(' + cy.toFixed(3) + ' 1) translate(-148 0)';
-    var off = { tube: sy * 12, bat: -sy * 8, dish: sy * 5 };
-    var order = ['wingL', 'wingR', 'tube', 'bus', 'bat', 'dish'];
-    for (var i = 0; i < order.length; i++) {
-      var id = order[i], b = BREAK[id];
-      var tf = id === 'wingL' ? wl : id === 'wingR' ? wr : 'translate(' + (off[id] || 0).toFixed(2) + ' 0)';
-      var op = 1;
-      var s = U.seg(burn, b.at, b.at + (id === 'bus' ? 0.26 : 0.3));
-      if (s > 0) {
-        var d = s * s;                                   /* accelerates away */
-        tf = 'translate(' + (b.dx * d).toFixed(1) + ' ' + (b.dy * d).toFixed(1) + ') rotate(' + (b.rot * s).toFixed(1) + ' 120 100) ' + tf;
-        op = id === 'bus' ? 1 - U.seg(s, 0.4, 1) : 1 - U.seg(s, 0.55, 1);
-        if (id === 'bus') tf += ' translate(120 100) scale(' + (1 - 0.45 * s).toFixed(3) + ') translate(-120 -100)';
-        var tr = trailEl[id], len = 55 * Math.min(1, s * 3) * (1 - U.seg(s, 0.6, 1));
-        var vx = b.dx * 2 * s, vy = b.dy * 2 * s, vl = Math.hypot(vx, vy) || 1;
-        tr.setAttribute('x1', 120 + b.dx * d); tr.setAttribute('y1', 100 + b.dy * d);
-        tr.setAttribute('x2', 120 + b.dx * d - vx / vl * len); tr.setAttribute('y2', 100 + b.dy * d - vy / vl * len);
-        tr.setAttribute('opacity', 0.8 * (1 - U.seg(s, 0.7, 1)));
-      } else { trailEl[id].setAttribute('opacity', 0); }
-      applyPart(id, tf, op);
-    }
-    heatG.setAttribute('opacity', heat * 0.92);
-    flare.style.opacity = U.ease.out(U.seg(burn, 0.02, 0.4)) * (1 - U.seg(burn, 0.8, 1));
-    flare.style.transform = 'scale(' + (0.6 + heat * 0.7 + (calm ? 0 : Math.sin(t * 9) * 0.03)) + ')';
-    debris.forEach(function (c) {
-      var s = (burn - c.at) / c.life;
-      if (s <= 0 || s >= 1) { c.n.setAttribute('opacity', 0); return; }
-      c.n.setAttribute('cx', 120 + Math.cos(c.a) * c.v * s); c.n.setAttribute('cy', 100 + Math.sin(c.a) * c.v * s + c.gy * s * s);
-      c.n.setAttribute('opacity', 1 - s);
-    });
-
-    /* glint when a burst flashes (the bursts piece owns the schedule) */
+    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    var alpha = enter * (1 - gone);
+    g.globalAlpha = alpha;
+    /* glows behind the model: burst glint (cool) and burn flare (ember) */
     var gl = Bagel.shared && Bagel.shared.glint ? Bagel.shared.glint(p) : 0;
-    glint.style.opacity = gl;
+    g.globalCompositeOperation = 'lighter';
+    if (gl > 0.02) { var gg = g.createRadialGradient(cx, cy, 0, cx, cy, scale * 2.2); gg.addColorStop(0, 'rgba(200,225,255,' + (0.55 * gl).toFixed(3) + ')'); gg.addColorStop(1, 'rgba(120,170,255,0)'); g.fillStyle = gg; g.fillRect(0, 0, W, H); }
+    if (heat > 0.02) { var fl = U.ease.out(U.seg(burn, 0.02, 0.4)) * (1 - U.seg(burn, 0.7, 1)); var fg = g.createRadialGradient(cx, cy, 0, cx, cy, scale * (1.8 + heat)); fg.addColorStop(0, 'rgba(255,150,70,' + (0.8 * fl).toFixed(3) + ')'); fg.addColorStop(0.5, 'rgba(255,100,40,' + (0.25 * fl).toFixed(3) + ')'); fg.addColorStop(1, 'rgba(255,80,20,0)'); g.fillStyle = fg; g.fillRect(0, 0, W, H); }
+    g.globalCompositeOperation = 'source-over';
 
-    /* thud: first wing lets go, with a white flash as its visual twin */
+    /* break-up transforms, per group */
+    IDS.forEach(function (id) { if (model.groups[id]) model.groups[id].t = { pos: [0, 0, 0], rot: [0, 0, 0], a: 1 }; });
+    var trails = [];
+    Object.keys(BREAK).forEach(function (id) {
+      var b = BREAK[id], s = U.seg(burn, b.at, b.at + 0.3);
+      if (s <= 0) return;
+      var d = s * s * 1.0, tr = model.groups[id].t;
+      tr.pos = [b.v[0] * d, b.v[1] * d, b.v[2] * d];
+      tr.rot = [b.spin[0] * s * 2, b.spin[1] * s * 2, b.spin[2] * s * 2];
+      tr.a = id === 'bus' ? 1 - U.seg(s, 0.45, 1) : 1 - U.seg(s, 0.55, 1);
+      var s0 = Math.max(0, s - 0.08), d0 = s0 * s0;
+      trails.push({ a: [b.v[0] * d0, b.v[1] * d0, b.v[2] * d0], b: tr.pos, k: tr.a * Math.min(1, s * 3) });
+    });
+    var info = rend.draw(model, view);
+
+    /* ember trails and debris, over the model */
+    g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+    trails.forEach(function (tl) {
+      var A = proj(tl.a, view, 7), Bp = proj(tl.b, view, 7);
+      g.strokeStyle = 'rgba(255,150,80,' + (0.8 * tl.k).toFixed(3) + ')'; g.lineWidth = 3; g.beginPath(); g.moveTo(A[0], A[1]); g.lineTo(Bp[0], Bp[1]); g.stroke();
+    });
+    debris.forEach(function (c) {
+      var s = (burn - c.at) / c.life; if (s <= 0 || s >= 1) return;
+      g.fillStyle = 'rgba(255,' + (150 + 60 * c.w | 0) + ',' + (90 + 40 * c.w | 0) + ',' + (1 - s).toFixed(3) + ')';
+      g.beginPath(); g.arc(cx + Math.cos(c.a) * c.v * s * 1.2, cy + Math.sin(c.a) * c.v * s * 1.2 + c.gy * s * s, c.r, 0, 6.283); g.fill();
+    });
+    g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1;
+
+    /* the gate box follows the craft's real extent */
+    var bb = info.bbox;
+    if (isFinite(bb[0]) && bb[2] > bb[0]) { gateBox.style.left = bb[0] + 'px'; gateBox.style.top = bb[1] + 'px'; gateBox.style.width = (bb[2] - bb[0]) + 'px'; gateBox.style.height = (bb[3] - bb[1]) + 'px'; }
+    gateBox.style.opacity = alpha;
+
+    /* thud with its flash twin; rumble while heating */
     var first = U.seg(burn, BREAK.wingL.at, BREAK.wingL.at + 0.04);
     whiteout.style.opacity = 0.5 * Math.sin(first * Math.PI) * (burn < BREAK.wingL.at + 0.06 ? 1 : 0);
     if (first > 0.2 && !thudded) { thudded = true; ctx.haptic.play('thud'); }
     if (first < 0.02) thudded = false;
-    if (heat > 0.12 && burn < 0.97 && !rumbled) { rumbled = true; ctx.haptic.play('rumble'); }
+    if (heat > 0.12 && burn < 0.9 && !rumbled) { rumbled = true; ctx.haptic.play('rumble'); }
     if (heat < 0.05) rumbled = false;
   });
-  return { destroy: function () { unsub(); layer.innerHTML = ''; } };
+  return { destroy: function () { unsub(); window.removeEventListener('resize', resize); layer.innerHTML = ''; } };
 });

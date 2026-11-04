@@ -55,7 +55,7 @@ Bagel.register('cash-accent', function (layer, ctx, B) {
 
   var wasOn = false, burst = false;
   var unsub = ctx.timeline.subscribe(function (p) {
-    var a = B.hero[0] + 0.058, b = B.hero[1] + 0.005;
+    var a = B.hero[0] + 0.07, b = B.hero[1] + 0.005;
     var q = U.seg(p, a, b);
     var on = p > a - 0.002 && p < b + 0.002 && !ctx.reducedMotion();
     if (!on) {
@@ -67,7 +67,7 @@ Bagel.register('cash-accent', function (layer, ctx, B) {
     if (!burst && q > 0.01) { burst = true; ctx.haptic.play('burst'); }
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     g.clearRect(0, 0, W, H);
-    var ox = W / 2, oy = H * 0.46;
+    var ox = W / 2, oy = H * 0.6;
     var unit = Math.min(W, H);
     for (var i = 0; i < notes.length; i++) {
       var n = notes[i];

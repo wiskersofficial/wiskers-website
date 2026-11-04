@@ -5,13 +5,13 @@ Bagel.register('earth', function (layer, ctx, B) {
   var heat = el('div', { 'class': 'heat', 'aria-hidden': 'true' }, layer);
   ball.style.transformOrigin = heat.style.transformOrigin = '50% 0';
   /* altitude gauge: only the starting figure is reported (about 171 mi, CNN/AP); the descent itself is illustrated, so no other numbers */
-  var gauge = el('div', { 'aria-hidden': 'true', style: 'position:absolute;right:22px;top:24svh;height:44svh;width:70px;opacity:0;will-change:opacity;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#EAF2FF' }, layer);
-  el('div', { text: '171 mi', style: 'position:absolute;right:14px;top:-18px;white-space:nowrap;font-size:12px' }, gauge);
-  el('div', { text: 'last reported', style: 'position:absolute;right:14px;top:-5px;white-space:nowrap;color:#7FB4FF;font-size:9.5px;transform:translateY(0)' }, gauge);
+  var gauge = el('div', { 'aria-hidden': 'true', style: 'position:absolute;right:22px;top:46svh;height:30svh;width:70px;opacity:0;will-change:opacity;font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#EAF2FF' }, layer);
+  el('div', { 'data-gate': 'text', 'data-gate-group': 'gauge', text: '171 mi', style: 'position:absolute;right:14px;top:-18px;white-space:nowrap;font-size:12px' }, gauge);
+  el('div', { 'data-gate': 'text', 'data-gate-group': 'gauge', text: 'last reported', style: 'position:absolute;right:14px;top:-5px;white-space:nowrap;color:#7FB4FF;font-size:9.5px;transform:translateY(0)' }, gauge);
   el('div', { style: 'position:absolute;right:6px;top:14px;bottom:0;width:1px;background:rgba(234,242,255,.45)' }, gauge);
   for (var k = 0; k <= 8; k++) el('div', { style: 'position:absolute;right:2px;width:9px;height:1px;background:rgba(234,242,255,.45);top:' + (14 + k * (100 - 0) / 8 * 0.86) + '%' }, gauge);
   var mk = el('div', { style: 'position:absolute;right:0;top:14px;width:0;height:0;border-left:11px solid #FF7A3D;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-top:-6px;margin-right:12px;will-change:transform' }, gauge);
-  el('div', { text: 'atmosphere', style: 'position:absolute;right:14px;bottom:-16px;white-space:nowrap;color:#FF9A5C;font-size:9.5px' }, gauge);
+  el('div', { 'data-gate': 'text', 'data-gate-group': 'gauge', text: 'atmosphere', style: 'position:absolute;right:14px;bottom:-16px;white-space:nowrap;color:#FF9A5C;font-size:9.5px' }, gauge);
 
   var unsub = ctx.timeline.subscribe(function (p, t) {
     var sink = U.ease.inout(U.seg(p, B.sink[0], B.sink[1] + 0.02));

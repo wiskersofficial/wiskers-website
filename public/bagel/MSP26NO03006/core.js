@@ -15,7 +15,7 @@
 (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
-  var SVGTAGS = { svg: 1, g: 1, path: 1, rect: 1, circle: 1, line: 1, text: 1, defs: 1, pattern: 1, clipPath: 1, polygon: 1, polyline: 1, ellipse: 1, linearGradient: 1, stop: 1 };
+  var SVGTAGS = { svg: 1, g: 1, path: 1, rect: 1, circle: 1, line: 1, text: 1, defs: 1, pattern: 1, clipPath: 1, polygon: 1, polyline: 1, ellipse: 1, linearGradient: 1, radialGradient: 1, stop: 1, mask: 1, use: 1, tspan: 1 };
 
   function el(tag, attrs, parent) {
     var n = SVGTAGS[tag] ? document.createElementNS(NS, tag) : document.createElement(tag);

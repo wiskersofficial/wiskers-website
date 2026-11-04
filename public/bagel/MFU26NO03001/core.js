@@ -5,7 +5,7 @@
  * ctx (everything a slice may use from its surroundings):
  *   ctx.timeline.subscribe(fn(p, t, dt)) -> unsubscribe   one shared, smoothed 0..1 scroll timeline, one rAF loop
  *   ctx.reducedMotion()                  -> boolean         live value
- *   ctx.haptic.play(name)                                   tick | stamp | thud | burst | snap
+ *   ctx.haptic.play(name)                                   tick | stamp | thud | burst | snap | rumble
  *   ctx.gesture.drag(el, {start, move, end}) -> unbind     normalised horizontal drag, vertical scroll left to the feed
  *   ctx.onCleanup(fn)                                       run when the slice leaves
  *   ctx.weight                                              declared weight, set by the slice
@@ -15,7 +15,7 @@
 (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
-  var SVGTAGS = { svg: 1, g: 1, path: 1, rect: 1, circle: 1, line: 1, text: 1, defs: 1, pattern: 1, clipPath: 1, polygon: 1, polyline: 1, ellipse: 1, linearGradient: 1, stop: 1 };
+  var SVGTAGS = { svg: 1, g: 1, path: 1, rect: 1, circle: 1, line: 1, text: 1, defs: 1, pattern: 1, clipPath: 1, polygon: 1, polyline: 1, ellipse: 1, linearGradient: 1, radialGradient: 1, stop: 1, mask: 1, use: 1, tspan: 1 };
 
   function el(tag, attrs, parent) {
     var n = SVGTAGS[tag] ? document.createElementNS(NS, tag) : document.createElement(tag);
@@ -60,7 +60,7 @@
   };
 
   /* ---------- standalone host: stands in for the feed ---------- */
-  var PATTERNS = { tick: [8], snap: [12], stamp: [22], thud: [45], burst: [30, 40, 30, 40, 50] };
+  var PATTERNS = { tick: [8], snap: [12], stamp: [22], thud: [45], burst: [30, 40, 30, 40, 50], rumble: [20, 30, 25, 30, 40, 30, 60, 30, 80] };
 
   window.Bagel.createScrollHost = function (scroller) {
     var subs = [], cleanups = [], cur = 0, last = performance.now(), raf = 0, dead = false;

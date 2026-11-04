@@ -17,7 +17,7 @@ Bagel.register('states', function (layer, ctx, B) {
 
   function tile(cls, pts, lat0, code) {
     var pr = project(pts, lat0);
-    var box = el('div', { 'class': 'tile ' + cls, 'aria-hidden': 'true' }, layer);
+    var box = el('div', { 'class': 'tile ' + cls, 'aria-hidden': 'true', 'data-gate': 'art', 'data-gate-id': code + ' tile' }, layer);
     var svg = el('svg', { viewBox: '0 0 ' + pr.w + ' ' + pr.h }, box);
     var defs = el('defs', {}, svg);
     var pat = el('pattern', { id: 'sh-' + cls, width: 7, height: 7, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(-45)' }, defs);
@@ -34,7 +34,7 @@ Bagel.register('states', function (layer, ctx, B) {
   }
   var ca = tile('ca', CA, 37, 'CALIFORNIA');
   var tx = tile('tx', TX, 31, 'TEXAS');
-  var count = el('div', { 'class': 'count', 'aria-hidden': 'true', text: '0' }, layer);
+  var count = el('div', { 'class': 'count', 'data-gate': 'text', 'data-gate-id': 'projects count', text: '0' }, layer);
   var lastN = -1, hit = [false, false];
 
   var unsub = ctx.timeline.subscribe(function (p, t) {
