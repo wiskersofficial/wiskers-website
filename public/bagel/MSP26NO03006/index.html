@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NASA's Swift Observatory to re-enter the atmosphere after 22 years</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="scroller"><div id="stage"></div></div>
+<script src="core.js"></script>
+<script src="pieces/starfield.js"></script>
+<script src="pieces/earth.js"></script>
+<script src="pieces/years.js"></script>
+<script src="pieces/bursts.js"></script>
+<script src="pieces/link.js"></script>
+<script src="pieces/craft.js"></script>
+<script src="pieces/groundtrack.js"></script>
+<script src="pieces/trail.js"></script>
+<script src="pieces/captions.js"></script>
+<script src="swift.js"></script>
+<script>
+  var host = Bagel.createScrollHost(document.getElementById('scroller'));
+  window.__slice = Swift.mount(document.getElementById('stage'), host);
+  window.__host = host;
+</script>
+</body>
+</html>
