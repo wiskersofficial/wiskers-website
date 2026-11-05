@@ -55,7 +55,9 @@ function paintScene(scene, p) {
   const {slide, glyphs: targets, counts, cube, steps} = scene;
   slide.style.setProperty('--p', p.toFixed(4));
   // Glyph waves: staggered through the slide's arrival, so headline words morph first.
-  targets.forEach((t, i) => glyphs.update(t, clamp((p - .08 - i * .08) / .72)));
+  // The stagger shrinks on slides with many headings, so every one finishes by p = 1.
+  const gap = Math.min(.08, .2 / Math.max(1, targets.length - 1));
+  targets.forEach((t, i) => glyphs.update(t, clamp((p - .08 - i * gap) / .72)));
   for (const c of counts) {
     const v = Math.round(c.to * (1 - Math.pow(1 - clamp((p - .15) / .85), 2)));
     c.el.textContent = `${c.prefix}${fmt(v)}${c.suffix}`;

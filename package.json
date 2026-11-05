@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "pitchdeck:pdf": "python3 scripts/export-pitchdeck.py",
+    "pitchdeck:pdf": "node scripts/export-pitchdeck.mjs",
     "check:static": "node scripts/static-check.cjs dist",
     "check:external": "playwright test"
   },
