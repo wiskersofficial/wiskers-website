@@ -8,15 +8,19 @@ import {mount as mountGlass} from './vendor/molten-glass/index.js';
 const LIGHT = new Set(['paper', 'mist', 'sage', 'blush']);
 const PHOTO = '/pitchdeck-assets/founders-josh-imran.jpg';
 
+// The photo is fetched only once slide 5 is near (see `focus`), not with the first page load.
 const photo = new Image();
-photo.src = PHOTO;
-const photoReady = photo.decode().catch(() => null);
+let photoReady = null;
+function loadPhoto() {
+  if (!photoReady) { photo.src = PHOTO; photoReady = photo.decode().catch(() => null); }
+  return photoReady;
+}
 
 function options(slide, backdrop) {
   const light = LIGHT.has(slide.dataset.theme);
   return light
-    ? {background: backdrop, twist: .32, refraction: .34, edgeExponent: 6, specular: .5, chromaticAberration: .32, tint: '#f4f6fb', tintStrength: .16, canvasBlur: 0, dpr: 1.5}
-    : {background: backdrop, twist: .22, refraction: .38, edgeExponent: 5, specular: .55, chromaticAberration: .22, tint: '#091540', tintStrength: .3, canvasBlur: 1.5, dpr: 1.5};
+    ? {background: backdrop, live: false, twist: .32, refraction: .34, edgeExponent: 6, specular: .5, chromaticAberration: .32, tint: '#f4f6fb', tintStrength: .16, canvasBlur: 0, dpr: 1.5}
+    : {background: backdrop, live: false, twist: .22, refraction: .38, edgeExponent: 5, specular: .55, chromaticAberration: .22, tint: '#091540', tintStrength: .3, canvasBlur: 1.5, dpr: 1.5};
 }
 
 /** Paint the slide's backdrop at viewport size, as it looks when the slide fills the screen. */
@@ -58,6 +62,7 @@ export function mountGlassTiles(slides) {
 
   function mountGroup(g) {
     if (g.lenses.length || disabled) return;
+    if (g.slide.id === 'slide-5' && !photo.naturalWidth) loadPhoto().then(refresh);
     g.backdrop = paintBackdrop(g.slide);
     for (const tile of g.tiles) {
       try { g.lenses.push(mountGlass(tile, options(g.slide, g.backdrop))); tile.classList.add('has-glass'); }
@@ -73,7 +78,6 @@ export function mountGlassTiles(slides) {
   }
   let resizeTimer = 0;
   addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(refresh, 200); }, {passive: true});
-  photoReady.then(refresh);
   document.fonts?.ready.then(refresh);
 
   return {

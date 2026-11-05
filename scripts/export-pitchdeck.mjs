@@ -25,7 +25,9 @@ try {
   await page.emulateMedia({media: 'print'});
   await page.evaluate(() => dispatchEvent(new Event('beforeprint')));
   await page.evaluate(async () => {
-    await Promise.all([...document.images].map(img => img.complete ? null : img.decode().catch(() => null)));
+    // The deck switches lazy images to eager for print; wait for them (each capped, so one bad image cannot hang the export).
+    const settle = img => Promise.race([img.decode().catch(() => null), new Promise(r => setTimeout(r, 10000))]);
+    await Promise.all([...document.images].filter(img => img.getAttribute('src')).map(img => img.complete ? null : settle(img)));
   });
   await page.waitForTimeout(300);
   if (errors.length) throw new Error(`Page errors:\n${errors.join('\n')}`);

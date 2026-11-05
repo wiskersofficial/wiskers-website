@@ -224,9 +224,9 @@ export class MoltenGlass {
       this._scheduleRender();
       return;
     }
-    this._live = this.options.live
-      || element instanceof HTMLVideoElement
-      || element instanceof HTMLCanvasElement;
+    // Wiskers patch: an explicit `live: false` keeps a still <canvas> source from re-uploading every frame.
+    this._live = this.options.live ?? (element instanceof HTMLVideoElement
+      || element instanceof HTMLCanvasElement);
 
     if (ready) this._commitSource(element);
     promise
