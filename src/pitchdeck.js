@@ -85,10 +85,21 @@ function frame(now = performance.now()) {
       if (p < 1) requestFrame();
     } else p = entry(scene.slide);
     paintScene(scene, p);
+    // Also marks arrival here, so the deck never depends on observer callbacks alone.
+    const r = scene.slide.getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0) {
+      scene.slide.classList.add('is-visible');
+      if (scene.slide.id === 'slide-5' || scene.slide.id === 'slide-6') bagel.arm();
+    }
   }
 }
-let queued = false;
-function requestFrame() { if (!queued) { queued = true; requestAnimationFrame(frame); } }
+let queued = false, fallback = 0;
+// rAF, with a timer fallback for tabs that are not painting yet.
+function requestFrame() {
+  if (queued) return; queued = true;
+  requestAnimationFrame(t => { clearTimeout(fallback); if (queued) frame(t); });
+  fallback = setTimeout(() => { if (queued) frame(); }, 150);
+}
 addEventListener('scroll', requestFrame, {passive: true});
 addEventListener('resize', requestFrame, {passive: true});
 
@@ -159,12 +170,13 @@ if (matchMedia('print').matches || navigator.webdriver) { printing = true; finis
 setActive(slides.find(s => `#${s.id}` === location.hash) || slides[0]);
 updateMotion();
 pickActive();
+frame();
 
 // Deep links (#slide-6): land on the slide even after fonts and images shift the layout.
 const linked = slides.find(s => `#${s.id}` === location.hash);
 if (linked) {
   history.scrollRestoration = 'manual';
   const align = () => { if (location.hash === `#${linked.id}`) { document.documentElement.style.scrollBehavior = 'auto'; scrollTo(0, linked.offsetTop); document.documentElement.style.scrollBehavior = ''; } };
-  requestAnimationFrame(align); document.fonts?.ready.then(() => requestAnimationFrame(align));
-  addEventListener('load', () => requestAnimationFrame(align), {once: true});
+  align(); document.fonts?.ready.then(align);
+  addEventListener('load', () => { align(); requestFrame(); }, {once: true});
 }
