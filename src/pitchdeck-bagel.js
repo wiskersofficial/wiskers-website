@@ -28,9 +28,27 @@ export function mountBagelPhone(root) {
     frame.hidden = false; frame.title = `Story: ${current.dataset.title}`;
     frame.src = current.dataset.story;
   }
+  // The stories animate with requestAnimationFrame. While the phone is off screen the deck holds
+  // their frames (same origin), so a loaded story costs nothing until it is back in view, where it
+  // carries on from the exact frame it stopped on.
+  let offscreen = true, held = [];
+  function gate(win) {
+    const native = win.requestAnimationFrame.bind(win), cancel = win.cancelAnimationFrame.bind(win);
+    // Only once live: a story loading ahead of the slide still draws its first frames.
+    win.requestAnimationFrame = cb => { if (!offscreen || !screen.classList.contains('is-live')) return native(cb); held.push(cb); return -held.length; };
+    win.cancelAnimationFrame = id => { if (id < 0) held[-id - 1] = null; else cancel(id); };
+    return native;
+  }
+  let release = null;
+  new IntersectionObserver(([e]) => {
+    offscreen = !e.isIntersecting;
+    if (!offscreen && release) { const queue = held; held = []; queue.forEach(cb => cb && release(cb)); }
+  }).observe(screen);
+
   frame.addEventListener('load', () => {
     if (!frame.getAttribute('src')) return;
     const win = frame.contentWindow;
+    held = []; release = gate(win);
     const takeOver = () => { userUntil = performance.now() + IDLE; };
     for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) win.addEventListener(type, takeOver, {passive: true});
     // Give 3D scenes a moment to draw before swapping out the poster.

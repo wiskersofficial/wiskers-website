@@ -16,7 +16,8 @@
  * @property {Function|null} html2canvas
  *   Inject the html2canvas function directly. If omitted, a global `window.html2canvas`
  *   is used when present, otherwise it is dynamically imported (needs a bundler).
- * @property {boolean} live          Re-upload the texture every frame (for <video>/<canvas> sources).
+ * @property {boolean|null} live     Re-upload the texture every frame. `null` (default): only for <video>/<canvas> sources.
+ *   Wiskers patch: `false` now also holds for a <canvas> source that never changes.
  * @property {string}  crossOrigin   crossOrigin attribute used when loading image URLs.
  *
  * @property {number}  twist         Rotational "melt" distortion toward the edges.
@@ -44,7 +45,7 @@ export const DEFAULTS = {
   captureScale: DPR,
   useCORS: true,
   html2canvas: null,
-  live: false,
+  live: null,
   crossOrigin: 'anonymous',
 
   twist: 0.75,

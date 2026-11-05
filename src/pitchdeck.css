@@ -280,6 +280,8 @@ h4 { font-size: 16px; font-weight: 600; line-height: 1.3; }
 .team-photo { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #0b1530; }
 .team-photo::before { content: ''; position: absolute; inset: -60px; background: url('/pitchdeck-assets/founders-josh-imran.jpg') center / cover no-repeat; filter: blur(34px) brightness(.55) saturate(1.15); }
 .team-photo-sharp { position: absolute; top: 0; bottom: 0; left: 50%; height: 100%; aspect-ratio: 4 / 3; transform: translateX(-50%); background: url('/pitchdeck-assets/founders-josh-imran.jpg') center / cover no-repeat; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+/* Fetch the photo only once the team slide is near (JS adds .is-near); print and no-JS always show it. */
+@media screen { .js .slide:not(.is-near) .team-photo::before, .js .slide:not(.is-near) .team-photo-sharp { background-image: none; } }
 .team-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9, 21, 64, .55) 0%, rgba(9, 21, 64, 0) 24%, rgba(9, 21, 64, 0) 58%, rgba(9, 21, 64, .5) 100%); }
 /* Each founder's card sits under their own torso; the record between them stays in view. */
 .team-cards { display: flex; justify-content: space-between; align-items: flex-end; gap: clamp(16px, 2.4vw, 32px); align-self: end; }

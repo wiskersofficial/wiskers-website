@@ -110,6 +110,9 @@ addEventListener('resize', requestFrame, {passive: true});
 function setActive(slide) {
   if (active === slide) return;
   active = slide; counter.textContent = slide.dataset.slide;
+  // Slides next to the active one fetch their heavy backgrounds (the team photo) ahead of arrival.
+  const at = slides.indexOf(slide);
+  slides.forEach((s, i) => { if (Math.abs(i - at) <= 1) s.classList.add('is-near'); });
   links.forEach(a => a.hash === `#${slide.id}` ? a.setAttribute('aria-current', 'step') : a.removeAttribute('aria-current'));
   const light = LIGHT.has(slide.dataset.theme);
   document.documentElement.classList.toggle('tone-light', light);
@@ -158,8 +161,23 @@ addEventListener('keydown', e => {
   slides[i].scrollIntoView({behavior: still() ? 'auto' : 'smooth'});
 });
 
+// Images further down (lazy <img>s and the team photo) stay off the first load.
+// They load on approach, or here: for print, and once the page is idle, so printing later has them.
+function loadAllImages() {
+  slides.forEach(s => s.classList.add('is-near'));
+  document.querySelectorAll('img[loading="lazy"]').forEach(img => { img.loading = 'eager'; });
+}
+addEventListener('load', () => {
+  if (navigator.connection?.saveData) return;
+  const idle = window.requestIdleCallback || (cb => setTimeout(cb, 1500));
+  setTimeout(() => idle(loadAllImages, {timeout: 3000}), 1000);
+}, {once: true});
+
 // Print and PDF: every effect in its finished state.
-function finishAll() { scenes.forEach(s => paintScene(s, 1)); slides.forEach(s => s.classList.add('is-visible')); }
+function finishAll() {
+  scenes.forEach(s => paintScene(s, 1)); slides.forEach(s => s.classList.add('is-visible'));
+  loadAllImages();
+}
 addEventListener('beforeprint', () => {
   printing = true; finishAll(); glass.release();
   wave.setReduced(true);
