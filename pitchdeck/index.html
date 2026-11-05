@@ -12,128 +12,278 @@
   <meta property="og:type" content="website">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <title>Wiskers — Make advertising an experience.</title>
-  <link rel="preload" href="/pitchdeck-assets/MontserratAlternates-SemiBold.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="/pitchdeck-assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/pitchdeck-assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/src/pitchdeck.css">
-  <link rel="stylesheet" href="/src/pitchdeck-reimagined.css">
-  <link rel="stylesheet" href="/src/pitchdeck-act-two.css">
-  <link rel="stylesheet" href="/src/pitchdeck-opening.css">
-  <link rel="stylesheet" href="/src/pitchdeck-studio.css">
-  <link rel="stylesheet" href="/src/pitchdeck-upgrades.css">
-  <link rel="stylesheet" href="/src/pitchdeck-library.css">
   <script type="module" src="/src/pitchdeck.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#slide-1">Skip to the pitch</a>
   <header class="deck-header" aria-label="Pitch deck controls">
-    <a class="deck-brand" href="/" aria-label="Wiskers home">
-      <img class="brand-dark" src="/pitchdeck-assets/wiskers-v2-wordmark-light.svg" alt="wiskers" width="760" height="184">
-    </a>
+    <a class="deck-brand" href="/" aria-label="Wiskers home"><img src="/pitchdeck-assets/wiskers-v2-wordmark-light.svg" alt="wiskers" width="760" height="184"></a>
     <nav class="deck-nav" aria-label="Deck navigation">
-      <a href="#slide-1" aria-label="Slide 1">01</a><a href="#slide-2" aria-label="Slide 2">02</a><a href="#slide-3" aria-label="Slide 3">03</a><a href="#slide-4" aria-label="Slide 4">04</a><a href="#slide-5" aria-label="Slide 5">05</a><a href="#slide-6" aria-label="Slide 6">06</a><a href="#slide-7" aria-label="Slide 7">07</a><a href="#slide-8" aria-label="Slide 8">08</a><a href="#slide-9" aria-label="Slide 9">09</a><a href="#slide-10" aria-label="Slide 10">10</a>
+      <a href="#slide-1" aria-label="Slide 1"></a><a href="#slide-2" aria-label="Slide 2"></a><a href="#slide-3" aria-label="Slide 3"></a><a href="#slide-4" aria-label="Slide 4"></a><a href="#slide-5" aria-label="Slide 5"></a><a href="#slide-6" aria-label="Slide 6"></a><a href="#slide-7" aria-label="Slide 7"></a><a href="#slide-8" aria-label="Slide 8"></a><a href="#slide-9" aria-label="Slide 9"></a><a href="#slide-10" aria-label="Slide 10"></a>
     </nav>
-    <div class="deck-actions"><button class="deck-replay" type="button">Replay</button><button class="deck-motion" type="button" aria-pressed="false">Pause motion</button><span class="slide-count"><b id="current-slide">01</b> / 10</span><a class="pdf-link" href="/pitchdeck.pdf" download>Download PDF <span aria-hidden="true">↗</span></a></div>
+    <div class="deck-actions">
+      <button class="deck-motion" type="button" aria-pressed="false">Pause motion</button>
+      <span class="slide-count"><b id="current-slide">01</b> / 10</span>
+      <a class="pdf-link" href="/pitchdeck.pdf" download>PDF <span aria-hidden="true">↓</span></a>
+    </div>
   </header>
+
   <main id="pitch" class="pitch-deck">
-    <section class="deck-slide pitch-intro" id="slide-1" aria-labelledby="title-1" data-slide="01">
-      <img class="intro-wordmark" src="/pitchdeck-assets/wiskers-v2-wordmark-light.svg" alt="wiskers"><div class="intro-copy"><h1 id="title-1">Make advertising<br><em>an experience.</em></h1><p>Interactive campaigns, powered by our<br class="intro-break"> experience <span class="engine-word">engine<svg viewBox="0 0 200 90" aria-hidden="true"><ellipse cx="100" cy="45" rx="96" ry="30"/><ellipse cx="100" cy="45" rx="91" ry="36"/></svg></span></p></div>
-      <div class="wave-stage" role="button" tabindex="0" aria-label="Create a coloured wave. Click, tap or press Enter."><canvas class="wave-grid" aria-hidden="true"></canvas><span class="wave-invite">Click or tap to make a wave <i>↗</i></span><img class="wave-print" alt="A field of three-dimensional cubes carries coloured waves"></div>
-      <a class="scroll-cue" href="#slide-2" aria-label="Scroll to slide 2"><span>SCROLL TO EXPLORE</span><b>↓</b></a><div class="slide-index"><span>01</span><i></i><span>10</span></div>
+
+    <!-- 01 · Title -->
+    <section class="slide s-intro" id="slide-1" aria-labelledby="title-1" data-slide="01">
+      <div class="intro-copy">
+        <h1 id="title-1">Make advertising<br><em>an experience.</em></h1>
+        <p class="lead">Interactive campaigns, powered by our experience <span class="engine-word">engine<svg viewBox="0 0 200 90" aria-hidden="true"><ellipse cx="100" cy="45" rx="96" ry="30"/><ellipse cx="100" cy="45" rx="91" ry="36"/></svg></span></p>
+      </div>
+      <div class="wave-stage" role="button" tabindex="0" aria-label="Create a coloured wave. Click, tap or press Enter.">
+        <canvas class="wave-grid" aria-hidden="true"></canvas>
+        <img class="wave-print" alt="A field of three-dimensional cubes carries coloured waves">
+      </div>
+      <p class="wave-invite">Click or tap to make a wave <span aria-hidden="true">↗</span></p>
     </section>
 
-    <section class="deck-slide pitch-problem evidence-scene" id="slide-2" aria-labelledby="title-2" data-slide="02">
-      <div class="evidence-ripple" aria-hidden="true"></div>
-      <header class="opening-heading"><span class="scene-label">THE PROBLEM</span><h2 id="title-2">A form. A download.<br><em>Then what?</em></h2></header>
-      <div class="lead-campaign" role="img" aria-label="A common B2B journey: share contact details through a form, download a guide, then receive a follow-up.">
-        <div class="lead-campaign-top"><span>THE EXISTING PROCESS</span><i>↗</i></div>
-        <div class="lead-objects">
-          <div class="lead-object lead-form"><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="lead-paper" x="23" y="6" width="94" height="108" rx="9"/><path class="lead-ink" d="M39 24H76M39 41H100M39 61H100"/><path class="form-fill" d="M41 41H81M41 61H91"/><rect class="form-submit" x="38" y="80" width="64" height="18" rx="4"/><path class="form-check" d="m62 88 5 5 13-13"/></svg><b>Form</b></div>
-          <span class="lead-link lead-link-one" aria-hidden="true">→</span>
-          <div class="lead-object lead-download"><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="guide-back" x="33" y="10" width="84" height="103" rx="6"/><rect class="guide-front" x="23" y="5" width="84" height="103" rx="6"/><path class="guide-lines" d="M37 24H78M37 33H65"/><text x="37" y="52">GUIDE</text><circle cx="65" cy="76" r="19"/><path class="guide-arrow" d="M65 64V86m-8-8 8 8 8-8"/></svg><b>Download</b></div>
-          <span class="lead-link lead-link-two" aria-hidden="true">→</span>
-          <div class="lead-object lead-followup"><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="mail-note" x="32" y="8" width="77" height="79" rx="6"/><path class="mail-writing" d="M45 26H91M45 38H83M45 50H94"/><path class="mail-body" d="M19 46h102v63H19z"/><path class="mail-flap" d="m19 46 51 37 51-37M19 109l37-36m65 36L84 73"/><circle class="mail-badge" cx="114" cy="24" r="12"/><path class="mail-tick" d="m108 24 4 4 8-9"/></svg><b>Follow-up</b></div>
-        </div>
+    <!-- 02 · Problem -->
+    <section class="slide s-problem" id="slide-2" aria-labelledby="title-2" data-slide="02">
+      <div class="problem-top">
+        <header class="slide-head">
+          <span class="eyebrow">The problem</span>
+          <h2 id="title-2">A form. A download.<br><em>Then what?</em></h2>
+        </header>
+        <figure class="journey" role="img" aria-label="A common B2B journey: share contact details through a form, download a guide, then receive a follow-up.">
+          <figcaption class="eyebrow eyebrow-quiet">The existing process</figcaption>
+          <ol class="journey-steps">
+            <li><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="paper" x="23" y="6" width="94" height="108" rx="9"/><path class="ink" d="M39 24H76M39 41H100M39 61H100"/><path class="fill-line" d="M41 41H81M41 61H91"/><rect class="accent-mint" x="38" y="80" width="64" height="18" rx="4"/><path class="tick" d="m62 88 5 5 13-13"/></svg><span>Form</span></li>
+            <li aria-hidden="true" class="journey-arrow">→</li>
+            <li><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="paper-back" x="33" y="10" width="84" height="103" rx="6"/><rect class="paper" x="23" y="5" width="84" height="103" rx="6"/><path class="ink" d="M37 24H78M37 33H65"/><circle class="accent-coral" cx="65" cy="72" r="19"/><path class="arrow-down" d="M65 61V82m-8-8 8 8 8-8"/></svg><span>Download</span></li>
+            <li aria-hidden="true" class="journey-arrow">→</li>
+            <li><svg viewBox="0 0 140 120" aria-hidden="true"><rect class="paper" x="32" y="8" width="77" height="79" rx="6"/><path class="ink" d="M45 26H91M45 38H83M45 50H94"/><path class="envelope" d="M19 46h102v63H19z"/><path class="envelope-line" d="m19 46 51 37 51-37M19 109l37-36m65 36L84 73"/></svg><span>Follow-up</span></li>
+          </ol>
+        </figure>
       </div>
       <aside hidden data-presenter-notes>In B2B, a common approach is to offer a guide, report or video in exchange for contact details. The buyer gets an asset to take away, and the business gets a lead. What if discovering the offer was an experience in itself?</aside>
-      <button class="reveal-skip" type="button" data-reveal-skip="2">Show the full slide ↗</button>
-      <div class="evidence-grid">
-        <section class="evidence-group evidence-production"><h3>Production <span>01 / THE WORKLOAD</span></h3><div class="production-pair">
-          <article class="evidence-point" data-reveal="0"><div class="evidence-number">43<span>%</span></div><h4>Pressure to produce more.</h4><p>B2B practitioners reporting greater pressure in 2025 than 2024 to increase content flow across channels and audiences.</p><a href="https://business.adobe.com/content/dam/dx/us/en/resources/reports/b2b-marketing-digital-trends/2025-ai-and-digital-trends-b2b-journeys-uk.pdf" target="_blank" rel="noopener noreferrer">Adobe, 2025 · 615 B2B practitioners ↗</a></article>
-          <article class="evidence-point" data-reveal="1"><div class="evidence-number"><small>About</small>5<small>rounds</small></div><h4>Before the work is approved.</h4><p>The average number of creative revisions agencies reported before project approval.</p><a href="https://wfanet.org/knowledge/item/2025/04/18/what-s-holding-back-brilliant-ideas" target="_blank" rel="noopener noreferrer">World Federation of Advertisers, 2025 ↗</a></article>
-        </div></section>
-        <section class="evidence-group evidence-experience"><h3>Experience <span>02 / THE AUDIENCE</span></h3><article class="evidence-point" data-reveal="2"><div class="evidence-number">66,000<span>+</span></div><span class="evidence-qualifier">CONSUMERS STUDIED</span><h4>Interruptions are unwelcome.</h4><p>Pop-ups and autoplay video with sound were among the least preferred formats in desktop and mobile web research.</p><a href="https://www.betterads.org/research/" target="_blank" rel="noopener noreferrer">Coalition for Better Ads · consumer research ↗</a></article></section>
-        <section class="evidence-group evidence-insight"><h3>Insight <span>03 / THE OUTCOME</span></h3><article class="evidence-point" data-reveal="3"><div class="evidence-number">58</div><span class="evidence-qualifier">CAMPAIGNS STUDIED</span><h4>A click isn’t a purchase.</h4><p>A 2015 analysis found clicks were poor proxies for the purchase outcomes examined.</p><a href="https://journals.sagepub.com/doi/abs/10.1089/big.2015.0006" target="_blank" rel="noopener noreferrer">Dalessandro et al., 2015 · online campaigns ↗</a></article></section>
+      <div class="evidence">
+        <section class="evidence-group span-2">
+          <h3>Production <span>01 / The workload</span></h3>
+          <div class="evidence-pair">
+            <article class="stat"><p class="stat-figure">43<small>%</small></p><h4>Pressure to produce more.</h4><p>B2B practitioners reporting greater pressure in 2025 than 2024 to increase content flow across channels and audiences.</p><a href="https://business.adobe.com/content/dam/dx/us/en/resources/reports/b2b-marketing-digital-trends/2025-ai-and-digital-trends-b2b-journeys-uk.pdf" target="_blank" rel="noopener noreferrer">Adobe, 2025 · 615 B2B practitioners ↗</a></article>
+            <article class="stat"><p class="stat-figure"><small class="pre">About</small>5<small>rounds</small></p><h4>Before the work is approved.</h4><p>The average number of creative revisions agencies reported before project approval.</p><a href="https://wfanet.org/knowledge/item/2025/04/18/what-s-holding-back-brilliant-ideas" target="_blank" rel="noopener noreferrer">World Federation of Advertisers, 2025 ↗</a></article>
+          </div>
+        </section>
+        <section class="evidence-group">
+          <h3>Experience <span>02 / The audience</span></h3>
+          <article class="stat"><p class="stat-figure">66,000<small>+</small></p><p class="stat-qualifier">Consumers studied</p><h4>Interruptions are unwelcome.</h4><p>Pop-ups and autoplay video with sound were among the least preferred formats in desktop and mobile web research.</p><a href="https://www.betterads.org/research/" target="_blank" rel="noopener noreferrer">Coalition for Better Ads · consumer research ↗</a></article>
+        </section>
+        <section class="evidence-group">
+          <h3>Insight <span>03 / The outcome</span></h3>
+          <article class="stat"><p class="stat-figure">58</p><p class="stat-qualifier">Campaigns studied</p><h4>A click isn’t a purchase.</h4><p>A 2015 analysis found clicks were poor proxies for the purchase outcomes examined.</p><a href="https://journals.sagepub.com/doi/abs/10.1089/big.2015.0006" target="_blank" rel="noopener noreferrer">Dalessandro et al., 2015 · online campaigns ↗</a></article>
+        </section>
       </div>
-      <a class="evidence-more" href="/pitchdeck/research.html">Research &amp; investor notes ↗</a><p class="problem-conclusion">Campaigns have to do <em>more.</em><span>Make it worth exploring. Learn from the exploration.</span></p><div class="slide-index"><span>02</span><i></i><span>10</span></div>
+      <footer class="slide-foot">
+        <p class="conclusion">Campaigns have to do <em>more.</em> <span>Make it worth exploring. Learn from the exploration.</span></p>
+        <a class="text-link" href="/pitchdeck/research.html">Research &amp; investor notes ↗</a>
+      </footer>
     </section>
 
-    <section class="deck-slide pitch-solution warehouse-scene studio-refined pdf-intro" id="slide-3" aria-labelledby="title-3" data-slide="03">
-      <div class="pdf-opening" aria-live="off"><span>THE SAME OFFER. A DIFFERENT EXPERIENCE.</span><p>This could have been a <em>PDF.</em></p><svg viewBox="0 0 90 110" aria-hidden="true"><path d="M14 4h42l23 23v78H14zM56 4v24h23M27 48h38M27 59h38M27 70h24"/><text x="27" y="94">PDF</text></svg></div>
-      <header class="opening-heading"><span class="scene-label">OUR SOLUTION</span><h2 id="title-3">Ads worth <em>exploring.</em></h2><p class="solution-route">An ad invites people into a Wiskers-hosted interactive experience.</p></header>
+    <!-- 03 · Solution -->
+    <section class="slide s-solution" id="slide-3" aria-labelledby="title-3" data-slide="03">
+      <div class="solution-copy">
+        <header class="slide-head">
+          <span class="eyebrow">Our solution</span>
+          <p class="kicker">This could have been a PDF.</p>
+          <h2 id="title-3">Ads worth <em>exploring.</em></h2>
+          <p class="lead">An ad invites people into a Wiskers-hosted interactive experience.</p>
+        </header>
+        <div class="activity">
+          <span class="eyebrow eyebrow-quiet">Exploration → signal</span>
+          <h3>What caught their attention?</h3>
+          <p>Choices inside the experience become observable activity.</p>
+          <ol class="activity-log">
+            <li data-activity="small"><i></i><span>Selected</span><strong>Small parcels</strong></li>
+            <li data-activity="large"><i></i><span>Selected</span><strong>Large boxes</strong></li>
+            <li data-activity="sensors"><i></i><span>Opened</span><strong>Sensors</strong></li>
+          </ol>
+          <p class="fine">Illustrative interaction events, not inferred buying intent.</p>
+        </div>
+      </div>
       <aside hidden data-presenter-notes>This could have been a PDF. Instead, it’s an experience. People can explore the product for themselves, and the business can see what they engage with.</aside>
-      <div class="warehouse-ad" id="warehouse-demo"><div class="warehouse-client"><span class="client-symbol" aria-hidden="true">N</span><div><b>NORTHLINE</b><small>WAREHOUSE ROBOTICS</small></div><span class="demo-tag">DEMO</span></div><canvas class="warehouse-canvas" aria-label="Interactive 3D warehouse: a coral robot handles parcels and opens to reveal its sensors, lift and wheels"></canvas><img class="warehouse-print" src="/pitchdeck-assets/warehouse-overview.png" alt="Northline warehouse robot with shelves, parcels and sorting stations"><span class="warehouse-stage-label">A smarter move, at every scale.</span><span class="warehouse-phase">CHOOSE A JOB. SEE IT HAPPEN.</span><svg class="demo-pointer" viewBox="0 0 30 40" aria-hidden="true"><path d="M3 2 25 24 15 26 11 36Z" fill="#091540" stroke="#f3f0e9" stroke-width="2"/></svg></div>
-      <aside class="activity-panel"><span class="activity-eyebrow">EXPLORATION → SIGNAL</span><h3>What caught<br>their attention?</h3><p>Choices inside the experience become observable activity.</p><ol><li data-activity="small"><i></i><span>Selected<strong>Small parcels</strong></span><b>↗</b></li><li data-activity="large"><i></i><span>Selected<strong>Large boxes</strong></span><b>↗</b></li><li data-activity="sensors"><i></i><span>Opened<strong>Sensors</strong></span><b>↗</b></li></ol><small>Illustrative interaction events,<br>not inferred buying intent.</small></aside>
-      <div class="warehouse-controls" aria-label="Explore the warehouse demo"><button data-demo="small" type="button">Small parcels</button><button data-demo="large" type="button">Large boxes</button><button data-demo="explore" type="button">Explore the robot <span>↗</span></button><button data-demo="sensors" type="button">Sensors <span>◎</span></button></div><button class="demo-resume" type="button" hidden>Resume automatic playback <span>▶</span></button><span class="demo-playback">AUTOMATIC DEMO <i></i> OR TRY A CHOICE</span>
-      <div class="slide-index"><span>03</span><i></i><span>10</span></div>
+      <div class="demo">
+        <figure class="demo-frame" id="warehouse-demo">
+          <div class="demo-bar">
+            <span class="client-mark" aria-hidden="true">N</span>
+            <span class="client-name"><b>Northline</b><small>Warehouse robotics</small></span>
+            <span class="demo-tagline">A smarter move, at every scale.</span>
+            <span class="demo-tag">Demo</span>
+          </div>
+          <div class="demo-stage">
+            <canvas class="demo-canvas" aria-label="Interactive 3D warehouse: a coral robot handles parcels and opens to reveal its sensors, lift and wheels"></canvas>
+            <img class="demo-print" src="/pitchdeck-assets/warehouse-overview.png" alt="Northline warehouse robot with shelves, parcels and sorting stations">
+            <div class="demo-labels" aria-hidden="true"><span data-part="sensor">Sensors</span><span data-part="lift">Lifting mechanism</span><span data-part="wheel">Drive wheels</span></div>
+          </div>
+          <figcaption class="demo-phase">Choose a job. See it happen.</figcaption>
+        </figure>
+        <div class="demo-controls" aria-label="Explore the warehouse demo">
+          <button data-demo="small" type="button">Small parcels</button>
+          <button data-demo="large" type="button">Large boxes</button>
+          <button data-demo="explore" type="button">Explore the robot</button>
+          <button data-demo="sensors" type="button">Sensors</button>
+          <button class="demo-resume" type="button" hidden>Resume automatic playback ▶</button>
+          <span class="demo-playback">Automatic demo · or try a choice</span>
+        </div>
+      </div>
     </section>
 
-    <section class="deck-slide pitch-engine engine-journey-scene studio-refined client-journey" id="slide-4" aria-labelledby="title-4" data-slide="04">
-      <header class="opening-heading"><span class="scene-label">WHAT WISKERS DELIVERS</span><h2 id="title-4">Experiences for your audience.<br><em>Insight for your team.</em></h2></header><button class="reveal-skip" type="button" data-reveal-skip="4">Show the whole journey ↗</button>
+    <!-- 04 · What Wiskers delivers -->
+    <section class="slide s-engine" id="slide-4" aria-labelledby="title-4" data-slide="04">
+      <header class="slide-head">
+        <span class="eyebrow">What Wiskers delivers</span>
+        <h2 id="title-4">Experiences for your audience.<br><em>Insight for your team.</em></h2>
+      </header>
       <aside hidden data-presenter-notes>The Wiskers team works from the client brief and assets, creates and hosts an interactive campaign, and helps the client understand observed engagement. Contact details are submitted separately by a visitor who chooses to get in touch. Linking events to a person depends on implementation and permissions.</aside>
-      <div class="engine-studio-stage" role="img" aria-label="The Wiskers experience engine assembles a warehouse campaign from a client brief and product materials."><img class="engine-studio-print" src="/pitchdeck-assets/engine-studio.png" alt=""></div>
-      <div class="engine-pipeline">
-        <section class="pipeline-step engine-inputs" data-engine-reveal="0"><h3><span>01</span>Client brief</h3><div class="input-brief"><small>NORTHLINE / CAMPAIGN BRIEF</small><strong>Show what<br>our robot can do.</strong><span>For warehouse &amp;<br>fulfilment operators</span><i>↗</i></div><div class="input-assets"><img class="setting-asset" src="/pitchdeck-assets/warehouse-overview.png" alt="Warehouse setting"><img class="robot-asset" src="/pitchdeck-assets/warehouse-robot.png" alt="Northline warehouse robot"><span>Client product + materials</span></div></section>
-        <section class="pipeline-step opening-engine-core" data-engine-reveal="1"><h3><span>02</span>Created by Wiskers</h3><p>Our team + experience engine</p></section>
-        <section class="pipeline-step opening-engine-outputs" data-engine-reveal="2"><h3><span>03</span>Interactive campaign</h3><div class="destination-card"><div class="destination-top"><span>WISKERS-HOSTED EXPERIENCE</span><i>↗</i></div><div class="destination-address">wiskers.click / campaign <b>↗</b></div><img class="warehouse-output" src="/pitchdeck-assets/warehouse-overview.png" alt="Illustrative Northline warehouse campaign"><strong>NORTHLINE</strong><small>Explore the robot</small></div></section>
-        <section class="pipeline-step engine-distribution" data-engine-reveal="3"><h3><span>04</span>Audience explores</h3><div class="audience-handoff"><span>CAMPAIGN LINK</span><strong>Ad or campaign<br>→ experience</strong><small>Visitors choose what to explore.</small></div></section>
-        <section class="pipeline-step engine-signals" data-engine-reveal="4"><h3><span>05</span>Client insight</h3><div class="engine-signal-panel"><small>ILLUSTRATIVE CLIENT VIEW</small><strong>What people explored</strong><ol><li><i></i><span>Selected<b>Large boxes</b></span></li><li><i></i><span>Opened<b>Sensors</b></span></li></ol><div class="contact-step"><span>SEPARATE · OPTIONAL</span><b>Visitor gets in touch</b><small>Contact details shared by choice</small></div><span>Interactions can inform a more relevant follow-up.</span></div></section>
-      </div><p class="engine-journey-line">Client brief <span>→</span> Interactive campaign <span>→</span> Audience explores <span>→</span> Engagement insight</p><span class="engine-disclaimer">Illustrative campaign · linking actions to a person depends on implementation and permissions</span><div class="slide-index"><span>04</span><i></i><span>10</span></div>
+      <ol class="flow">
+        <li class="flow-step">
+          <div class="tile tile-brief">
+            <small>Northline / campaign brief</small>
+            <strong>Show what our robot can do.</strong>
+            <span>For warehouse &amp; fulfilment operators</span>
+          </div>
+          <h3><span>01</span>Client brief</h3>
+          <p>Client product + materials</p>
+        </li>
+        <li class="flow-step">
+          <div class="tile tile-engine" aria-hidden="true">
+            <svg viewBox="0 0 160 120"><path class="layer l3" d="M80 78 140 58 80 38 20 58Z"/><path class="layer l2" d="M80 62 140 42 80 22 20 42Z"/><path class="layer l1" d="M80 46 140 26 80 6 20 26Z"/><path class="edge" d="M20 58v8l60 20 60-20v-8"/></svg>
+            <span class="tile-caption">Scene · Robot · Choices · Interaction cues</span>
+          </div>
+          <h3><span>02</span>Created by Wiskers</h3>
+          <p>Our team + experience engine</p>
+        </li>
+        <li class="flow-step">
+          <div class="tile tile-campaign">
+            <span class="browser-bar"><i></i><i></i><i></i><b>wiskers.click / campaign</b></span>
+            <img src="/pitchdeck-assets/warehouse-overview.png" alt="Illustrative Northline warehouse campaign" data-demo-still>
+            <span class="campaign-cta"><b>Northline</b> Explore the robot ↗</span>
+          </div>
+          <h3><span>03</span>Interactive campaign</h3>
+          <p>Wiskers-hosted experience</p>
+        </li>
+        <li class="flow-step">
+          <div class="tile tile-audience">
+            <small>Campaign link</small>
+            <strong>Ad or campaign → experience</strong>
+            <span class="choice-chips" aria-hidden="true"><i>Small parcels</i><i class="on">Large boxes</i><i class="on">Sensors</i></span>
+          </div>
+          <h3><span>04</span>Audience explores</h3>
+          <p>Visitors choose what to explore.</p>
+        </li>
+        <li class="flow-step">
+          <div class="tile tile-insight">
+            <small>Illustrative client view</small>
+            <strong>What people explored</strong>
+            <ul><li><i></i>Selected <b>Large boxes</b></li><li><i></i>Opened <b>Sensors</b></li></ul>
+            <span class="contact"><small>Separate · optional</small>Visitor gets in touch</span>
+          </div>
+          <h3><span>05</span>Client insight</h3>
+          <p>Interactions can inform a more relevant follow-up.</p>
+        </li>
+      </ol>
+      <footer class="slide-foot">
+        <p class="fine">Illustrative campaign · contact details are shared by choice · linking actions to a person depends on implementation and permissions</p>
+      </footer>
     </section>
 
-    <section class="deck-slide pitch-team" id="slide-5" aria-labelledby="title-5" data-slide="05">
-      <div class="team-photo" aria-hidden="true"></div><div class="team-shade" aria-hidden="true"></div><h2 id="title-5">The team<span>.</span></h2>
+    <!-- 05 · Team -->
+    <section class="slide s-team" id="slide-5" aria-labelledby="title-5" data-slide="05">
+      <div class="team-photo" aria-hidden="true"></div>
+      <header class="slide-head"><span class="eyebrow">The founders</span><h2 id="title-5">The team<em>.</em></h2></header>
       <div class="team-cards">
-        <article class="founder-glass founder-imran"><div class="founder-copy"><span>CO-FOUNDER</span><h3>Imran Azizuddin</h3><p>Product, UX &amp; technology</p><ul><li><b>Game &amp; app developer · UX evaluator</b><span>Bro &amp; Arrow · Echoes</span></li><li><b>Content &amp; growth marketing</b><span>Copywriting, narrative and agency experience</span></li><li><b>BEng Robotics</b><span>Queen Mary University of London</span></li></ul></div></article>
-        <article class="founder-glass founder-josh"><div class="founder-copy"><span>CO-FOUNDER</span><h3>Josh Augustine<span class="founder-credential">, MBA</span></h3><p>B2B marketing &amp; commercial</p><ul><li><b>MBA · University of Cambridge</b><span>Cambridge Judge Business School · completed 2026</span></li><li><b>6 years in B2B campaign management</b><span>Planning-inc/Plinc · Pipeline360</span></li><li><b>BEng Mechanical Engineering</b><span>Queen Mary University of London</span></li></ul></div></article>
+        <article class="founder"><span class="eyebrow eyebrow-quiet">Co-founder</span><h3>Imran Azizuddin</h3><p class="role">Product, UX &amp; technology</p><ul><li><b>Game &amp; app developer · UX evaluator</b><span>Bro &amp; Arrow · Echoes</span></li><li><b>Content &amp; growth marketing</b><span>Copywriting, narrative and agency experience</span></li><li><b>BEng Robotics</b><span>Queen Mary University of London</span></li></ul></article>
+        <article class="founder"><span class="eyebrow eyebrow-quiet">Co-founder</span><h3>Josh Augustine<span class="credential">, MBA</span></h3><p class="role">B2B marketing &amp; commercial</p><ul><li><b>MBA · University of Cambridge</b><span>Cambridge Judge Business School · completed 2026</span></li><li><b>6 years in B2B campaign management</b><span>Planning-inc/Plinc · Pipeline360</span></li><li><b>BEng Mechanical Engineering</b><span>Queen Mary University of London</span></li></ul></article>
       </div>
-      <div class="slide-index"><span>05</span><i></i><span>10</span></div>
     </section>
 
-    <section class="deck-slide pitch-act-two act-bagel" id="slide-6" aria-labelledby="title-6" data-slide="06" data-stage="10" data-phone="bagel">
-      <header class="act-copy"><span class="scene-label">A SECOND APPLICATION</span><h2 id="title-6">Meet <em>Bagel.</em></h2><p class="act-lead">Immersive stories for the entrepreneurial world.</p></header>
-      <div class="bagel-thesis act-art"><p>Building an audience through<br><b>stories worth exploring.</b></p><p class="bagel-detail">Built on the same experience engine.</p><div class="shared-engine"><span>SCROLL-BASED WISKERS · SHARED ENGINE</span><div><i>Structure</i><i>Interaction</i><i>Experience</i></div></div></div><div class="bagel-orbit" aria-hidden="true"><i></i><i></i><i></i></div><span class="bagel-watermark" aria-hidden="true">bagel</span>
-      <div class="device-aura" aria-hidden="true"></div><div class="slide-device" role="group" aria-label="Campaign and product demonstration"><div class="device-island"></div><div class="device-screen"><img class="product-still" src="/pitchdeck-assets/prototype-news-still.png" alt="Actual continuous stories prototype capture"><div class="bagel-screen"><header><b>bagel</b><span>A LITTLE MORE CURIOUS.</span></header><article><span>THE ENTREPRENEURIAL WORLD</span><h3>Ideas worth<br>spending<br><em>time with.</em></h3><div class="bagel-art"><i></i><i></i><i></i></div><p>Scroll. Explore. Follow a thought.</p></article><footer>PROPOSED EDITORIAL APPLICATION</footer></div></div></div><p class="act-footnote">Bagel is in development · prototype content shown; its audience and evidence are still to build.</p><div class="slide-index"><span>06</span><i></i><span>10</span></div>
-    </section>
-
-    <section class="deck-slide pitch-commercial pitch-growth" id="slide-7" aria-labelledby="title-7" data-slide="07">
-      <header class="commercial-heading"><span class="scene-label">TWO APPLICATIONS · ONE ENGINE</span><h2 id="title-7">How we <em>grow.</em></h2></header>
-      <div class="growth-tracks">
-        <article class="commercial-glass growth-client"><span>01 / B2B</span><h3>Client campaigns</h3><ol><li>Founder-led outreach</li><li>Demo and brief</li><li>Paid pilot</li><li>Repeat work</li></ol><p><b>Campaign fee + ongoing service</b><br>Create and launch · Distribution, reporting and improvement</p></article>
-        <article class="commercial-glass growth-bagel"><span>02 / CONSUMER</span><h3>Bagel</h3><ol><li>Reach the first readers</li><li>Deliver great stories</li><li>Bring readers back</li><li>Grow the audience</li></ol><p><b>Build an audience</b><br>Scroll-based stories help develop and test the shared engine.</p></article>
+    <!-- 06 · Bagel -->
+    <section class="slide s-bagel" id="slide-6" aria-labelledby="title-6" data-slide="06">
+      <div class="bagel-copy">
+        <header class="slide-head">
+          <span class="eyebrow">A second application</span>
+          <h2 id="title-6">Meet <em>Bagel.</em></h2>
+          <p class="lead">Immersive stories for the entrepreneurial world.</p>
+        </header>
+        <div class="bagel-thesis">
+          <p class="statement">Building an audience through <em>stories worth exploring.</em></p>
+          <p>Built on the same experience engine.</p>
+          <div class="shared-engine"><span class="eyebrow eyebrow-quiet">Scroll-based Wiskers · shared engine</span><ul><li>Structure</li><li>Interaction</li><li>Experience</li></ul></div>
+        </div>
       </div>
-      <div class="growth-shared"><span></span><strong>ONE SHARED EXPERIENCE ENGINE</strong><span></span></div><a class="growth-notes" href="/pitchdeck/research.html#market">Market, alternatives &amp; pilot ↗</a><div class="slide-index"><span>07</span><i></i><span>10</span></div>
+      <figure class="phone" role="group" aria-label="Bagel prototype">
+        <div class="phone-screen"><img src="/pitchdeck-assets/prototype-news-still.png" alt="Actual continuous stories prototype capture" width="271" height="597"></div>
+      </figure>
+      <footer class="slide-foot"><p class="fine">Bagel is in development · prototype content shown; its audience and evidence are still to build.</p></footer>
     </section>
 
-    <section class="deck-slide pitch-library" id="slide-8" aria-labelledby="title-8" data-slide="08">
-      <header class="library-heading"><span class="scene-label">THE EXPERIENCE ENGINE</span><h2 id="title-8">Building the <em>engine.</em></h2><div class="build-status"><span><b>Built</b> Interactive prototype &amp; reusable components</span><span><b>Building</b> Experience engine &amp; interaction mapping · scroll-based Bagel Wiskers</span></div></header>
-      <div class="library-field" aria-label="Illustrative Wisker, reusable components and interaction data"><div class="library-ambient" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <article class="library-glass library-wisker"><small>01 / EXPERIENCE</small><h3>Wiskers</h3><div class="library-preview"><img src="/pitchdeck-assets/prototype-journey-still.png" alt="Preview from the working story prototype"><span>SCROLL TO EXPLORE ↗</span></div></article>
-        <article class="library-glass library-components"><small>02 / REUSABLE BUILDING BLOCKS</small><h3>Components</h3><div class="component-grid"><div><i>↗</i><b>Detail reveal</b><span>Open a product detail</span></div><div><i>◎</i><b>Choice</b><span>Select an option</span></div><div><i>≋</i><b>Scroll SVG Assembly</b><span>Reusable scroll-driven scene</span></div></div></article>
-        <article class="library-glass library-data"><small>03 / OBSERVABLE ACTIONS</small><h3>Interaction data</h3><div class="library-events"><p><i></i><span>Opened<strong>product detail</strong></span></p><p><i></i><span>Selected<strong>option</strong></span></p></div><small>ILLUSTRATIVE EVENTS</small></article>
-      </div><div class="library-links"><a href="https://github.com/wiskersofficial/wiskers-console/blob/experiment/molten-glass-playground/experiments/molten-glass-playground/README.md" target="_blank" rel="noopener noreferrer">Glass playground ↗</a><a href="https://drive.google.com/drive/folders/1LHubvGEXGo6TKmmla-C9qytRL54tGIRv" target="_blank" rel="noopener noreferrer">Primitives library ↗</a><a href="https://continuous-stories-josh-demo.whiskers-7031.chatgpt.site/" target="_blank" rel="noopener noreferrer">Try the prototype ↗</a></div><p class="library-path">Wisker <span>→</span> Component <span>→</span> Interaction <span>→</span> Data</p><div class="slide-index"><span>08</span><i></i><span>10</span></div>
+    <!-- 07 · Growth -->
+    <section class="slide s-growth" id="slide-7" aria-labelledby="title-7" data-slide="07">
+      <header class="slide-head"><span class="eyebrow">Two applications · one engine</span><h2 id="title-7">How we <em>grow.</em></h2></header>
+      <div class="tracks">
+        <article class="track"><span class="eyebrow eyebrow-quiet">01 / B2B</span><h3>Client campaigns</h3><ol><li>Founder-led outreach</li><li>Demo and brief</li><li>Paid pilot</li><li>Repeat work</li></ol><p><b>Campaign fee + ongoing service</b>Create and launch · Distribution, reporting and improvement</p></article>
+        <article class="track"><span class="eyebrow eyebrow-quiet">02 / Consumer</span><h3>Bagel</h3><ol><li>Reach the first readers</li><li>Deliver great stories</li><li>Bring readers back</li><li>Grow the audience</li></ol><p><b>Build an audience</b>Scroll-based stories help develop and test the shared engine.</p></article>
+      </div>
+      <footer class="slide-foot"><p class="shared-rule"><span>One shared experience engine</span></p><a class="text-link" href="/pitchdeck/research.html#market">Market, alternatives &amp; pilot ↗</a></footer>
     </section>
 
-    <section class="deck-slide pitch-act-two act-milestones" id="slide-9" aria-labelledby="title-9" data-slide="09" data-stage="11" data-phone="bagel">
-      <header class="act-copy"><span class="scene-label">WHAT WE PLAN TO PROVE</span><h2 id="title-9">Build. Launch.<br><em>Prove.</em></h2><p class="act-lead">Two applications. Distinct evidence. A shared production engine.</p></header>
-      <div class="evidence-timeline act-art"><div class="gate-headings"><span></span><button type="button" data-gate="ready" aria-pressed="true">01 <b>Readiness</b></button><button type="button" data-gate="launch" aria-pressed="false">02 <b>First evidence</b></button><button type="button" data-gate="prove" aria-pressed="false">03 <b>Repeatability</b></button></div><div class="timeline-track client-track"><strong>CLIENT<br>CAMPAIGNS</strong><span>Delivery-ready<br>experience</span><span>Initial paid<br>campaigns</span><span>Quality, economics<br>&amp; repeat demand</span></div><div class="timeline-track bagel-track"><strong>BAGEL</strong><span>Product<br>readiness</span><span>Initial<br>reader cohort</span><span>Return use<br>&amp; reader value</span></div><p class="gate-explanation" aria-live="polite">Readiness: a reviewed experience, clear delivery scope and an agreed measurement plan.</p></div>
-      <div class="device-aura" aria-hidden="true"></div><div class="slide-device" role="group" aria-label="Campaign and product demonstration"><div class="device-island"></div><div class="device-screen"><img class="product-still" src="/pitchdeck-assets/prototype-news-still.png" alt="Actual continuous stories prototype capture"><div class="bagel-screen"><header><b>bagel</b><span>A LITTLE MORE CURIOUS.</span></header><article><span>THE ENTREPRENEURIAL WORLD</span><h3>Ideas worth<br>spending<br><em>time with.</em></h3><div class="bagel-art"><i></i><i></i><i></i></div><p>Scroll. Explore. Follow a thought.</p></article><footer>PROPOSED EDITORIAL APPLICATION</footer></div></div></div><p class="act-footnote">Success measures to agree · client campaigns and Bagel have separate evidence tracks.</p><div class="slide-index"><span>09</span><i></i><span>10</span></div>
+    <!-- 08 · Engine -->
+    <section class="slide s-library" id="slide-8" aria-labelledby="title-8" data-slide="08">
+      <div class="library-top">
+        <header class="slide-head"><span class="eyebrow">The experience engine</span><h2 id="title-8">Building the <em>engine.</em></h2></header>
+        <dl class="build-status"><div><dt>Built</dt><dd>Interactive prototype &amp; reusable components</dd></div><div><dt>Building</dt><dd>Experience engine &amp; interaction mapping · scroll-based Bagel Wiskers</dd></div></dl>
+      </div>
+      <div class="library" aria-label="Illustrative Wisker, reusable components and interaction data">
+        <article class="card card-wisker"><span class="eyebrow eyebrow-quiet">01 / Experience</span><h3>Wiskers</h3><div class="wisker-preview"><img src="/pitchdeck-assets/prototype-journey-still.png" alt="Preview from the working story prototype" width="271" height="597"></div><p class="fine">Scroll to explore ↗</p></article>
+        <article class="card"><span class="eyebrow eyebrow-quiet">02 / Reusable building blocks</span><h3>Components</h3><ul class="components"><li><i aria-hidden="true">↗</i><b>Detail reveal</b><span>Open a product detail</span></li><li><i aria-hidden="true">◎</i><b>Choice</b><span>Select an option</span></li><li><i aria-hidden="true">≋</i><b>Scroll SVG Assembly</b><span>Reusable scroll-driven scene</span></li></ul></article>
+        <article class="card"><span class="eyebrow eyebrow-quiet">03 / Observable actions</span><h3>Interaction data</h3><ul class="events"><li><i></i><span>Opened</span><strong>product detail</strong></li><li><i></i><span>Selected</span><strong>option</strong></li></ul><p class="fine">Illustrative events</p></article>
+      </div>
+      <footer class="slide-foot"><p class="path">Wisker <span>→</span> Component <span>→</span> Interaction <span>→</span> Data</p><nav class="link-row" aria-label="Engine resources"><a class="text-link" href="https://github.com/wiskersofficial/wiskers-console/blob/experiment/molten-glass-playground/experiments/molten-glass-playground/README.md" target="_blank" rel="noopener noreferrer">Glass playground ↗</a><a class="text-link" href="https://drive.google.com/drive/folders/1LHubvGEXGo6TKmmla-C9qytRL54tGIRv" target="_blank" rel="noopener noreferrer">Primitives library ↗</a><a class="text-link" href="https://continuous-stories-josh-demo.whiskers-7031.chatgpt.site/" target="_blank" rel="noopener noreferrer">Try the prototype ↗</a></nav></footer>
     </section>
 
-    <section class="deck-slide pitch-raise" id="slide-10" aria-labelledby="title-10" data-slide="10">
-      <header class="raise-heading"><span class="scene-label">THE RAISE · 18-MONTH PLAN</span><h2 id="title-10"><strong>£125k</strong> to build, launch <em>and prove.</em></h2><p><strong>18 months</strong> of planned runway</p></header>
-      <div class="raise-funds"><article><b>£50k</b><span>Two founders’ salaries<br>across 18 months</span></article><article><b>£75k</b><span>Engine development · Campaign delivery<br>Growth · Operating costs</span></article></div>
-      <button class="reveal-skip raise-skip" type="button" data-reveal-skip="10">Show full roadmap ↗</button>
-      <div class="raise-timeline"><div class="raise-line" aria-hidden="true"></div><article data-raise-reveal="0"><i></i><small>MONTHS 0–3</small><h3>Build and prepare</h3><p>Develop the engine, reusable Wiskers and interaction mapping. Prepare the first client campaigns.</p></article><article data-raise-reveal="1"><i></i><small>MONTHS 4–8</small><h3>Launch and learn</h3><p>Run initial paid campaigns, learn from delivery and improve the experiences.</p></article><article data-raise-reveal="2"><i></i><small>MONTHS 9–12</small><h3>Build evidence</h3><p>Improve repeatability, develop client demand and Bagel. Prepare for the next funding round.</p></article><article data-raise-reveal="3"><i></i><small>MONTHS 12–18</small><h3>Raise and grow</h3><p>Pursue the next round and develop the strongest opportunities based on the evidence.</p></article><div class="raise-overlap" data-raise-reveal="4"><span>FUNDRAISING</span><i></i><b>Prepare &amp; start conversations → pursue next round</b></div></div>
-      <p class="raise-note">Investor conversations begin before runway ends · milestones and runway to validate.</p><div class="slide-index"><span>10</span><i></i><span>10</span></div>
+    <!-- 09 · Milestones -->
+    <section class="slide s-milestones" id="slide-9" aria-labelledby="title-9" data-slide="09">
+      <header class="slide-head"><span class="eyebrow">What we plan to prove</span><h2 id="title-9">Build. Launch. <em>Prove.</em></h2><p class="lead">Two applications. Distinct evidence. A shared production engine.</p></header>
+      <div class="gates" role="table" aria-label="Evidence milestones for client campaigns and Bagel">
+        <div class="gate-row gate-head" role="row"><span role="columnheader"></span><span role="columnheader"><small>01</small>Readiness</span><span role="columnheader"><small>02</small>First evidence</span><span role="columnheader"><small>03</small>Repeatability</span></div>
+        <div class="gate-row" role="row"><strong role="rowheader">Client campaigns</strong><span role="cell">Delivery-ready experience</span><span role="cell">Initial paid campaigns</span><span role="cell">Quality, economics &amp; repeat demand</span></div>
+        <div class="gate-row" role="row"><strong role="rowheader">Bagel</strong><span role="cell">Product readiness</span><span role="cell">Initial reader cohort</span><span role="cell">Return use &amp; reader value</span></div>
+        <div class="gate-row gate-notes" role="row"><span role="cell"></span><p role="cell">A reviewed experience, clear delivery scope and an agreed measurement plan.</p><p role="cell">Evaluate initial campaigns with buyers, and test Bagel with a defined reader cohort.</p><p role="cell">Assess delivery cost and quality, repeat demand, reader return and useful outcomes.</p></div>
+      </div>
+      <footer class="slide-foot"><p class="fine">Success measures to agree · client campaigns and Bagel have separate evidence tracks.</p></footer>
+    </section>
+
+    <!-- 10 · Raise -->
+    <section class="slide s-raise" id="slide-10" aria-labelledby="title-10" data-slide="10">
+      <div class="raise-top">
+        <header class="slide-head">
+          <span class="eyebrow">The raise · 18-month plan</span>
+          <h2 id="title-10"><strong>£125k</strong> to build, launch <em>and prove.</em></h2>
+          <p class="lead"><b>18 months</b> of planned runway</p>
+        </header>
+        <div class="funds">
+          <article><b>£50k</b><span>Two founders’ salaries across 18 months</span></article>
+          <article><b>£75k</b><span>Engine development · Campaign delivery · Growth · Operating costs</span></article>
+        </div>
+      </div>
+      <div class="roadmap">
+        <ol class="phases">
+          <li><small>Months 0–3</small><h3>Build and prepare</h3><p>Develop the engine, reusable Wiskers and interaction mapping. Prepare the first client campaigns.</p></li>
+          <li><small>Months 4–8</small><h3>Launch and learn</h3><p>Run initial paid campaigns, learn from delivery and improve the experiences.</p></li>
+          <li><small>Months 9–12</small><h3>Build evidence</h3><p>Improve repeatability, develop client demand and Bagel. Prepare for the next funding round.</p></li>
+          <li><small>Months 12–18</small><h3>Raise and grow</h3><p>Pursue the next round and develop the strongest opportunities based on the evidence.</p></li>
+        </ol>
+        <p class="fundraising"><span class="eyebrow">Fundraising</span><b>Prepare &amp; start conversations → pursue next round</b></p>
+      </div>
+      <footer class="slide-foot"><p class="fine">Investor conversations begin before runway ends · milestones and runway to validate.</p></footer>
     </section>
   </main>
   <div class="scroll-progress" aria-hidden="true"><span id="progress-bar"></span></div>
