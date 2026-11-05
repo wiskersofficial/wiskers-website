@@ -14,7 +14,7 @@ Read these before you change anything:
 - Dev server: `npm run dev`, then open the URL it prints (the README also gives a fixed-port form: `npm run dev -- --port 5178 --configLoader runner`)
 - Build: `npm run build`. Run it before every commit to `dev`. It writes `dist/`, which is gitignored.
 - Preview the build: `npm run preview`
-- Pitch deck PDF: `npm run pitchdeck:pdf` (runs `scripts/export-pitchdeck.py`)
+- Pitch deck PDF: `npm run pitchdeck:pdf` (runs `scripts/export-pitchdeck.mjs` against `npm run preview`)
 
 ## Release
 

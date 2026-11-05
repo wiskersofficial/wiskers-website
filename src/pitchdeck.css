@@ -466,13 +466,13 @@ em.glyph-wave { display: inline; font-style: normal; }
 @media (hover: none) { .phone-live { pointer-events: none; } }
 
 /* ── Responsive ───────────────────────────────────── */
-@media (max-width: 1100px) {
+@media screen and (max-width: 1100px) {
   .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 32px; }
   .flow-step:nth-child(3)::after { display: none; }
   .evidence { grid-template-columns: 1fr 1fr; row-gap: 36px; }
   .evidence-group.span-2 { grid-column: 1 / -1; }
 }
-@media (max-width: 900px) {
+@media screen and (max-width: 900px) {
   :root { --header: 56px; }
   .deck-header { grid-template-columns: auto 1fr; }
   .deck-nav { display: none; }
@@ -504,7 +504,7 @@ em.glyph-wave { display: inline; font-style: normal; }
   .gate-row > :first-child { grid-column: 1 / -1; }
   .gate-head > :first-child, .gate-notes > :first-child { display: none; }
 }
-@media (max-width: 640px) {
+@media screen and (max-width: 640px) {
   .deck-actions { gap: 14px; }
   .flow { grid-template-columns: 1fr; --tile-h: auto; }
   .flow-step::after { display: none; }
@@ -529,7 +529,7 @@ em.glyph-wave { display: inline; font-style: normal; }
 }
 
 /* Short laptop screens (e.g. 1280×720): tighten so each slide still fits one screen */
-@media (max-height: 820px) and (min-width: 901px) {
+@media screen and (max-height: 820px) and (min-width: 901px) {
   .slide { padding-top: calc(var(--header) + 24px); padding-bottom: 36px; gap: 24px; }
   h2 { font-size: clamp(40px, 4.4vw, 64px); }
   .slide-head { gap: 12px; }
@@ -606,7 +606,7 @@ em.glyph-wave { display: inline; font-style: normal; }
 .tone-light .deck-nav a::after { background: rgba(13, 26, 69, .2); }
 .tone-light .deck-nav a[aria-current]::after { background: #d9545a; }
 .tone-light .deck-motion:hover, .tone-light .pdf-link:hover { color: #0d1a45; }
-@media (max-width: 900px) {
+@media screen and (max-width: 900px) {
   .device-row { flex-direction: column; }
   .qr-stack { width: min(360px, 100%); grid-template-columns: 1fr 1fr; }
   .qr-note { grid-column: 1 / -1; text-align: center; }
