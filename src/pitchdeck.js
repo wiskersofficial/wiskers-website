@@ -1,6 +1,7 @@
 import {mountDeckWaveGrid} from './deck-wave-grid.js';
 import {mountWarehouseDemo} from './pitchdeck-demo.js';
 import {mountBagelPhone} from './pitchdeck-bagel.js';
+import {mountGlassTiles} from './pitchdeck-glass.js';
 import {initGlyphWaves} from './home-v6/glyph-wave.js';
 import {initHoverWarp} from './home-v6/hover-warp.js';
 import './home-v6/glyph-wave.css';
@@ -22,6 +23,7 @@ const wave = mountDeckWaveGrid(document.querySelector('.wave-stage'));
 const demo = mountWarehouseDemo(document.getElementById('slide-3'));
 const bagel = mountBagelPhone(document.querySelector('[data-bagel]'));
 const glyphs = initGlyphWaves(document);
+const glass = mountGlassTiles(slides);
 
 let warpFrame = 0;
 const warp = initHoverWarp(document, () => { if (!warpFrame) warpFrame = requestAnimationFrame(tickWarp); });
@@ -113,6 +115,7 @@ function setActive(slide) {
   slide.id === 'slide-1' ? wave.play() : wave.pause();
   demo.activate(slide.id === 'slide-3');
   bagel.activate(slide.id === 'slide-6');
+  if (!printing) glass.focus(slide);
 }
 
 // The active slide is whichever one covers the middle of the screen.
@@ -156,12 +159,12 @@ addEventListener('keydown', e => {
 // Print and PDF: every effect in its finished state.
 function finishAll() { scenes.forEach(s => paintScene(s, 1)); slides.forEach(s => s.classList.add('is-visible')); }
 addEventListener('beforeprint', () => {
-  printing = true; finishAll();
+  printing = true; finishAll(); glass.release();
   wave.setReduced(true);
   document.querySelector('.wave-print').src = document.querySelector('.wave-grid').toDataURL();
   demo.beforePrint();
 });
-addEventListener('afterprint', () => { printing = false; updateMotion(); demo.afterPrint(); });
+addEventListener('afterprint', () => { printing = false; updateMotion(); demo.afterPrint(); if (active) glass.focus(active); });
 
 // Headless PDF export has no scroll, so show every slide finished straight away.
 // Automated checks (webdriver) also freeze effects at their finished state, so layouts are measured as presented.

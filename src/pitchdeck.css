@@ -276,9 +276,14 @@ h4 { font-size: 16px; font-weight: 600; line-height: 1.3; }
 /* ── 05 Team ──────────────────────────────────────── */
 .s-team { max-width: none; overflow: hidden; align-content: space-between; isolation: isolate; }
 .s-team > .slide-head, .s-team > .team-cards { width: 100%; max-width: calc(1480px - 2 * var(--gutter)); margin: 0 auto; }
-.team-photo { position: absolute; inset: var(--header) 0 0; z-index: -1; background: url('/pitchdeck-assets/founders-josh-imran.jpg') center 6% / cover no-repeat; }
-.team-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9, 21, 64, .78) 0%, rgba(9, 21, 64, .15) 28%, rgba(9, 21, 64, .1) 48%, rgba(9, 21, 64, .88) 76%, var(--navy) 100%); }
-.team-cards { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2.4vw, 32px); align-self: end; }
+/* The photo fits the slide top to bottom; a blurred copy fills the sides. */
+.team-photo { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #0b1530; }
+.team-photo::before { content: ''; position: absolute; inset: -60px; background: url('/pitchdeck-assets/founders-josh-imran.jpg') center / cover no-repeat; filter: blur(34px) brightness(.55) saturate(1.15); }
+.team-photo-sharp { position: absolute; top: 0; bottom: 0; left: 50%; height: 100%; aspect-ratio: 4 / 3; transform: translateX(-50%); background: url('/pitchdeck-assets/founders-josh-imran.jpg') center / cover no-repeat; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+.team-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(9, 21, 64, .55) 0%, rgba(9, 21, 64, 0) 24%, rgba(9, 21, 64, 0) 58%, rgba(9, 21, 64, .5) 100%); }
+/* Each founder's card sits under their own torso; the record between them stays in view. */
+.team-cards { display: flex; justify-content: space-between; align-items: flex-end; gap: clamp(16px, 2.4vw, 32px); align-self: end; }
+.team-cards .founder { width: min(33vw, 440px); }
 .founder { display: grid; gap: 6px; padding: clamp(20px, 2.2vw, 30px); border-radius: 18px; background: rgba(9, 21, 64, .6); border: 1px solid var(--line-strong); backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2); }
 .founder h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 2.6vw, 38px); letter-spacing: -.01em; line-height: 1.05; }
 .credential { color: var(--mint); }
@@ -430,7 +435,7 @@ em.glyph-wave { display: inline; font-style: normal; }
 .flow-step h3 span { color: color-mix(in srgb, var(--coral) calc(var(--lit) * 100%), var(--faint)); }
 
 /* 05: the team photo settles as the slide arrives */
-.team-photo { transform: scale(calc(1.14 - .14 * var(--p))); transform-origin: 50% 20%; }
+.team-photo-sharp { scale: calc(1.08 - .08 * var(--p)); transform-origin: 50% 30%; }
 
 /* 08: three real story covers fan out */
 .s-library { --fan: clamp(0, calc((var(--p) - .3) / .6), 1); }
@@ -490,8 +495,11 @@ em.glyph-wave { display: inline; font-style: normal; }
   .phases li::before { top: -5px; }
   .fundraising { margin-left: 0; border-radius: 14px; }
   .s-team { align-content: end; padding-top: 52vh; }
-  .team-photo { background-position: center top; background-size: auto 60vh; background-color: var(--navy); }
-  .team-photo::after { background: linear-gradient(180deg, rgba(9, 21, 64, .55) 0%, rgba(9, 21, 64, 0) 20%, rgba(9, 21, 64, 0) 40%, var(--navy) 60vh); }
+  .team-cards { flex-direction: column; align-items: stretch; }
+  .team-cards .founder { width: auto; }
+  .team-photo { bottom: auto; height: 56vh; }
+  .team-photo-sharp { height: 100%; }
+  .team-photo::after { background: linear-gradient(180deg, rgba(9, 21, 64, .5) 0%, rgba(9, 21, 64, 0) 25%, rgba(9, 21, 64, 0) 70%, #091540 100%); }
   .gate-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .gate-row > :first-child { grid-column: 1 / -1; }
   .gate-head > :first-child, .gate-notes > :first-child { display: none; }
@@ -578,7 +586,15 @@ em.glyph-wave { display: inline; font-style: normal; }
   .cube-face { visibility: hidden !important; } .cube-face:nth-child(4) { visibility: visible !important; }
   .cube-rotor { transform: translateZ(-.52em) rotateX(-270deg) !important; }
   .qr:hover { transform: none; }
-  .founder { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(9, 21, 64, .82); }
+  [data-glass] > canvas { display: none !important; }
+  .s-team { align-content: space-between; padding-top: 72px; }
+  .team-photo-sharp { -webkit-mask-image: none; mask-image: none; }
+  .team-photo-sharp::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #0d1733, rgba(13, 23, 51, .6) 4%, rgba(13, 23, 51, 0) 12%, rgba(13, 23, 51, 0) 88%, rgba(13, 23, 51, .6) 96%, #0d1733); }
+  .team-photo::before { filter: blur(34px) brightness(.4) saturate(1.1); }
+  [data-glass].has-glass { background: linear-gradient(140deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .05)); }
+  [data-theme="paper"] [data-glass].has-glass, [data-theme="mist"] [data-glass].has-glass, [data-theme="sage"] [data-glass].has-glass, [data-theme="blush"] [data-glass].has-glass { background: rgba(255, 255, 255, .62); }
+  .founder[data-glass], .founder[data-glass].has-glass { background: rgba(9, 21, 64, .72); }
+  [data-glass] { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
   a { text-decoration: none; }
 }
 
@@ -595,3 +611,29 @@ em.glyph-wave { display: inline; font-style: normal; }
   .qr-stack { width: min(360px, 100%); grid-template-columns: 1fr 1fr; }
   .qr-note { grid-column: 1 / -1; text-align: center; }
 }
+
+/* ── Colour glows: give the glass something to bend ── */
+.slide { isolation: isolate; }
+.ambient { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.ambient i { position: absolute; display: block; width: var(--s, 46vmax); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, var(--orb), transparent); opacity: .9; }
+.ambient i:nth-child(1) { --orb: var(--orb-a, rgba(239, 118, 122, .45)); left: var(--ax, 55%); top: var(--ay, 30%); }
+.ambient i:nth-child(2) { --orb: var(--orb-b, rgba(127, 211, 191, .40)); left: var(--bx, 78%); top: var(--by, 52%); --s: 38vmax; }
+.ambient i:nth-child(3) { --orb: var(--orb-c, rgba(47, 151, 193, .38)); left: var(--cx, 12%); top: var(--cy, 58%); --s: 34vmax; }
+.s-problem { --ax: 50%; --ay: -12%; --bx: 74%; --by: -8%; --cx: 8%; --cy: 44%; }
+.s-engine { --ax: 18%; --ay: 30%; --bx: 52%; --by: 34%; --cx: 78%; --cy: 26%; }
+.s-bagel { --ax: 52%; --ay: 4%; --bx: 70%; --by: 30%; --cx: 40%; --cy: 50%; }
+.s-growth { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
+.s-library { --ax: -4%; --ay: 30%; --bx: 36%; --by: 40%; --cx: 70%; --cy: 30%; }
+.s-raise { --ax: 52%; --ay: -6%; --bx: 74%; --by: 10%; --cx: 24%; --cy: 60%; }
+[data-theme="paper"], [data-theme="mist"], [data-theme="sage"], [data-theme="blush"] { --orb-a: rgba(239, 118, 122, .5); --orb-b: rgba(37, 165, 131, .42); --orb-c: rgba(47, 151, 193, .42); }
+
+/* ── Glass tiles ──────────────────────────────────────
+   CSS gives every tile a frosted-glass finish (this is also the print look).
+   Where WebGL is available, the molten-glass lens is mounted on top and
+   refracts the slide behind the tile. */
+[data-glass] { position: relative; background: linear-gradient(140deg, rgba(255, 255, 255, .13), rgba(255, 255, 255, .03) 46%, rgba(255, 255, 255, .07)); border: 1px solid rgba(255, 255, 255, .2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28), inset 0 -1px 0 rgba(255, 255, 255, .05), 0 30px 60px -34px rgba(0, 0, 0, .6); backdrop-filter: blur(22px) saturate(1.35); -webkit-backdrop-filter: blur(22px) saturate(1.35); }
+[data-theme="paper"] [data-glass], [data-theme="mist"] [data-glass], [data-theme="sage"] [data-glass], [data-theme="blush"] [data-glass] { background: linear-gradient(140deg, rgba(255, 255, 255, .72), rgba(255, 255, 255, .34) 50%, rgba(255, 255, 255, .55)); border-color: rgba(255, 255, 255, .85); box-shadow: inset 0 1px 0 #fff, 0 30px 60px -36px rgba(13, 26, 69, .35); }
+[data-glass].has-glass { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+[data-glass] > canvas { border-radius: inherit; }
+.founder[data-glass] { background: linear-gradient(140deg, rgba(9, 21, 64, .55), rgba(9, 21, 64, .35)); }
+.founder[data-glass].has-glass { background: transparent; }
