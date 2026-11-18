@@ -10,3 +10,4 @@ dist/
 /cat-style-comparison.jpg
 /test-results/
 /playwright-report/
+/.wrangler/
