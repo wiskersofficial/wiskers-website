@@ -10,7 +10,8 @@
 .ev-hero h1 [data-glyph-wave] { display: inline; }
 .ev-hero .v6-hero-line-last { margin-left: 6%; }
 .ev-hero .v6-hero [data-glyph-wave], .ev-hero [data-glyph-wave] { --glyph-wave-serif-color: var(--v6-coral-ink); }
-.ev-hero .v6-intro { width: min(560px, 92%); margin: 44px 0 0 6%; font-size: clamp(17px, 1.7vw, 24px); }
+.ev-hero-sub { max-width: 40ch; margin: 36px 0 0 6%; color: var(--v6-muted); font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; letter-spacing: -.025em; }
+.ev-hero .v6-intro { width: min(560px, 92%); margin: 32px 0 0 6%; font-size: clamp(17px, 1.7vw, 24px); }
 
 .ev-hero-stage { --px: 0; --py: 0; position: relative; display: grid; place-items: center; min-height: 640px; }
 .ev-hero-asterisk { position: absolute; z-index: 0; right: 6%; top: 2%; color: var(--v6-green); font-size: clamp(32px, 4vw, 56px); line-height: 1; animation: v6-asterisk-turn 48s linear infinite; }
@@ -156,6 +157,7 @@
   .ev-hero-stage { min-height: 0; }
   .ev-hero h1 { font-size: clamp(54px, 12.6vw, 104px); }
   .ev-hero .v6-intro { width: min(560px, 100%); margin-left: 3%; }
+  .ev-hero-sub { margin-left: 3%; }
   .ev-sticker-a { top: 2%; left: 4%; } .ev-sticker-b { right: 2%; } .ev-sticker-c { left: 4%; }
 }
 @media (max-width: 900px) {
@@ -170,7 +172,8 @@
 @media (max-width: 760px) {
   .ev-hero { padding-top: 56px; padding-bottom: 64px; min-height: 0; }
   .ev-hero .v6-hero-line-last { margin-left: 3%; }
-  .ev-hero .v6-intro { margin: 36px 0 0 3%; width: 94%; }
+  .ev-hero .v6-intro { margin: 28px 0 0 3%; width: 94%; }
+  .ev-hero-sub { margin: 28px 0 0 3%; }
   .ev-how h2, .ev-learn h2, .ev-fit h2 { font-size: clamp(40px, 11vw, 62px); }
   .ev-learn-head h2 br { display: none; }
   .ev-signals { margin-left: 0; }
