@@ -6,11 +6,11 @@
 .ev-hero { min-height: min(86svh, 920px); padding-top: clamp(56px, 8vh, 112px); padding-bottom: clamp(64px, 9vh, 120px); }
 .ev-hero-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); align-items: center; gap: clamp(24px, 4vw, 64px); }
 .ev-hero .v6-overline { margin-bottom: 28px; }
-.ev-hero h1 { font-size: clamp(52px, 7.4vw, 116px); line-height: .92; letter-spacing: -.082em; }
+.ev-hero h1 { font-size: clamp(46px, 5.5vw, 90px); line-height: .92; letter-spacing: -.082em; }
 .ev-hero h1 [data-glyph-wave] { display: inline; }
 .ev-hero .v6-hero-line-last { margin-left: 6%; }
 .ev-hero .v6-hero [data-glyph-wave], .ev-hero [data-glyph-wave] { --glyph-wave-serif-color: var(--v6-coral-ink); }
-.ev-hero-sub { max-width: 40ch; margin: 36px 0 0 6%; color: var(--v6-muted); font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; letter-spacing: -.025em; }
+.ev-hero-sub { max-width: 40ch; margin: 48px 0 0 6%; color: var(--v6-muted); font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; letter-spacing: -.025em; }
 .ev-hero .v6-intro { width: min(560px, 92%); margin: 32px 0 0 6%; font-size: clamp(17px, 1.7vw, 24px); }
 
 .ev-hero-stage { --px: 0; --py: 0; position: relative; display: grid; place-items: center; min-height: 640px; }
@@ -155,7 +155,7 @@
 @media (max-width: 1000px) {
   .ev-hero-grid { grid-template-columns: 1fr; gap: 56px; }
   .ev-hero-stage { min-height: 0; }
-  .ev-hero h1 { font-size: clamp(54px, 12.6vw, 104px); }
+  .ev-hero h1 { font-size: clamp(46px, 11.2vw, 104px); }
   .ev-hero .v6-intro { width: min(560px, 100%); margin-left: 3%; }
   .ev-hero-sub { margin-left: 3%; }
   .ev-sticker-a { top: 2%; left: 4%; } .ev-sticker-b { right: 2%; } .ev-sticker-c { left: 4%; }
@@ -182,7 +182,7 @@
   .ev-sticker { font-size: 11px; padding: 7px 10px; }
 }
 @media (max-width: 400px) {
-  .ev-hero h1 { font-size: 13.4vw; }
+  .ev-hero h1 { font-size: 11.2vw; }
   .ev-sticker-b { right: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
