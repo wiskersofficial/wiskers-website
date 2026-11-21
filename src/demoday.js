@@ -1,14 +1,12 @@
 import {mountDeckWaveGrid} from './deck-wave-grid.js';
-import {mountWarehouseDemo} from './pitchdeck-demo.js';
-import {mountBagelPhone} from './pitchdeck-bagel.js';
 import {mountGlassTiles} from './demoday-glass.js';
 import {initGlyphWaves} from './home-v6/glyph-wave.js';
 import {initHoverWarp} from './home-v6/hover-warp.js';
 import './home-v6/glyph-wave.css';
 import './home-v6/hover-warp.css';
 
-// Deck shell: active slide, keyboard navigation, motion toggle, print stills,
-// and one scroll loop that drives every scroll-tracked effect.
+// Demo day deck shell (8 slides): no warehouse demo, no live Bagel phone —
+// the background video carries the demo, and the slices are shown as stills.
 document.documentElement.classList.add('js');
 const slides = [...document.querySelectorAll('.slide')], links = [...document.querySelectorAll('.deck-nav a')];
 const counter = document.getElementById('current-slide'), progressBar = document.getElementById('progress-bar');
@@ -20,8 +18,6 @@ let paused = reduce.matches, active = null, printing = false;
 const still = () => paused || reduce.matches || printing;
 
 const wave = mountDeckWaveGrid(document.querySelector('.wave-stage'));
-const demo = mountWarehouseDemo(document.getElementById('slide-3'));
-const bagel = mountBagelPhone(document.querySelector('[data-bagel]'));
 const glyphs = initGlyphWaves(document);
 const glass = mountGlassTiles(slides);
 
@@ -62,7 +58,6 @@ function paintScene(scene, p) {
     const v = Math.round(c.to * (1 - Math.pow(1 - clamp((p - .15) / .85), 2)));
     c.el.textContent = `${c.prefix}${fmt(v)}${c.suffix}`;
   }
-  // Slide 4: the signal's glow peaks on each card as it passes, then fades (none once finished).
   steps.forEach((el, i) => el.style.setProperty('--glow', p >= 1 ? '0' : clamp(1 - Math.abs(p * 6.2 - 1.45 - i) * 1.4).toFixed(3)));
   if (cube) {
     // Three quarter-turns, holding each word, ending on the real copy.
@@ -91,10 +86,7 @@ function frame(now = performance.now()) {
     paintScene(scene, p);
     // Also marks arrival here, so the deck never depends on observer callbacks alone.
     const r = scene.slide.getBoundingClientRect();
-    if (r.top < innerHeight && r.bottom > 0) {
-      scene.slide.classList.add('is-visible');
-      if (scene.slide.id === 'slide-10' || scene.slide.id === 'slide-11') bagel.arm();
-    }
+    if (r.top < innerHeight && r.bottom > 0) scene.slide.classList.add('is-visible');
   }
 }
 let queued = false, fallback = 0;
@@ -118,8 +110,6 @@ function setActive(slide) {
   document.documentElement.classList.toggle('tone-light', light);
   brand.src = light ? '/pitchdeck-assets/wiskers-v2-wordmark-dark.svg' : '/pitchdeck-assets/wiskers-v2-wordmark-light.svg';
   slide.id === 'slide-1' ? wave.play() : wave.pause();
-  demo.activate(slide.id === 'slide-3');
-  bagel.activate(slide.id === 'slide-11');
   if (!printing) glass.focus(slide);
 }
 
@@ -135,7 +125,6 @@ const observer = new IntersectionObserver(entries => {
   for (const {target, isIntersecting} of entries) {
     if (!isIntersecting) continue;
     target.classList.add('is-visible');
-    if (target.id === 'slide-10' || target.id === 'slide-11') bagel.arm();
   }
 }, {threshold: [0, .15]});
 slides.forEach(s => observer.observe(s));
@@ -144,7 +133,7 @@ function updateMotion() {
   document.documentElement.classList.toggle('no-motion', still());
   motion.disabled = reduce.matches; motion.setAttribute('aria-pressed', String(paused));
   motion.textContent = paused ? 'Resume motion' : 'Pause motion';
-  wave.setReduced(still()); demo.setReduced(still()); warp.setPaused(still()); bagel.setReduced(still());
+  wave.setReduced(still()); warp.setPaused(still());
   requestFrame();
 }
 motion.addEventListener('click', () => { paused = !paused; updateMotion(); });
@@ -182,9 +171,8 @@ addEventListener('beforeprint', () => {
   printing = true; finishAll(); glass.release();
   wave.setReduced(true);
   document.querySelector('.wave-print').src = document.querySelector('.wave-grid').toDataURL();
-  demo.beforePrint();
 });
-addEventListener('afterprint', () => { printing = false; updateMotion(); demo.afterPrint(); if (active) glass.focus(active); });
+addEventListener('afterprint', () => { printing = false; updateMotion(); if (active) glass.focus(active); });
 
 // Headless PDF export has no scroll, so show every slide finished straight away.
 // Automated checks (webdriver) also freeze effects at their finished state, so layouts are measured as presented.
@@ -195,7 +183,7 @@ updateMotion();
 pickActive();
 frame();
 
-// Deep links (#slide-11): land on the slide even after fonts and images shift the layout.
+// Deep links (#slide-5): land on the slide even after fonts and images shift the layout.
 const linked = slides.find(s => `#${s.id}` === location.hash);
 if (linked) {
   history.scrollRestoration = 'manual';

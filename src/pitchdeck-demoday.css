@@ -1,31 +1,30 @@
 /* Demo day deck: additions to the one-stylesheet deck system.
-   Loaded after pitchdeck.css; composed entirely from its components,
-   so these rules only retune layout for the demo-day slide set (15 slides). */
+   Loaded after pitchdeck.css; composed from its components.
+   Eight-slide cut: problem → solution → venture case → why now →
+   go-to-market → why us → asks. */
 
-/* Page counter: this deck runs to 15. */
-.pitch-deck .slide::after { content: attr(data-slide) ' / 15'; }
+/* Page counter: this deck runs to 8. */
+.pitch-deck .slide::after { content: attr(data-slide) ' / 8'; }
 
 /* Ambient glows for the new slides (positions only; colours come from the theme). */
-.s-funnel { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
 .s-market { --ax: 50%; --ay: -12%; --bx: 74%; --by: -8%; --cx: 8%; --cy: 44%; }
 .s-whynow { --ax: 18%; --ay: 30%; --bx: 52%; --by: 34%; --cx: 78%; --cy: 26%; }
-.s-gtm    { --ax: -4%; --ay: 30%; --bx: 36%; --by: 40%; --cx: 70%; --cy: 30%; }
-.s-doors   { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
+.s-funnel { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
 .s-asks   { --ax: 52%; --ay: -6%; --bx: 74%; --by: 10%; --cx: 24%; --cy: 60%; }
 
-/* Four-card slides reuse the three-card library grid with a fourth column. */
-.s-doors .library, .s-asks .library { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.s-doors .card h3, .s-asks .card h3 { font-size: clamp(24px, 2vw, 32px); }
-.s-doors .card, .s-asks .card { min-height: clamp(190px, 26vh, 280px); }
+/* Asks slide reuses the three-card library grid with a fourth column. */
+.s-asks .library { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.s-asks .card h3 { font-size: clamp(24px, 2vw, 32px); }
+.s-asks .card { min-height: clamp(190px, 26vh, 280px); }
 @media screen and (max-width: 1100px) {
-  .s-doors .library, .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media screen and (max-width: 900px) {
-  .s-doors .library, .s-asks .library { grid-template-columns: 1fr; }
-  .s-doors .card, .s-asks .card { min-height: 0; }
+  .s-asks .library { grid-template-columns: 1fr; }
+  .s-asks .card { min-height: 0; }
 }
 
-/* The door we're opening first carries the coral accent. */
+/* The first ask carries the coral accent. */
 .door-first { border-color: rgba(239, 118, 122, .6); }
 .door-first .eyebrow-quiet { color: var(--coral); }
 
@@ -35,6 +34,26 @@
 /* Why-now cards: the source link sits at the card's foot. */
 .s-whynow .card .text-link { margin-top: auto; }
 
-/* The demo-day raise split: £55k / £95k. */
-.s-raise .split span:first-child { width: calc(37% * var(--fill)); }
-.s-raise .split span:last-child  { width: calc(63% * var(--fill)); }
+/* Solution slide: two published Wiskers slices, displayed side by side. */
+.slices { display: flex; align-items: flex-start; justify-content: center; gap: clamp(18px, 2.6vw, 44px); }
+.slice { display: grid; gap: 14px; justify-items: center; min-width: 0; }
+.slice .phone-screen { height: min(46vh, 460px); }
+.slice figcaption { display: grid; gap: 5px; justify-items: center; text-align: center; }
+.slice figcaption b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2vw, 34px); line-height: 1; }
+.slice figcaption span { font-size: 13px; color: var(--muted); }
+@media screen and (max-width: 900px) {
+  .s-solution .slide-head { order: 1; }
+  .s-solution .slices { order: 2; }
+  .s-solution .activity { order: 3; }
+  .slices { flex-direction: column; align-items: center; }
+  .slice .phone-screen { height: min(52vh, 480px); }
+  .slice + .slice { margin-top: 10px; }
+}
+@media screen and (max-height: 820px) and (min-width: 901px) {
+  .slice .phone-screen { height: 42vh; }
+  .slice figcaption b { font-size: 22px; }
+}
+@media print {
+  .slices { display: grid; grid-template-columns: 1fr 1fr; }
+  .slice .phone-screen { height: 380px; }
+}
