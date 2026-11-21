@@ -1,0 +1,40 @@
+/* Demo day deck: additions to the one-stylesheet deck system.
+   Loaded after pitchdeck.css; composed entirely from its components,
+   so these rules only retune layout for the demo-day slide set (15 slides). */
+
+/* Page counter: this deck runs to 15. */
+.pitch-deck .slide::after { content: attr(data-slide) ' / 15'; }
+
+/* Ambient glows for the new slides (positions only; colours come from the theme). */
+.s-funnel { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
+.s-market { --ax: 50%; --ay: -12%; --bx: 74%; --by: -8%; --cx: 8%; --cy: 44%; }
+.s-whynow { --ax: 18%; --ay: 30%; --bx: 52%; --by: 34%; --cx: 78%; --cy: 26%; }
+.s-gtm    { --ax: -4%; --ay: 30%; --bx: 36%; --by: 40%; --cx: 70%; --cy: 30%; }
+.s-doors   { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
+.s-asks   { --ax: 52%; --ay: -6%; --bx: 74%; --by: 10%; --cx: 24%; --cy: 60%; }
+
+/* Four-card slides reuse the three-card library grid with a fourth column. */
+.s-doors .library, .s-asks .library { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.s-doors .card h3, .s-asks .card h3 { font-size: clamp(24px, 2vw, 32px); }
+.s-doors .card, .s-asks .card { min-height: clamp(190px, 26vh, 280px); }
+@media screen and (max-width: 1100px) {
+  .s-doors .library, .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media screen and (max-width: 900px) {
+  .s-doors .library, .s-asks .library { grid-template-columns: 1fr; }
+  .s-doors .card, .s-asks .card { min-height: 0; }
+}
+
+/* The door we're opening first carries the coral accent. */
+.door-first { border-color: rgba(239, 118, 122, .6); }
+.door-first .eyebrow-quiet { color: var(--coral); }
+
+/* Market stats: unlinked sources sit at the card's foot like the linked ones. */
+.s-market .stat .fine { margin-top: auto; padding-top: 6px; }
+
+/* Why-now cards: the source link sits at the card's foot. */
+.s-whynow .card .text-link { margin-top: auto; }
+
+/* The demo-day raise split: £55k / £95k. */
+.s-raise .split span:first-child { width: calc(37% * var(--fill)); }
+.s-raise .split span:last-child  { width: calc(63% * var(--fill)); }

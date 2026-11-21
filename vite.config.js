@@ -26,6 +26,7 @@ export default defineConfig({
       input: {
         pitchdeck: resolve(import.meta.dirname, 'pitchdeck/index.html'),
         events: resolve(import.meta.dirname, 'events/index.html'),
+        demoday: resolve(import.meta.dirname, 'demoday/index.html'),
         scroll: resolve(import.meta.dirname, 'scroll/index.html'),
         main: resolve(import.meta.dirname, 'index.html'),
         playground: resolve(import.meta.dirname, 'playground.html'),
