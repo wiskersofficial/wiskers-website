@@ -1,7 +1,8 @@
 /* Demo day deck: additions to the one-stylesheet deck system.
    Loaded after pitchdeck.css; composed from its components.
-   Eight-slide cut: problem → solution → venture case → why now →
-   go-to-market → why us → asks. */
+   Eight-slide cut. Each slide spends its boldness in one place:
+   cover = masthead wordmark; solution = two live slices; market =
+   one hero budget line; why-now = the Wiskers card; asks = intros. */
 
 /* Page counter: this deck runs to 8. */
 .pitch-deck .slide::after { content: attr(data-slide) ' / 8'; }
@@ -12,48 +13,78 @@
 .s-funnel { --ax: -6%; --ay: 26%; --bx: 44%; --by: 34%; --cx: 70%; --cy: 22%; }
 .s-asks   { --ax: 52%; --ay: -6%; --bx: 74%; --by: 10%; --cx: 24%; --cy: 60%; }
 
-/* Asks slide reuses the three-card library grid with a fourth column. */
+/* ── 01 · Cover: the wordmark is the hero ─────────────────── */
+.s-intro { grid-template-rows: auto 1fr auto; }
+.s-intro .intro-logo { grid-column: 1 / -1; width: min(48vw, 780px); max-width: none; margin-left: calc(var(--gutter) * -.35); margin-bottom: clamp(8px, 2vh, 26px); align-self: start; }
+.s-intro .wave-stage { height: min(56vh, 520px); }
+
+/* ── 03 · Solution: two published slices, filling the slide ── */
+.s-solution { grid-template-columns: 1fr; align-content: center; gap: clamp(16px, 3vh, 36px); }
+.s-solution .phone::before { display: none; } /* no dynamic island */
+.s-solution .phone { padding: 8px; border-radius: 34px; }
+.s-solution .phone-screen { height: min(62vh, 600px); }
+.slices { display: flex; justify-content: center; align-items: flex-start; gap: clamp(34px, 7.4vw, 128px); }
+.slice { display: grid; gap: 13px; justify-items: center; position: relative; width: fit-content; }
+.slice figcaption { display: grid; gap: 4px; justify-items: center; text-align: center; }
+.slice figcaption b { font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 1.9vw, 32px); line-height: 1; }
+.slice figcaption span { font-size: 12.5px; color: var(--muted); }
+.slice figcaption .text-link { font-size: 12px; }
+/* Callout lines drawn out from each slice */
+.callout { position: absolute; display: flex; align-items: center; gap: 9px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.callout::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--coral); flex: none; }
+.callout i { display: block; width: clamp(34px, 4.6vw, 84px); height: 1px; background: var(--line-strong); }
+.callout-1 { top: 30%; }
+.callout-2 { top: 64%; }
+.slice-dream .callout { right: calc(100% - 1px); flex-direction: row-reverse; }
+.slice-coffee .callout { left: calc(100% - 1px); }
+
+/* ── 04 · Market: one hero budget line, three supports ────── */
+.s-market .evidence-group.span-2 .stat-figure { font-size: clamp(64px, 7.2vw, 116px); }
+.s-market .evidence-group.span-2 h4 { font-size: clamp(17px, 1.4vw, 21px); }
+
+/* ── 05 · Why now: the Wiskers card is the hero ────────────── */
+.s-whynow .library { grid-template-columns: 1fr 1fr 1.38fr; }
+.s-whynow .card { min-height: clamp(220px, 30vh, 320px); }
+.s-whynow .door-first h3 { font-size: clamp(30px, 2.6vw, 44px); }
+.s-whynow .card .text-link { margin-top: auto; }
+
+/* ── 08 · Asks reuses the library grid with a fourth column ── */
 .s-asks .library { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .s-asks .card h3 { font-size: clamp(24px, 2vw, 32px); }
 .s-asks .card { min-height: clamp(190px, 26vh, 280px); }
-@media screen and (max-width: 1100px) {
-  .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media screen and (max-width: 900px) {
-  .s-asks .library { grid-template-columns: 1fr; }
-  .s-asks .card { min-height: 0; }
-}
-
-/* The first ask carries the coral accent. */
 .door-first { border-color: rgba(239, 118, 122, .6); }
 .door-first .eyebrow-quiet { color: var(--coral); }
 
 /* Market stats: unlinked sources sit at the card's foot like the linked ones. */
 .s-market .stat .fine { margin-top: auto; padding-top: 6px; }
 
-/* Why-now cards: the source link sits at the card's foot. */
-.s-whynow .card .text-link { margin-top: auto; }
-
-/* Solution slide: two published Wiskers slices, displayed side by side. */
-.slices { display: flex; align-items: flex-start; justify-content: center; gap: clamp(18px, 2.6vw, 44px); }
-.slice { display: grid; gap: 14px; justify-items: center; min-width: 0; }
-.slice .phone-screen { height: min(46vh, 460px); }
-.slice figcaption { display: grid; gap: 5px; justify-items: center; text-align: center; }
-.slice figcaption b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2vw, 34px); line-height: 1; }
-.slice figcaption span { font-size: 13px; color: var(--muted); }
+/* ── Responsive ────────────────────────────────────────────── */
 @media screen and (max-width: 900px) {
-  .s-solution .slide-head { order: 1; }
-  .s-solution .slices { order: 2; }
-  .s-solution .activity { order: 3; }
-  .slices { flex-direction: column; align-items: center; }
-  .slice .phone-screen { height: min(52vh, 480px); }
-  .slice + .slice { margin-top: 10px; }
+  .s-intro .intro-logo { width: min(70vw, 420px); margin-left: 0; }
+  .s-intro .wave-stage { height: min(40vh, 340px); }
+  .s-solution .phone-screen { height: min(52vh, 460px); }
+  .slices { flex-direction: column; align-items: center; gap: 22px; }
+  .slice + .slice { margin-top: 0; }
+  .callout { display: none; }
+  .s-whynow .library { grid-template-columns: 1fr; }
+  .s-asks .library { grid-template-columns: 1fr; }
+  .s-asks .card { min-height: 0; }
+  .s-market .evidence-group.span-2 .stat-figure { font-size: clamp(56px, 9vw, 84px); }
+}
+@media screen and (max-width: 1100px) {
+  .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media screen and (max-height: 820px) and (min-width: 901px) {
-  .slice .phone-screen { height: 42vh; }
-  .slice figcaption b { font-size: 22px; }
+  .s-intro .intro-logo { margin-bottom: 4px; }
+  .s-intro .wave-stage { height: 46vh; }
+  .s-solution .phone-screen { height: 54vh; }
+  .callout-1 { top: 26%; }
+  .callout-2 { top: 66%; }
+  .slice figcaption b { font-size: 20px; }
 }
 @media print {
   .slices { display: grid; grid-template-columns: 1fr 1fr; }
   .slice .phone-screen { height: 380px; }
+  .callout { display: none; }
+  .s-whynow .library { grid-template-columns: 1fr 1fr 1.38fr; }
 }
