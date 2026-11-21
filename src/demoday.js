@@ -22,24 +22,49 @@ const wave = mountDeckWaveGrid(document.querySelector('.wave-stage'));
 const glyphs = initGlyphWaves(document);
 const glass = mountGlassTiles(slides);
 
-// Two live slices on the solution slide: each auto-scrolls itself,
-// and the signal feeds beside each phone light up as it scrolls.
+// Two live campaign experiences on the solution slide: each auto-scrolls
+// itself. The signal rails beside each phone light by scroll depth, and the
+// coffee experience clicks its own choice boxes as they come into view —
+// those coral choice signals light once and stay, as they would in a campaign.
 const bagels = [...document.querySelectorAll('[data-bagel]')].map(el => mountBagelPhone(el));
-const signalFeeds = [...document.querySelectorAll('.slice')].map(slice => ({
-  frame: slice.querySelector('.phone-live'),
-  signals: [...slice.querySelectorAll('.signal')],
-}));
-const SIGNAL_AT = [.12, .42, .72];
+const MOTOR_AT = [.08, .25, .45, .65, .85];
+const COFFEE_MINT = [{ at: .08, idx: 0 }, { at: .3, idx: 1 }, { at: .58, idx: 3 }, { at: .82, idx: 5 }];
+const COFFEE_CHOICES = [
+  { sel: '[data-k="pods"]', idx: 2, fired: false },
+  { sel: '[data-k="beantocup"]', idx: 4, fired: false },
+  { sel: '[data-dive="leaders"]', idx: 6, fired: false },
+];
+const motorRail = [...document.querySelectorAll('.slice-motor .signal')];
+const coffeeRail = [...document.querySelectorAll('.slice-coffee .signal')];
+const frames = [...document.querySelectorAll('.s-solution .phone-live')];
+const scrollFraction = frame => {
+  try { const el = frame.contentDocument?.scrollingElement; return el ? el.scrollTop / Math.max(1, el.scrollHeight - el.clientHeight) : 0; } catch { return 0; }
+};
 setInterval(() => {
   if (printing) return;
   const on = active?.id === 'slide-3' && !still();
-  for (const {frame, signals} of signalFeeds) {
-    if (!signals.length) continue;
-    if (!on) { signals.forEach(s => s.classList.remove('is-on')); continue; }
-    let frac = 0;
-    try { const el = frame.contentDocument?.scrollingElement; if (el) frac = el.scrollTop / Math.max(1, el.scrollHeight - el.clientHeight); } catch { /* not loaded yet */ }
-    if (frac < .03) signals.forEach(s => s.classList.remove('is-on'));
-    else signals.forEach((s, i) => s.classList.toggle('is-on', frac > SIGNAL_AT[i]));
+  if (!on) {
+    motorRail.forEach(s => s.classList.remove('is-on'));
+    coffeeRail.forEach(s => { if (!s.classList.contains('is-choice')) s.classList.remove('is-on'); });
+    return;
+  }
+  const motorFrac = scrollFraction(frames[0]), coffeeFrac = scrollFraction(frames[1]);
+  motorRail.forEach((s, i) => s.classList.toggle('is-on', motorFrac > MOTOR_AT[i]));
+  if (coffeeFrac < .03) coffeeRail.forEach(s => { if (!s.classList.contains('is-choice')) s.classList.remove('is-on'); });
+  else coffeeRail.forEach((s, i) => { const m = COFFEE_MINT.find(x => x.idx === i); if (m) s.classList.toggle('is-on', coffeeFrac > m.at); });
+  // Simulated choices: click each box as it scrolls into view, one per tick.
+  // Gated on real scroll so nothing fires during the slice's load window.
+  if (coffeeFrac > .05) {
+    try {
+      const doc = frames[1].contentDocument;
+      if (doc) for (const choice of COFFEE_CHOICES) {
+        if (choice.fired) continue;
+        const el = doc.querySelector(choice.sel);
+        if (!el) { choice.fired = true; continue; }
+        const r = el.getBoundingClientRect();
+        if (r.top < 650 && r.bottom > 100) { el.click(); choice.fired = true; coffeeRail[choice.idx].classList.add('is-on'); break; }
+      }
+    } catch { /* frame not ready */ }
   }
 }, 350);
 
