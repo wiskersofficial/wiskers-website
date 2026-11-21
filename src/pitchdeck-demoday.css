@@ -34,15 +34,16 @@
 .slice figcaption { display: grid; gap: 4px; justify-items: center; text-align: center; }
 .slice figcaption b { font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 1.9vw, 32px); line-height: 1; }
 .slice figcaption span { font-size: 12.5px; color: var(--muted); }
-/* Signal rails: sideways text drawn out from each phone's side */
-.signal-rail { position: absolute; top: 3%; height: 90%; display: grid; align-content: space-between; justify-items: center; }
-.slice-motor .signal-rail { right: calc(100% + 15px); }
-.slice-coffee .signal-rail { left: calc(100% + 15px); }
-.signal { writing-mode: vertical-rl; white-space: nowrap; font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); opacity: 0; translate: 0 12px; transition: opacity .55s var(--ease), translate .55s var(--ease), color .55s; }
-.slice-motor .signal { transform: rotate(180deg); }
-.signal.is-on { opacity: 1; translate: 0 0; color: var(--ink); }
-.signal.is-choice { font-family: var(--serif); font-style: italic; font-weight: 400; text-transform: none; font-size: 13px; letter-spacing: .05em; }
-.signal.is-choice.is-on { color: var(--coral); text-shadow: 0 0 20px rgba(239, 118, 122, .4); }
+/* Signal rails: plain caps text drawn out from each phone's side,
+   alternating white and pink for readability */
+.signal-rail { position: absolute; top: 3%; height: 90%; display: grid; align-content: space-between; }
+.slice-motor .signal-rail { right: calc(100% + 15px); justify-items: end; }
+.slice-coffee .signal-rail { left: calc(100% + 15px); justify-items: start; }
+.signal { white-space: nowrap; font-size: 10.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); opacity: 0; translate: 12px 0; transition: opacity .5s var(--ease), translate .5s var(--ease), color .5s; }
+.slice-coffee .signal { translate: -12px 0; }
+.signal.is-on { opacity: 1; translate: 0 0; }
+.signal:nth-child(odd).is-on { color: var(--ink); }
+.signal:nth-child(even).is-on { color: var(--coral); }
 
 /* ── 04 · Market: one hero budget line, two supports ──────── */
 .s-market .evidence-group.span-2 .stat-figure { font-size: clamp(64px, 7.2vw, 116px); }
