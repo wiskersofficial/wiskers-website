@@ -1,8 +1,9 @@
 /* Demo day deck: additions to the one-stylesheet deck system.
    Loaded after pitchdeck.css; composed from its components.
    Eight-slide cut. Each slide spends its boldness in one place:
-   cover = masthead wordmark; solution = two live slices; market =
-   one hero budget line; why-now = the Wiskers card; asks = intros. */
+   cover = masthead wordmark; solution = two live, auto-scrolling
+   slices with signal feeds; market = one hero budget line; why-now
+   = the Wiskers card with the native loop; asks = intros. */
 
 /* Page counter: this deck runs to 8. */
 .pitch-deck .slide::after { content: attr(data-slide) ' / 8'; }
@@ -18,35 +19,58 @@
 .s-intro .intro-logo { grid-column: 1 / -1; width: min(48vw, 780px); max-width: none; margin-left: calc(var(--gutter) * -.35); margin-bottom: clamp(8px, 2vh, 26px); align-self: start; }
 .s-intro .wave-stage { height: min(56vh, 520px); }
 
-/* ── 03 · Solution: two published slices, filling the slide ── */
-.s-solution { grid-template-columns: 1fr; align-content: center; gap: clamp(16px, 3vh, 36px); }
+/* ── 03 · Solution: two live slices, auto-scrolling, signals out ── */
+.s-solution { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(30px, 4.6vw, 78px); align-items: center; }
 .s-solution .phone::before { display: none; } /* no dynamic island */
 .s-solution .phone { padding: 8px; border-radius: 34px; }
-.s-solution .phone-screen { height: min(62vh, 600px); }
-.slices { display: flex; justify-content: center; align-items: flex-start; gap: clamp(34px, 7.4vw, 128px); }
+.s-solution .phone-screen { height: min(74vh, 680px); }
+.solution-notes { display: grid; margin-top: clamp(16px, 3vh, 32px); border-top: 1px solid var(--line); }
+.solution-notes li { display: flex; align-items: center; gap: 12px; padding: 11px 2px; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.solution-notes li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--coral); flex: none; }
+.s-solution .fine { margin-top: 14px; }
+.slices { display: flex; justify-content: center; align-items: flex-start; gap: clamp(30px, 4.2vw, 70px); }
 .slice { display: grid; gap: 13px; justify-items: center; position: relative; width: fit-content; }
 .slice figcaption { display: grid; gap: 4px; justify-items: center; text-align: center; }
 .slice figcaption b { font-family: var(--serif); font-weight: 400; font-size: clamp(22px, 1.9vw, 32px); line-height: 1; }
 .slice figcaption span { font-size: 12.5px; color: var(--muted); }
 .slice figcaption .text-link { font-size: 12px; }
-/* Callout lines drawn out from each slice */
-.callout { position: absolute; display: flex; align-items: center; gap: 9px; font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.callout::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--coral); flex: none; }
-.callout i { display: block; width: clamp(34px, 4.6vw, 84px); height: 1px; background: var(--line-strong); }
-.callout-1 { top: 30%; }
-.callout-2 { top: 64%; }
-.slice-dream .callout { right: calc(100% - 1px); flex-direction: row-reverse; }
-.slice-coffee .callout { left: calc(100% - 1px); }
+/* Signal feeds drawn out from each live slice */
+.signal-feed { position: absolute; top: 16%; display: grid; gap: 10px; width: max-content; max-width: 168px; }
+.slice-dream .signal-feed { right: calc(100% + 16px); text-align: right; }
+.slice-coffee .signal-feed { left: calc(100% + 16px); }
+.signal { display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 11px; line-height: 1.2; color: var(--faint); opacity: 0; transform: translateY(10px); transition: opacity .55s var(--ease), transform .55s var(--ease), color .55s, border-color .55s; }
+.signal i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); flex: none; transition: background .55s, box-shadow .55s; }
+.signal.is-on { opacity: 1; transform: none; color: var(--ink); border-color: rgba(127, 211, 191, .45); }
+.signal.is-on i { background: var(--mint); box-shadow: 0 0 0 4px rgba(127, 211, 191, .18); }
 
-/* ── 04 · Market: one hero budget line, three supports ────── */
+/* ── 04 · Market: one hero budget line, two supports ──────── */
 .s-market .evidence-group.span-2 .stat-figure { font-size: clamp(64px, 7.2vw, 116px); }
 .s-market .evidence-group.span-2 h4 { font-size: clamp(17px, 1.4vw, 21px); }
 
-/* ── 05 · Why now: the Wiskers card is the hero ────────────── */
+/* ── 05 · Why now: the Wiskers card, with the native loop ──── */
 .s-whynow .library { grid-template-columns: 1fr 1fr 1.38fr; }
-.s-whynow .card { min-height: clamp(220px, 30vh, 320px); }
+.s-whynow .card { min-height: clamp(230px, 32vh, 340px); }
 .s-whynow .door-first h3 { font-size: clamp(30px, 2.6vw, 44px); }
 .s-whynow .card .text-link { margin-top: auto; }
+.native-flow { margin-top: auto; width: 100%; height: auto; }
+.native-flow .nf-stroke { stroke: rgba(243, 240, 233, .34); stroke-width: 1; fill: none; }
+.native-flow .nf-dash { stroke-dasharray: 3 5; }
+.native-flow .nf-dot { stroke: rgba(243, 240, 233, .34); stroke-width: 1.5; }
+.native-flow text { font-family: var(--sans); font-size: 8.6px; letter-spacing: .08em; fill: rgba(243, 240, 233, .62); }
+
+/* ── 06 · Go to market: the funnel lineup, priced ──────────── */
+.journey-lineup { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 26px); }
+.journey-lineup li { position: relative; display: grid; gap: 5px; padding: 14px 4px 0; border-top: 2px solid var(--line-strong); }
+.journey-lineup li small { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.journey-lineup li b { font-size: clamp(14px, 1.25vw, 18px); font-weight: 600; }
+.journey-lineup li i { font-style: normal; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.journey-lineup li.is-wisker { border-top-color: var(--coral); }
+.journey-lineup li.is-wisker small { color: var(--coral); }
+.ladder { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 30px); padding-top: clamp(14px, 2.6vh, 26px); border-top: 1px solid var(--line-strong); }
+.ladder li { display: grid; gap: 6px; }
+.ladder li small { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--mint); }
+.ladder li b { font-size: clamp(15px, 1.35vw, 20px); }
+.ladder li span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
 
 /* ── 08 · Asks reuses the library grid with a fourth column ── */
 .s-asks .library { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -59,17 +83,25 @@
 .s-market .stat .fine { margin-top: auto; padding-top: 6px; }
 
 /* ── Responsive ────────────────────────────────────────────── */
+@media screen and (max-width: 1240px) {
+  .signal-feed { max-width: 132px; }
+  .signal { font-size: 10px; padding: 6px 9px; }
+  .s-solution .phone-screen { height: min(70vh, 620px); }
+}
 @media screen and (max-width: 900px) {
   .s-intro .intro-logo { width: min(70vw, 420px); margin-left: 0; }
   .s-intro .wave-stage { height: min(40vh, 340px); }
-  .s-solution .phone-screen { height: min(52vh, 460px); }
-  .slices { flex-direction: column; align-items: center; gap: 22px; }
-  .slice + .slice { margin-top: 0; }
-  .callout { display: none; }
+  .s-solution { grid-template-columns: 1fr; }
+  .s-solution .phone-screen { height: min(56vh, 480px); }
+  .slices { flex-direction: column; align-items: center; gap: 26px; }
+  .signal-feed { display: none; }
   .s-whynow .library { grid-template-columns: 1fr; }
+  .s-whynow .card { min-height: 0; }
   .s-asks .library { grid-template-columns: 1fr; }
   .s-asks .card { min-height: 0; }
   .s-market .evidence-group.span-2 .stat-figure { font-size: clamp(56px, 9vw, 84px); }
+  .journey-lineup { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ladder { grid-template-columns: 1fr; }
 }
 @media screen and (max-width: 1100px) {
   .s-asks .library { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -77,14 +109,15 @@
 @media screen and (max-height: 820px) and (min-width: 901px) {
   .s-intro .intro-logo { margin-bottom: 4px; }
   .s-intro .wave-stage { height: 46vh; }
-  .s-solution .phone-screen { height: 54vh; }
-  .callout-1 { top: 26%; }
-  .callout-2 { top: 66%; }
+  .s-solution .phone-screen { height: 58vh; }
+  .s-solution .fine { display: none; }
   .slice figcaption b { font-size: 20px; }
 }
 @media print {
   .slices { display: grid; grid-template-columns: 1fr 1fr; }
   .slice .phone-screen { height: 380px; }
-  .callout { display: none; }
+  .signal-feed { display: none; }
   .s-whynow .library { grid-template-columns: 1fr 1fr 1.38fr; }
+  .journey-lineup { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .ladder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
