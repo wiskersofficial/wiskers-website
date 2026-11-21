@@ -31,7 +31,7 @@ function paintBackdrop(slide) {
   const sr = slide.getBoundingClientRect();
   ctx.fillStyle = getComputedStyle(slide).backgroundColor; ctx.fillRect(0, 0, w, h);
 
-  if (slide.id === 'slide-10' && photo.naturalWidth) {
+  if (slide.id === 'slide-7' && photo.naturalWidth) {
     // Blurred fill: draw tiny, scale up (a cheap blur that works in every browser).
     const small = document.createElement('canvas'); small.width = 48; small.height = 36;
     small.getContext('2d').drawImage(photo, 0, 0, 48, 36);
@@ -62,7 +62,7 @@ export function mountGlassTiles(slides) {
 
   function mountGroup(g) {
     if (g.lenses.length || disabled) return;
-    if (g.slide.id === 'slide-10' && !photo.naturalWidth) loadPhoto().then(refresh);
+    if (g.slide.id === 'slide-7' && !photo.naturalWidth) loadPhoto().then(refresh);
     g.backdrop = paintBackdrop(g.slide);
     for (const tile of g.tiles) {
       try { g.lenses.push(mountGlass(tile, options(g.slide, g.backdrop))); tile.classList.add('has-glass'); }
