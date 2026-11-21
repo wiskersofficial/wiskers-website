@@ -128,3 +128,33 @@
   .journey-lineup { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .ladder { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* Stats lead with the claim: the bold headline sits above the figure. */
+.stat h4 { order: -1; margin-top: 0; }
+
+/* Problem slide: compact spacing so the slide stays within one screen. */
+@media print, screen and (min-width: 1101px) {
+  .s-problem { gap: 22px; }
+  .s-problem h2 { font-size: clamp(40px, 4vw, 60px); }
+  .s-problem .evidence-group { gap: 12px; }
+  .s-problem .stat { gap: 6px; }
+  .s-problem .stat-figure { font-size: clamp(40px, 3.2vw, 46px); }
+  /* Reserve two headline lines so the big numbers share one baseline across cards. */
+  .s-problem .stat h4 { min-height: 2lh; }
+}
+
+/* Print/PDF slides are a fixed 900px with overflow hidden; tighten this one so the closing line fits. */
+@media print {
+  .s-problem { padding: 52px 88px 36px; gap: 22px; }
+  .s-problem h2 { font-size: 60px; }
+  .s-problem .evidence { row-gap: 20px; }
+  .s-problem .evidence-group { gap: 12px; }
+  .s-problem .stat { gap: 6px; }
+  .s-problem .stat-figure { font-size: 46px; }
+}
+
+
+/* Market slide: four equal stat groups; reserve two headline lines so the big numbers share one baseline. */
+@media print, screen and (min-width: 1101px) {
+  .s-market .stat h4 { min-height: 2lh; }
+}
