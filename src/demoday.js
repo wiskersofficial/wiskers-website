@@ -28,11 +28,13 @@ const glass = mountGlassTiles(slides);
 // those coral choice signals light once and stay, as they would in a campaign.
 const bagels = [...document.querySelectorAll('[data-bagel]')].map(el => mountBagelPhone(el));
 const MOTOR_AT = [.06, .18, .32, .46, .62, .78, .9];
-const COFFEE_MINT = [{ at: .08, idx: 0 }, { at: .3, idx: 1 }, { at: .58, idx: 3 }, { at: .82, idx: 5 }];
+// Coffee rail timeline: the choice boxes sit on the story's first screen, so the
+// choices light early and in order. Every signal resets with the story loop.
+const COFFEE_AT = [.06, .12, .16, .2, .38, .62, .9];
 const COFFEE_CHOICES = [
-  { sel: '[data-k="pods"]', idx: 2, fired: false },
-  { sel: '[data-k="beantocup"]', idx: 4, fired: false },
-  { sel: '[data-dive="leaders"]', idx: 6, fired: false },
+  { sel: '[data-k="pods"]', idx: 1, fired: false },
+  { sel: '[data-k="beantocup"]', idx: 2, fired: false },
+  { sel: '[data-dive="leaders"]', idx: 3, fired: false },
 ];
 const motorRail = [...document.querySelectorAll('.slice-motor .signal')];
 const coffeeRail = [...document.querySelectorAll('.slice-coffee .signal')];
@@ -65,21 +67,26 @@ setInterval(() => {
   }
   const motorFrac = scrollFraction(frames[0]), coffeeFrac = scrollFraction(frames[1]);
   motorRail.forEach((s, i) => s.classList.toggle('is-on', motorFrac > MOTOR_AT[i]));
-  if (coffeeFrac < .03) coffeeRail.forEach(s => { if (!s.classList.contains('is-choice')) s.classList.remove('is-on'); });
-  else coffeeRail.forEach((s, i) => { const m = COFFEE_MINT.find(x => x.idx === i); if (m) s.classList.toggle('is-on', coffeeFrac > m.at); });
-  // Simulated choices: click each box as it scrolls into view, one per tick.
-  // Gated on real scroll so nothing fires during the slice's load window.
-  if (coffeeFrac > .05) {
-    try {
-      const doc = frames[1].contentDocument;
-      if (doc) for (const choice of COFFEE_CHOICES) {
-        if (choice.fired) continue;
-        const el = doc.querySelector(choice.sel);
-        if (!el) { choice.fired = true; continue; }
-        const r = el.getBoundingClientRect();
-        if (r.top < 650 && r.bottom > 100) { el.click(); choice.fired = true; coffeeRail[choice.idx].classList.add('is-on'); break; }
-      }
-    } catch { /* frame not ready */ }
+  if (coffeeFrac < .03) {
+    // Loop reset: everything clears, choices included.
+    coffeeRail.forEach(s => s.classList.remove('is-on'));
+  } else {
+    coffeeRail.forEach((s, i) => s.classList.toggle('is-on', coffeeFrac > COFFEE_AT[i]));
+    // Simulated choices: on the first pass, click each box as it scrolls into
+    // view (one per tick) so the story records real pressed states; later
+    // loops keep the story settled and just re-light the rail by timeline.
+    if (coffeeFrac > .05) {
+      try {
+        const doc = frames[1].contentDocument;
+        if (doc) for (const choice of COFFEE_CHOICES) {
+          if (choice.fired) continue;
+          const el = doc.querySelector(choice.sel);
+          if (!el) { choice.fired = true; continue; }
+          const r = el.getBoundingClientRect();
+          if (r.top < 650 && r.bottom > 100) { el.click(); choice.fired = true; break; }
+        }
+      } catch { /* frame not ready */ }
+    }
   }
 }, 350);
 
