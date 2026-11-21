@@ -27,7 +27,7 @@ const glass = mountGlassTiles(slides);
 // coffee experience clicks its own choice boxes as they come into view —
 // those coral choice signals light once and stay, as they would in a campaign.
 const bagels = [...document.querySelectorAll('[data-bagel]')].map(el => mountBagelPhone(el));
-const MOTOR_AT = [.08, .25, .45, .65, .85];
+const MOTOR_AT = [.06, .18, .32, .46, .62, .78, .9];
 const COFFEE_MINT = [{ at: .08, idx: 0 }, { at: .3, idx: 1 }, { at: .58, idx: 3 }, { at: .82, idx: 5 }];
 const COFFEE_CHOICES = [
   { sel: '[data-k="pods"]', idx: 2, fired: false },
@@ -40,6 +40,21 @@ const frames = [...document.querySelectorAll('.s-solution .phone-live')];
 const scrollFraction = frame => {
   try { const el = frame.contentDocument?.scrollingElement; return el ? el.scrollTop / Math.max(1, el.scrollHeight - el.clientHeight) : 0; } catch { return 0; }
 };
+// Hide the slice documents' own scrollbars inside the phones (scroll still works).
+const hideScrollbars = frame => {
+  try {
+    const doc = frame.contentDocument;
+    if (!doc || doc.getElementById('deck-no-scrollbar')) return;
+    const style = doc.createElement('style');
+    style.id = 'deck-no-scrollbar';
+    style.textContent = 'html{scrollbar-width:none;-ms-overflow-style:none}::-webkit-scrollbar{width:0;height:0;display:none}';
+    doc.head.appendChild(style);
+  } catch { /* frame not ready */ }
+};
+for (const frame of document.querySelectorAll('.s-solution .phone-live')) {
+  frame.addEventListener('load', () => hideScrollbars(frame));
+  hideScrollbars(frame);
+}
 setInterval(() => {
   if (printing) return;
   const on = active?.id === 'slide-3' && !still();
