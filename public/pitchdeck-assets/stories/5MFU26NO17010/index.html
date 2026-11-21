@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" data-slice="5MFU26NO17010">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<title>The engine bay is empty: Stark Future raises €150 million</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#000; --ink:#F4F1E8; --dim:rgba(244,241,232,.62); --rule:rgba(244,241,232,.2); --ion:#3CC8FF; --paper:#ECE6D6; --paper2:#CFC9B8; --slate:#23252D;
+    --u:3.9px; --disp:"Unbounded",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --bagel-credit-ink:rgba(244,241,232,.6); }
+  *{box-sizing:border-box}
+  html{background:#000}
+  body{margin:0;background:#000;color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  h1,h2,p,figure,ul{margin:0;padding:0}
+  #track{height:1000svh}
+  #stage{margin:0 auto;width:100vw;overflow:hidden;background:#000}
+  @media (min-width:600px){#stage{width:min(100vw,calc(100svh*.5))}}
+  #gl{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+  .beat{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;padding:0 calc(var(--u)*6)}
+  .beat.on{pointer-events:none}
+  .beat .tap{pointer-events:auto}
+  /* type */
+  .hd{font:700 calc(var(--u)*6.6)/1.1 var(--disp);letter-spacing:-.02em;text-wrap:balance}
+  .hd.l{font-size:calc(var(--u)*7.4)}
+  .w{display:inline-block;opacity:var(--r,0);filter:blur(calc((1 - var(--r,0))*7px));will-change:opacity,filter}
+  .blk{opacity:var(--r,0);transform:translateY(calc((1 - var(--r,0))*12px));will-change:opacity,transform}
+  .blk p{font:400 calc(var(--u)*4.1)/1.36 var(--body);text-wrap:pretty}
+  .blk+.blk{margin-top:calc(var(--u)*2.4)}
+  .tag{display:inline-block;font:600 calc(var(--u)*2.85)/1 var(--body);font-variant-caps:all-small-caps;letter-spacing:.12em;color:var(--ion);padding-bottom:3px;border-bottom:1px solid var(--ion);margin-right:.6em;white-space:nowrap}
+  .tag.q{color:var(--dim);border-color:var(--dim)}
+  .zone{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);bottom:max(4%,env(safe-area-inset-bottom))}
+  .top{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:max(8%,calc(env(safe-area-inset-top) + 34px))}
+  .note{margin-top:calc(var(--u)*2.4);font:400 calc(var(--u)*3)/1.35 var(--body);color:var(--dim)}
+  .fig{font-family:var(--disp);font-weight:700;letter-spacing:-.03em;white-space:nowrap}
+  /* arrival */
+  #arrive{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:#000;transition:opacity .6s}
+  #arrive.gone{opacity:0;pointer-events:none}
+  #arrive i{display:block;width:84px;height:2px;background:linear-gradient(90deg,transparent,var(--ion),transparent);animation:sweep 1.4s ease-in-out infinite}
+  @keyframes sweep{0%,100%{opacity:.25;transform:scaleX(.5)}50%{opacity:1;transform:scaleX(1)}}
+  /* gauge companion */
+  #gauge{position:absolute;right:16px;top:calc(env(safe-area-inset-top) + 38px);width:52px;height:52px;z-index:12;opacity:0;pointer-events:none}
+  #gauge svg{width:100%;height:100%;overflow:visible}
+  #gauge .ring{fill:none;stroke:rgba(244,241,232,.28);stroke-width:2}
+  #gauge .tick{stroke:rgba(244,241,232,.5);stroke-width:1.5}
+  #needle{transform-origin:26px 26px;stroke:var(--ion);stroke-width:2.2;stroke-linecap:round}
+  #gread{position:absolute;right:0;top:56px;width:120px;text-align:right;font:600 9px/1.3 var(--body);letter-spacing:.1em;color:var(--ion);opacity:0}
+  /* tile 2: the timeline */
+  #tl{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:47%;height:90px}
+  .rule{position:absolute;left:0;top:44px;height:3px;background:var(--paper);box-shadow:0 7px 0 rgba(244,241,232,.07);transform-origin:0 0;transform:scaleX(var(--r,0))}
+  .rule.dash{background:repeating-linear-gradient(90deg,var(--paper) 0 7px,transparent 7px 13px)}
+  .tk{position:absolute;top:30px;width:3px;height:31px;background:var(--paper);opacity:var(--r,0);transform:translateY(calc((1 - var(--r,0))*-10px))}
+  .tkl{position:absolute;top:70px;font:600 calc(var(--u)*2.4)/1.25 var(--body);font-variant-caps:all-small-caps;letter-spacing:.1em;color:var(--ink);opacity:var(--r,0);transform:translateX(-1.5px)}
+  .tkl.up{top:0}
+  .tkl.dim{color:var(--dim)}
+  /* tile 4: the sheet */
+  #sheet{position:absolute;left:11%;right:11%;top:29%;height:38%}
+  #sheet .sh{position:absolute;inset:0;background:var(--paper);box-shadow:10px 14px 0 rgba(244,241,232,.05);transform:translateY(calc((1 - var(--r,0))*40px));opacity:var(--r,0)}
+  #sheet .hole{position:absolute;right:0;bottom:0;width:11%;height:62%;background:#000}
+  #sheet .sl{position:absolute;right:calc(-3% - var(--s,0)*1.1px);bottom:calc(var(--s,0)*1px);width:11%;height:62%;background:var(--paper2);box-shadow:5px 7px 0 rgba(244,241,232,.08);transform:rotate(calc(var(--s,0)*.09deg));opacity:var(--r,0)}
+  #sheet .big{position:absolute;left:8%;top:10%;font:700 calc(var(--u)*24)/1 var(--disp);letter-spacing:-.05em;color:#14151a;opacity:var(--n,0)}
+  #sheet .cap{position:absolute;left:8%;top:calc(10% + var(--u)*25);right:20%;font:600 calc(var(--u)*3.2)/1.3 var(--body);color:#2b2d35;opacity:var(--n,0)}
+  #sheet .tg{position:absolute;left:8%;bottom:9%;opacity:var(--n,0)}
+  #sheet .tg .tag{color:#0b6b94;border-color:#0b6b94}
+  #marks{position:absolute;left:8%;bottom:calc(9% + var(--u)*7);display:flex;gap:7px}
+  #marks i{width:3px;height:24px;background:#14151a;opacity:0;transform:translateY(-14px)}
+  #marks i.on{opacity:1;transform:none;transition:opacity .2s,transform .35s cubic-bezier(.32,.72,0,1)}
+  /* beat 5: motor figure, parts */
+  #parts button{position:absolute;min-width:56px;min-height:44px;transform:translate(-50%,-50%);appearance:none;background:none;border:1px solid var(--rule);border-radius:99px;
+    color:var(--ink);font:600 calc(var(--u)*2.45)/1 var(--body);font-variant-caps:all-small-caps;letter-spacing:.12em;padding:0 12px;opacity:0;pointer-events:none;cursor:pointer;
+    background:rgba(0,0,0,.35)}
+  #parts button.m{border-color:var(--ion);color:#fff;background:rgba(0,0,0,.72)}
+  #parts button.on{opacity:1;pointer-events:auto}
+  #parts button.sel{background:var(--ion);color:#000;border-color:var(--ion)}
+  #tally{display:flex;align-items:flex-end;gap:7px;height:44px;margin-bottom:calc(var(--u)*2)}
+  #tally i{width:3px;height:30px;background:var(--paper);opacity:0;transform:translateY(-16px)}
+  #tally i.on{opacity:1;transform:none;transition:opacity .2s,transform .35s cubic-bezier(.32,.72,0,1)}
+  #tally b{margin-left:10px;font:700 calc(var(--u)*13)/.9 var(--disp);letter-spacing:-.05em;opacity:var(--n,0)}
+  #tally b small{font-size:.38em;letter-spacing:-.01em;margin-left:.15em}
+  #card{min-height:calc(var(--u)*11);margin-top:calc(var(--u)*2.4)}
+  /* tile 6: the line */
+  #vline{position:absolute;left:0;top:38%;width:100%;height:3px;background:var(--ion);box-shadow:0 0 18px 2px rgba(60,200,255,.55);transform-origin:0 0;transform:scaleX(var(--r,0))}
+  #spark{position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 22px 8px rgba(60,200,255,.8);left:50%;top:38%;margin:-4px 0 0 -5px;opacity:0}
+  #vabove{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:calc(38% - 82px)}
+  #vbelow{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:calc(38% + 22px)}
+  #vabove,#vbelow{opacity:var(--r,0)}
+  #door{position:absolute;right:20%;top:calc(38% - 15px);width:62px;height:33px;opacity:var(--r,0)}
+  #door i{position:absolute;top:0;width:50%;height:100%;background:var(--paper);box-shadow:0 0 0 1px #000}
+  #door i:first-child{left:0;transform:translateX(calc(var(--o,0)*-8px))}
+  #door i:last-child{right:0;transform:translateX(calc(var(--o,0)*8px))}
+  #doorl{position:absolute;right:calc(20% - 14px);top:calc(38% + 28px);font:600 calc(var(--u)*2.3)/1.2 var(--body);font-variant-caps:all-small-caps;letter-spacing:.1em;color:var(--dim);opacity:var(--r,0);white-space:nowrap}
+  /* tile 7: cards */
+  .cards{position:absolute;left:calc(var(--u)*6);right:calc(var(--u)*6);top:49%;height:11.5%}
+  .cd{position:absolute;top:0;width:31%;height:100%;background:var(--paper);color:#14151a;padding:10px 9px;font:600 calc(var(--u)*2.45)/1.25 var(--body);font-variant-caps:all-small-caps;letter-spacing:.1em;
+    box-shadow:6px 9px 0 rgba(244,241,232,.06);opacity:var(--r,0);transform:translateX(calc((1 - var(--r,0))*90px)) rotate(calc((1 - var(--r,0))*6deg))}
+  .cd:nth-child(1){left:0}.cd:nth-child(2){left:34.5%}.cd:nth-child(3){left:69%}
+  .cd small{display:block;margin-top:6px;font:700 calc(var(--u)*5)/1 var(--disp);letter-spacing:-.04em;color:#0b6b94}
+  .cd em{display:block;margin-top:8px;font:400 calc(var(--u)*3)/1.3 var(--body);font-style:normal;font-variant-caps:normal;letter-spacing:0;color:#2b2d35}
+  .cdline{display:block;width:100%;height:1px;background:rgba(0,0,0,.25);margin-top:6px}
+  .gap{display:inline-block;width:5.5em;border-bottom:1px solid var(--dim);transform:translateY(.1em)}
+  dialog{position:fixed;inset:0;z-index:40;margin:0;padding:0;border:0;width:100%;height:100%;max-width:none;max-height:none;background:#0a0b0e;color:var(--ink);overflow-y:auto}
+  dialog article{max-width:34em;margin:0 auto;padding:max(26px,env(safe-area-inset-top)) 7% 80px}
+  dialog button{appearance:none;border:0;border-bottom:1px solid currentColor;background:none;color:inherit;font:600 14px/1 var(--body);padding:12px 0 6px;min-height:44px;cursor:pointer}
+  dialog h1{font:700 27px/1.15 var(--disp);letter-spacing:-.02em;margin:26px 0 16px}
+  dialog p,dialog li{font-size:16px;line-height:1.6}
+  dialog p+p{margin-top:12px}
+  .dives{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:calc(var(--u)*3)}
+  .dives button{appearance:none;background:none;border:0;border-bottom:1px solid var(--dim);color:var(--ink);font:400 calc(var(--u)*3.4)/1.2 var(--body);padding:10px 0 4px;min-height:44px;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.w{filter:none}}
+</style>
+</head>
+<body>
+<div id="track"><div id="stage" class="bagel-stage">
+  <canvas id="gl"></canvas>
+  <div id="arrive"><i></i></div>
+
+  <div id="gauge" aria-hidden="true"><svg viewBox="0 0 52 52"><circle class="ring" cx="26" cy="26" r="22"/><g id="ticks"></g><line id="needle" x1="26" y1="26" x2="26" y2="9"/><circle cx="26" cy="26" r="2.4" fill="#F4F1E8"/></svg>
+    <div id="gread">80 HP <span style="opacity:.7">· STARK SAYS</span></div></div>
+
+  <section class="beat" id="b1">
+    <div class="zone">
+      <h1 class="hd l" data-h="0.06">A bike hangs in the dark, and it has no engine.</h1>
+      <div class="blk" data-a=".42" style="margin-top:calc(var(--u)*4)"><p>Stark Future builds electric motorcycles outside Barcelona.</p></div>
+      <div class="blk" data-a=".58"><p>Every one is made at its own 20,000 square metre site, the company says.</p></div>
+      <p class="note blk" data-a=".74">A generic electric bike stands in for Stark's.</p>
+    </div>
+  </section>
+
+  <section class="beat" id="b2">
+    <div class="top"><h2 class="hd" data-h="0.04">Three years after its first sale, an investor calls it the go-to name.</h2></div>
+    <div id="tl">
+      <div class="rule" data-a=".08" data-d=".5" style="left:44%;width:56%"></div>
+      <div class="tk" data-a=".12" data-d=".1" style="left:0"></div><div class="tkl up" data-a=".12" data-d=".1" style="left:0">2020<br><span style="color:var(--dim)">founded</span></div>
+      <div class="rule dash" data-a=".2" data-d=".16" style="left:2px;width:41%;top:44px;opacity:.8"></div>
+      <div class="tkl dim" data-a=".3" data-d=".12" style="left:3%;top:56px;width:38%;line-height:1.3">years before the first sale: not given</div>
+      <div class="tk" data-a=".42" data-d=".1" style="left:44%"></div><div class="tkl up" data-a=".42" data-d=".1" style="left:44%">first sale</div>
+      <div class="tk" data-a=".58" data-d=".1" style="left:calc(100% - 3px)"></div><div class="tkl up" data-a=".58" data-d=".1" style="right:0;text-align:right">+3 years<br><span style="color:var(--dim)">from first sale</span></div>
+    </div>
+    <div class="zone" style="bottom:auto;top:61%">
+      <div class="blk" data-a=".52"><p>Stark was founded in 2020.</p></div>
+      <div class="blk" data-a=".66"><p>Highland Europe's Tony Zappalà says it is the go-to name in performance off-road riding.</p></div>
+    </div>
+  </section>
+
+  <section class="beat" id="b3">
+    <div class="zone">
+      <h2 class="hd" data-h="0.04"><span class="tag q" style="font-size:calc(var(--u)*2.45);vertical-align:middle">STARK SAYS</span> its VARG is the best-selling enduro bike in the world.</h2>
+      <div class="blk" data-a=".34" style="margin-top:calc(var(--u)*3)"><p>It says that includes outselling every combustion rival.</p></div>
+      <div class="blk" data-a=".5"><p>In its first year it took around 50% of German enduro, the company says.</p></div>
+      <div class="blk" data-a=".66"><p>The United States is now its largest market by volume.</p></div>
+    </div>
+  </section>
+
+  <section class="beat" id="b4">
+    <div class="top"><h2 class="hd" data-h="0.04">Around five per cent of a market worth €3 billion.</h2></div>
+    <div id="sheet">
+      <div class="sh" data-a=".05" data-d=".25"></div><div class="hole"></div><div class="sl" data-a=".1" data-d=".2"></div>
+      <div id="marks"><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="big fig" data-n=".45">5%</div>
+      <div class="cap" data-n=".55">of the €3 billion off-road market</div>
+      <div class="tg" data-n=".55"><span class="tag">STARK SAYS</span></div>
+    </div>
+    <div class="zone"><div class="blk" data-a=".5"><p>Stark says it has taken that share of global off-road motorcycles from combustion in three years.</p></div>
+      <p class="note blk" data-a=".68">Five per cent is Stark's own count.</p></div>
+  </section>
+
+  <section class="beat" id="b5">
+    <div class="top" style="top:max(5%,calc(env(safe-area-inset-top) + 56px))"><h2 class="hd" data-h="0.03">Take it apart, and the engine bay holds a box.</h2></div>
+    <div id="parts"><button data-p="frame" class="tap">frame</button><button data-p="wheels" class="tap">wheels</button><button data-p="battery" class="tap">battery</button><button data-p="motor" class="tap m">motor</button></div>
+    <div class="zone">
+      <div id="tally"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b data-n=".5">9<small>kg</small></b></div>
+      <div class="blk" data-a=".55"><span class="tag">MOTOR WEIGHT</span><span class="tag q">STARK SAYS</span></div>
+      <div id="card" class="blk" data-a=".6"><p id="cardp">It rates it at 80 horsepower, 30% more peak power than a 450cc bike.</p></div>
+    </div>
+  </section>
+
+  <section class="beat" id="b6">
+    <div class="top"><h2 class="hd l" data-h="0.04">Then the money.</h2></div>
+    <div id="spark"></div><div id="vline" data-a=".1" data-d=".3"></div>
+    <div id="vabove" data-a=".34" data-d=".12"><span class="fig" style="font-size:calc(var(--u)*10.6)">€1.2 billion</span><br><span class="tag q" style="margin-top:6px">BEFORE THE ROUND</span></div>
+    <div id="vbelow" data-a=".4" data-d=".12"><span class="tag q">RAISED, MORE THAN</span><br><span class="fig" style="font-size:calc(var(--u)*7.4);display:block;margin-top:6px">€150 million</span></div>
+    <div id="door" data-a=".5" data-d=".1"><i></i><i></i></div><div id="doorl" data-a=".52" data-d=".1">2nd close: more partners</div>
+    <div class="zone">
+      <div class="blk" data-a=".5"><p>Highland Europe led, with Morgan Stanley's 1GT strategy and Axon Partners Group.</p></div>
+      <div class="blk" data-a=".64"><p>The round was oversubscribed, so a second closing let more partners in.</p></div>
+      <div class="blk" data-a=".66"><p>Stark calls it the largest ever in a European electric motorcycle company.</p></div>
+    </div>
+  </section>
+
+  <section class="beat" id="b7">
+    <div class="top"><h2 class="hd" data-h="0.04" style="padding-right:56px;font-size:calc(var(--u)*5.5)">The CEO says it has turned profitable, and he wants a bigger market.</h2></div>
+    <div class="cards"><div class="cd" data-a=".16" data-d=".15">New<br>categories<span class="cdline"></span><em>New motorcycle categories.</em></div><div class="cd" data-a=".26" data-d=".15">Global<br>expansion<span class="cdline"></span><em>Global expansion.</em></div><div class="cd" data-a=".36" data-d=".15">New electric<br>platforms<span class="cdline"></span><em>Develop new electric platforms.</em></div></div>
+    <div class="zone">
+      <div class="blk" data-a=".08"><p><span class="tag q">THE CEO SAYS</span>Turned profitable. No figure given.</p></div>
+      <div class="blk" data-a=".3"><p>The money is for the three things above.</p></div>
+      <div class="blk" data-a=".44"><span class="tag q">THE MARKET HE SAYS STARK CAN GO FOR NEXT</span><br><span class="fig" style="font-size:calc(var(--u)*11);display:block;margin-top:8px">€90 billion</span></div>
+      <div class="dives blk" data-a=".6"><button data-dive="claims" class="tap">What Stark says, and what is checked</button><button data-dive="motor" class="tap">The 9 kg motor</button></div>
+    </div>
+  </section>
+
+  <dialog id="dlg"><article><button id="dlgx">Back to the story</button><div id="dlgbody"></div></article></dialog>
+</div></div>
+<script type="module" src="live.js"></script>
+</body>
+</html>
