@@ -1,5 +1,6 @@
 import {mountDeckWaveGrid} from './deck-wave-grid.js';
 import {mountGlassTiles} from './demoday-glass.js';
+import {mountBagelPhone} from './pitchdeck-bagel.js';
 import {initGlyphWaves} from './home-v6/glyph-wave.js';
 import {initHoverWarp} from './home-v6/hover-warp.js';
 import './home-v6/glyph-wave.css';
@@ -20,6 +21,27 @@ const still = () => paused || reduce.matches || printing;
 const wave = mountDeckWaveGrid(document.querySelector('.wave-stage'));
 const glyphs = initGlyphWaves(document);
 const glass = mountGlassTiles(slides);
+
+// Two live slices on the solution slide: each auto-scrolls itself,
+// and the signal feeds beside each phone light up as it scrolls.
+const bagels = [...document.querySelectorAll('[data-bagel]')].map(el => mountBagelPhone(el));
+const signalFeeds = [...document.querySelectorAll('.slice')].map(slice => ({
+  frame: slice.querySelector('.phone-live'),
+  signals: [...slice.querySelectorAll('.signal')],
+}));
+const SIGNAL_AT = [.12, .42, .72];
+setInterval(() => {
+  if (printing) return;
+  const on = active?.id === 'slide-3' && !still();
+  for (const {frame, signals} of signalFeeds) {
+    if (!signals.length) continue;
+    if (!on) { signals.forEach(s => s.classList.remove('is-on')); continue; }
+    let frac = 0;
+    try { const el = frame.contentDocument?.scrollingElement; if (el) frac = el.scrollTop / Math.max(1, el.scrollHeight - el.clientHeight); } catch { /* not loaded yet */ }
+    if (frac < .03) signals.forEach(s => s.classList.remove('is-on'));
+    else signals.forEach((s, i) => s.classList.toggle('is-on', frac > SIGNAL_AT[i]));
+  }
+}, 350);
 
 let warpFrame = 0;
 const warp = initHoverWarp(document, () => { if (!warpFrame) warpFrame = requestAnimationFrame(tickWarp); });
@@ -86,7 +108,10 @@ function frame(now = performance.now()) {
     paintScene(scene, p);
     // Also marks arrival here, so the deck never depends on observer callbacks alone.
     const r = scene.slide.getBoundingClientRect();
-    if (r.top < innerHeight && r.bottom > 0) scene.slide.classList.add('is-visible');
+    if (r.top < innerHeight && r.bottom > 0) {
+      scene.slide.classList.add('is-visible');
+      if (scene.slide.id === 'slide-3') bagels.forEach(b => b.arm());
+    }
   }
 }
 let queued = false, fallback = 0;
@@ -110,6 +135,7 @@ function setActive(slide) {
   document.documentElement.classList.toggle('tone-light', light);
   brand.src = light ? '/pitchdeck-assets/wiskers-v2-wordmark-dark.svg' : '/pitchdeck-assets/wiskers-v2-wordmark-light.svg';
   slide.id === 'slide-1' ? wave.play() : wave.pause();
+  bagels.forEach(b => b.activate(slide.id === 'slide-3'));
   if (!printing) glass.focus(slide);
 }
 
@@ -125,6 +151,7 @@ const observer = new IntersectionObserver(entries => {
   for (const {target, isIntersecting} of entries) {
     if (!isIntersecting) continue;
     target.classList.add('is-visible');
+    if (target.id === 'slide-3') bagels.forEach(b => b.arm());
   }
 }, {threshold: [0, .15]});
 slides.forEach(s => observer.observe(s));
@@ -134,6 +161,7 @@ function updateMotion() {
   motion.disabled = reduce.matches; motion.setAttribute('aria-pressed', String(paused));
   motion.textContent = paused ? 'Resume motion' : 'Pause motion';
   wave.setReduced(still()); warp.setPaused(still());
+  bagels.forEach(b => b.setReduced(still()));
   requestFrame();
 }
 motion.addEventListener('click', () => { paused = !paused; updateMotion(); });
